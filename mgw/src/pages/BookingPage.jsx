@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Button from '../components/Button';
 
 const s = {
-  header: { padding: '22px 20px 16px', borderBottom: '0.5px solid rgba(201,162,39,0.18)' },
+  header: { padding: '22px 20px 16px' },
   title: { fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 26, fontWeight: 500, marginBottom: 4 },
   subtitle: { fontSize: 11, color: '#999' },
   typesGrid: {
@@ -10,7 +10,6 @@ const s = {
     gridTemplateColumns: '1fr 1fr',
     gap: 10,
     padding: '18px 20px',
-    borderBottom: '0.5px solid rgba(201,162,39,0.18)',
   },
   typeCard: {
     background: '#141414',
@@ -34,7 +33,7 @@ const s = {
   },
   typeName: { fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 14, fontWeight: 500, marginBottom: 3 },
   typePrice: { fontSize: 10, color: '#C9A227', letterSpacing: '0.05em' },
-  calSection: { padding: '18px 20px', borderBottom: '0.5px solid rgba(201,162,39,0.18)' },
+  calSection: { padding: '18px 20px' },
   calMonthRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 },
   calMonthName: { fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 16, fontWeight: 500 },
   calNav: { display: 'flex', gap: 10 },
@@ -60,7 +59,7 @@ const s = {
   calDaySelected: { background: '#C9A227', color: '#0A0A0A', fontWeight: 500 },
   calDayToday: { border: '0.5px solid #C9A227', color: '#C9A227' },
   calDayDisabled: { opacity: 0.3, cursor: 'default' },
-  slotsSection: { padding: '18px 20px', borderBottom: '0.5px solid rgba(201,162,39,0.18)' },
+  slotsSection: { padding: '18px 20px' },
   slotsTitle: { fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 15, fontWeight: 500, marginBottom: 12 },
   slotsGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 },
   slot: {
@@ -88,7 +87,6 @@ const s = {
   summaryRow: {
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
     padding: '6px 0',
-    borderBottom: '0.5px solid rgba(201,162,39,0.18)',
     fontSize: 12,
   },
   summaryKey: { color: '#999' },

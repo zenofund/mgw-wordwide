@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const s = {
-  header: { padding: '22px 20px 16px', borderBottom: '0.5px solid rgba(201,162,39,0.18)' },
+  header: { padding: '22px 20px 16px' },
   title: { fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 26, fontWeight: 500, marginBottom: 4 },
   subtitle: { fontSize: 11, color: '#999' },
   filters: {
@@ -10,7 +10,6 @@ const s = {
     padding: '14px 20px',
     overflowX: 'auto',
     scrollbarWidth: 'none',
-    borderBottom: '0.5px solid rgba(201,162,39,0.18)',
   },
   filterPill: {
     flexShrink: 0,

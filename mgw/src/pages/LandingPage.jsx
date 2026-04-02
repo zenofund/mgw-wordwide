@@ -73,34 +73,46 @@ const s = {
   /* ── Stats ── */
   statsBar: {
     display: 'flex',
-    padding: '18px 20px',
-    borderBottom: '0.5px solid rgba(201,162,39,0.18)',
+    gap: 12,
+    padding: '28px 20px',
   },
-  statItem: {
+  statCard: {
     flex: 1,
+    background: 'linear-gradient(145deg, #1a1520 0%, #111019 100%)',
+    border: '0.5px solid rgba(201,162,39,0.28)',
+    borderRadius: 12,
+    padding: '16px 10px 14px',
     textAlign: 'center',
-    padding: '0 8px',
-    borderRight: '0.5px solid rgba(201,162,39,0.18)',
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  statCardTopBar: {
+    position: 'absolute',
+    top: 0, left: '20%', right: '20%',
+    height: 1.5,
+    background: 'linear-gradient(90deg, transparent, #C9A227, transparent)',
+    borderRadius: 2,
   },
   statNum: {
     fontFamily: "'Cormorant Garamond', Georgia, serif",
-    fontSize: 22,
-    fontWeight: 600,
+    fontSize: 26,
+    fontWeight: 700,
     color: '#C9A227',
     lineHeight: 1,
-    marginBottom: 3,
+    marginBottom: 5,
+    letterSpacing: '-0.01em',
   },
   statLabel: {
-    fontSize: 9,
-    letterSpacing: '0.1em',
+    fontSize: 8,
+    letterSpacing: '0.18em',
     textTransform: 'uppercase',
-    color: '#999',
+    color: '#888',
+    lineHeight: 1.3,
   },
 
   /* ── Sections ── */
   section: {
     padding: '28px 20px',
-    borderBottom: '0.5px solid rgba(201,162,39,0.18)',
   },
   sectionLabel: {
     fontSize: 9,
@@ -506,11 +518,9 @@ export default function LandingPage({ onJoinMembership, onBookSession, onBecomeM
 
       {/* ── Stats ── */}
       <div className="mgw-stats-bar" style={s.statsBar}>
-        {STATS.map((st, i) => (
-          <div key={st.label} className="mgw-stat-item" style={{
-            ...s.statItem,
-            borderRight: i < STATS.length - 1 ? '0.5px solid rgba(201,162,39,0.18)' : 'none',
-          }}>
+        {STATS.map((st) => (
+          <div key={st.label} className="mgw-stat-card" style={s.statCard}>
+            <div style={s.statCardTopBar} />
             <div className="mgw-stat-num" style={s.statNum}>{st.num}</div>
             <div className="mgw-stat-label" style={s.statLabel}>{st.label}</div>
           </div>

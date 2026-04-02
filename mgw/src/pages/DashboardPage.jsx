@@ -3,7 +3,6 @@ import React from 'react';
 const s = {
   greeting: {
     padding: '22px 20px 14px',
-    borderBottom: '0.5px solid rgba(201,162,39,0.18)',
   },
   greetingSub: {
     fontSize: 10,
@@ -21,11 +20,10 @@ const s = {
   quickStats: {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr 1fr',
-    gap: 1,
-    background: 'rgba(201,162,39,0.18)',
-    borderBottom: '0.5px solid rgba(201,162,39,0.18)',
+    gap: 10,
+    padding: '0 20px 20px',
   },
-  stat: { background: '#0A0A0A', padding: '16px 14px', textAlign: 'center' },
+  stat: { background: '#141414', border: '0.5px solid rgba(201,162,39,0.2)', borderRadius: 10, padding: '16px 14px', textAlign: 'center' },
   statVal: {
     fontFamily: "'Cormorant Garamond', Georgia, serif",
     fontSize: 20,
