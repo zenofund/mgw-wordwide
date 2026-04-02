@@ -1,7 +1,6 @@
 import React from 'react';
 import Button from '../components/Button';
 
-/* ─── inline styles ─── */
 const s = {
   hero: {
     position: 'relative',
@@ -123,7 +122,6 @@ const s = {
     flex: 1,
     textAlign: 'center',
     padding: '0 8px',
-    borderRight: '0.5px solid rgba(201,162,39,0.18)',
   },
   statNum: {
     fontFamily: "'Cormorant Garamond', Georgia, serif",
@@ -351,30 +349,46 @@ const VAULT_ITEMS = [
   { type: 'audio', title: 'Industry Conversations Vol. 3', sub: '1 hr 12 min', locked: true },
 ];
 
+const TESTIMONIALS = [
+  {
+    quote: '"Mavin Grandpa reshaped how I think about creative direction. My brand doubled its reach within three months of our sessions."',
+    name: 'Adaeze J.',
+    role: 'Creative Director, Lagos',
+    initials: 'AJ',
+    gradient: 'linear-gradient(135deg, #6A38C2, #00B3FF)',
+  },
+  {
+    quote: '"The Brand Architecture intensive was transformative. Worth every dollar — the clarity I gained was unparalleled."',
+    name: 'Emeka T.',
+    role: 'Founder, Accra',
+    initials: 'ET',
+    gradient: 'linear-gradient(135deg, #C9A227, #6A38C2)',
+  },
+  {
+    quote: '"As a creative entrepreneur, the Founder\'s Circle gave me frameworks I still use daily. Game-changing community."',
+    name: 'Sola M.',
+    role: 'Brand Strategist, Nairobi',
+    initials: 'SM',
+    gradient: 'linear-gradient(135deg, #00B3FF, #C9A227)',
+  },
+];
+
 const STATS = [
   { num: '2.4K', label: 'Members' },
   { num: '180+', label: 'Sessions' },
   { num: '12yr', label: 'Experience' },
 ];
 
-/**
- * LandingPage
- * Props:
- *  - onJoinMembership: () => void
- *  - onBookSession: () => void
- *  - onBecomeMember: () => void
- */
 export default function LandingPage({ onJoinMembership, onBookSession, onBecomeMember }) {
   return (
     <div>
       {/* ── Hero ── */}
-      <div style={s.hero}>
+      <div className="mgw-hero" style={s.hero}>
         <div style={s.heroBg} />
-        <div style={s.orb1} />
+        <div className="mgw-hero-orb1" style={s.orb1} />
         <div style={s.orb2} />
 
-        {/* Portrait placeholder — swap src for real MGW image */}
-        <div style={s.portrait}>
+        <div className="mgw-hero-portrait" style={s.portrait}>
           <div style={{
             width: 240, height: 400,
             background: 'linear-gradient(180deg, #2a1a4a 0%, #1a1030 50%, #0d0820 100%)',
@@ -396,18 +410,18 @@ export default function LandingPage({ onJoinMembership, onBookSession, onBecomeM
         </div>
         <div style={s.portraitGlow} />
 
-        <div style={s.heroContent}>
+        <div className="mgw-hero-content" style={s.heroContent}>
           <div style={s.badge}>
             <span style={s.badgeDot} />
             Private Circle
           </div>
-          <h1 style={s.heroTitle}>
+          <h1 className="mgw-hero-title" style={s.heroTitle}>
             Mentorship for <em style={s.heroTitleEm}>Visionary</em> Creatives
           </h1>
-          <p style={s.heroSub}>
+          <p className="mgw-hero-subtitle" style={s.heroSub}>
             Join a private circle of creators, founders, and industry leaders learning from Mavin Grandpa.
           </p>
-          <div style={s.heroBtns}>
+          <div className="mgw-hero-btns" style={s.heroBtns}>
             <Button variant="primary" size="md" onClick={onJoinMembership}>Join Membership</Button>
             <Button variant="ghost" size="md" onClick={onBookSession}>Book Session</Button>
           </div>
@@ -415,9 +429,12 @@ export default function LandingPage({ onJoinMembership, onBookSession, onBecomeM
       </div>
 
       {/* ── Stats ── */}
-      <div style={s.statsBar}>
+      <div className="mgw-stats-bar" style={s.statsBar}>
         {STATS.map((st, i) => (
-          <div key={st.label} style={{ ...s.statItem, borderRight: i < STATS.length - 1 ? '0.5px solid rgba(201,162,39,0.18)' : 'none' }}>
+          <div key={st.label} className="mgw-stat-item" style={{
+            ...s.statItem,
+            borderRight: i < STATS.length - 1 ? '0.5px solid rgba(201,162,39,0.18)' : 'none',
+          }}>
             <div style={s.statNum}>{st.num}</div>
             <div style={s.statLabel}>{st.label}</div>
           </div>
@@ -425,85 +442,97 @@ export default function LandingPage({ onJoinMembership, onBookSession, onBecomeM
       </div>
 
       {/* ── Programs ── */}
-      <div style={s.section}>
-        <div style={s.sectionLabel}>Programs</div>
-        <div style={s.sectionTitle}>Mentorship Tracks</div>
-        <div style={s.sectionSub}>Structured programs designed for creative professionals at every stage.</div>
-        <div style={s.programsScroll}>
-          {PROGRAMS.map((p) => (
-            <div key={p.name} style={s.programCard}>
-              <div style={{ ...s.programAccent, background: accentColors[p.accent] }} />
-              <div style={s.programTag}>{p.tag}</div>
-              <div style={s.programName}>{p.name}</div>
-              <div style={s.programDesc}>{p.desc}</div>
-              <div style={s.programMeta}>
-                <div>
-                  <div style={s.programPrice}>{p.price}</div>
-                  <div style={s.programDuration}>{p.duration}</div>
+      <div className="mgw-section" style={s.section}>
+        <div className="mgw-inner">
+          <div style={s.sectionLabel}>Programs</div>
+          <div className="mgw-section-title-lg" style={s.sectionTitle}>Mentorship Tracks</div>
+          <div style={s.sectionSub}>Structured programs designed for creative professionals at every stage.</div>
+          <div className="mgw-programs-scroll" style={s.programsScroll}>
+            {PROGRAMS.map((p) => (
+              <div key={p.name} className="mgw-program-card" style={s.programCard}>
+                <div style={{ ...s.programAccent, background: accentColors[p.accent] }} />
+                <div style={s.programTag}>{p.tag}</div>
+                <div style={s.programName}>{p.name}</div>
+                <div style={s.programDesc}>{p.desc}</div>
+                <div style={s.programMeta}>
+                  <div>
+                    <div style={s.programPrice}>{p.price}</div>
+                    <div style={s.programDuration}>{p.duration}</div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
 
       {/* ── Vault Preview ── */}
-      <div style={s.section}>
-        <div style={s.sectionLabel}>Knowledge</div>
-        <div style={s.sectionTitle}>Private Vault</div>
-        <div style={s.sectionSub}>Exclusive content from decades of creative industry mastery.</div>
-        <div style={s.vaultGrid}>
-          {VAULT_ITEMS.map((item) => (
-            <div key={item.title} style={s.vaultItem}>
-              <div style={{ ...s.typePill, ...pillStyles[item.type] }}>{item.type}</div>
-              <div style={s.vaultTitle}>{item.title}</div>
-              <div style={s.vaultSub}>{item.sub}</div>
-              {item.locked && <div style={s.lockIcon}><LockIcon /></div>}
+      <div className="mgw-section" style={s.section}>
+        <div className="mgw-inner">
+          <div style={s.sectionLabel}>Knowledge</div>
+          <div className="mgw-section-title-lg" style={s.sectionTitle}>Private Vault</div>
+          <div style={s.sectionSub}>Exclusive content from decades of creative industry mastery.</div>
+          <div className="mgw-vault-preview-grid" style={s.vaultGrid}>
+            {VAULT_ITEMS.map((item) => (
+              <div key={item.title} style={s.vaultItem}>
+                <div style={{ ...s.typePill, ...pillStyles[item.type] }}>{item.type}</div>
+                <div style={s.vaultTitle}>{item.title}</div>
+                <div style={s.vaultSub}>{item.sub}</div>
+                {item.locked && <div style={s.lockIcon}><LockIcon /></div>}
+              </div>
+            ))}
+            <div style={{ ...s.vaultItem, ...s.vaultItemWide }}>
+              <div style={{ ...s.typePill, ...pillStyles.pdf }}>Guide</div>
+              <div style={s.vaultTitle}>The MGW Brand Strategy Framework — Complete Edition</div>
+              <div style={s.vaultSub}>62 pages · Premium members only</div>
+              <div style={s.lockIcon}><LockIcon /></div>
             </div>
-          ))}
-          <div style={{ ...s.vaultItem, ...s.vaultItemWide }}>
-            <div style={{ ...s.typePill, ...pillStyles.pdf }}>Guide</div>
-            <div style={s.vaultTitle}>The MGW Brand Strategy Framework — Complete Edition</div>
-            <div style={s.vaultSub}>62 pages · Premium members only</div>
-            <div style={s.lockIcon}><LockIcon /></div>
           </div>
         </div>
       </div>
 
       {/* ── Testimonials ── */}
-      <div style={s.section}>
-        <div style={s.sectionLabel}>Testimonials</div>
-        <div style={s.sectionTitle}>What Leaders Say</div>
-        <div style={s.testimonialCard}>
-          <div style={s.testimonialQuote}>
-            "Mavin Grandpa reshaped how I think about creative direction. My brand doubled its reach within three months of our sessions."
-          </div>
-          <div style={s.testimonialSource}>
-            <div style={s.avatar}>AJ</div>
-            <div>
-              <div style={s.testimonialName}>Adaeze J.</div>
-              <div style={s.testimonialRole}>Creative Director, Lagos</div>
-            </div>
-          </div>
-          <div style={s.dots}>
-            <div style={{ ...s.dot, ...s.dotActive }} />
-            <div style={s.dot} />
-            <div style={s.dot} />
+      <div className="mgw-section" style={s.section}>
+        <div className="mgw-inner">
+          <div style={s.sectionLabel}>Testimonials</div>
+          <div className="mgw-section-title-lg" style={s.sectionTitle}>What Leaders Say</div>
+          <div className="mgw-testimonials-grid" style={{ marginTop: 4 }}>
+            {TESTIMONIALS.map((t, i) => (
+              <div key={i} style={s.testimonialCard}>
+                <div style={s.testimonialQuote}>{t.quote}</div>
+                <div style={s.testimonialSource}>
+                  <div style={{ ...s.avatar, background: t.gradient }}>{t.initials}</div>
+                  <div>
+                    <div style={s.testimonialName}>{t.name}</div>
+                    <div style={s.testimonialRole}>{t.role}</div>
+                  </div>
+                </div>
+                {i === 0 && (
+                  <div style={s.dots}>
+                    <div style={{ ...s.dot, ...s.dotActive }} />
+                    <div style={s.dot} />
+                    <div style={s.dot} />
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
       {/* ── Join CTA ── */}
-      <div style={s.joinSection}>
-        <div style={{ ...s.sectionLabel, textAlign: 'center' }}>Exclusive Access</div>
-        <div style={s.joinTitle}>
-          Join the <em style={{ fontStyle: 'italic', color: '#C9A227' }}>Inner Circle</em>
+      <div className="mgw-join-section" style={s.joinSection}>
+        <div className="mgw-join-inner">
+          <div style={{ ...s.sectionLabel, textAlign: 'center' }}>Exclusive Access</div>
+          <div className="mgw-join-title" style={s.joinTitle}>
+            Join the <em style={{ fontStyle: 'italic', color: '#C9A227' }}>Inner Circle</em>
+          </div>
+          <p style={s.joinSub}>
+            A private membership for serious creatives. Access all programs, the Knowledge Vault, and priority consulting.
+          </p>
+          <Button variant="primary" size="full" onClick={onBecomeMember}>Become a Member</Button>
+          <div style={s.joinNote}>Starting from $97 / month</div>
         </div>
-        <p style={s.joinSub}>
-          A private membership for serious creatives. Access all programs, the Knowledge Vault, and priority consulting.
-        </p>
-        <Button variant="primary" size="full" onClick={onBecomeMember}>Become a Member</Button>
-        <div style={s.joinNote}>Starting from $97 / month</div>
       </div>
     </div>
   );

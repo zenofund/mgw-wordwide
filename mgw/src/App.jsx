@@ -17,7 +17,6 @@ const TABS = [
 ];
 
 const tabBarStyles = {
-  display: 'flex',
   padding: '0 20px',
   borderBottom: '0.5px solid rgba(201,162,39,0.18)',
   background: '#0A0A0A',
@@ -34,7 +33,6 @@ const tabStyle = {
   color: '#999',
   padding: '12px 14px',
   cursor: 'pointer',
-  borderBottom: '1.5px solid transparent',
   whiteSpace: 'nowrap',
   transition: 'all 0.2s',
   background: 'none',
@@ -54,15 +52,18 @@ export default function App() {
   const [activePage, setActivePage] = useState('landing');
 
   return (
-    <div style={{ background: '#0A0A0A', minHeight: '100vh', maxWidth: 420, margin: '0 auto' }}>
+    <div style={{ background: '#0A0A0A', minHeight: '100vh' }}>
       <Navbar
+        activePage={activePage}
+        onNavigate={setActivePage}
+        tabs={TABS}
         onSearchClick={() => console.log('search')}
         onNotificationsClick={() => console.log('notifications')}
         onProfileClick={() => setActivePage('auth')}
       />
 
-      {/* Tab Bar */}
-      <div style={tabBarStyles}>
+      {/* Mobile-only Tab Bar */}
+      <div className="mgw-tabbar" style={tabBarStyles}>
         {TABS.map((tab) => (
           <button
             key={tab.id}
@@ -100,7 +101,6 @@ export default function App() {
         <BookingPage
           onConfirm={(data) => {
             console.log('Booking confirmed:', data);
-            // Integrate Paystack here
           }}
         />
       )}

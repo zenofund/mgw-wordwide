@@ -87,7 +87,7 @@ const s = {
   },
   contentThumb: { flexShrink: 0, width: 150, cursor: 'pointer' },
   thumbImg: {
-    width: 150,
+    width: '100%',
     height: 90,
     background: '#141414',
     border: '0.5px solid rgba(201,162,39,0.18)',
@@ -164,17 +164,6 @@ const PlayIcon = () => (
   </svg>
 );
 
-/**
- * DashboardPage
- * Props:
- *  - user: { name: string }
- *  - stats: Array<{ val: string, key: string }>
- *  - sessions: Array<{ day: string, month: string, type: string, name: string, time: string, status: string }>
- *  - recentContent: Array<{ title: string, duration: string }>
- *  - announcement: { text: string, date: string } | null
- *  - onViewAllSessions: () => void
- *  - onOpenVault: () => void
- */
 export default function DashboardPage({
   user = { name: 'Chisom Adeyemi' },
   stats = [
@@ -198,80 +187,88 @@ export default function DashboardPage({
   const today = new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
   return (
-    <div>
-      {/* ── Greeting ── */}
-      <div style={s.greeting}>
-        <div style={s.greetingSub}>Welcome back</div>
-        <div style={s.greetingTitle}>{user.name}</div>
-        <div style={s.greetingDate}>{today}</div>
-      </div>
-
-      {/* ── Quick Stats ── */}
-      <div style={s.quickStats}>
-        {stats.map((st) => (
-          <div key={st.key} style={s.stat}>
-            <div style={s.statVal}>{st.val}</div>
-            <div style={s.statKey}>{st.key}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* ── Upcoming Sessions ── */}
-      <div style={{ ...s.section, paddingTop: 20 }}>
-        <div style={s.sectionHead}>
-          <div style={s.sectionTitle}>Upcoming Sessions</div>
-          <div style={s.seeAll} onClick={onViewAllSessions}>View all</div>
+    <div className="mgw-dashboard-layout">
+      {/* ── Left: Sidebar (greeting + stats + sessions) ── */}
+      <div className="mgw-dashboard-sidebar">
+        {/* Greeting */}
+        <div style={s.greeting}>
+          <div style={s.greetingSub}>Welcome back</div>
+          <div style={s.greetingTitle}>{user.name}</div>
+          <div style={s.greetingDate}>{today}</div>
         </div>
-        {sessions.map((sess) => (
-          <div key={sess.name} style={s.sessionCard}>
-            <div style={s.sessionTimeCol}>
-              <div style={s.sessionDay}>{sess.day}</div>
-              <div style={s.sessionMonth}>{sess.month}</div>
-            </div>
-            <div style={s.divider} />
-            <div style={s.sessionInfo}>
-              <div style={s.sessionType}>{sess.type}</div>
-              <div style={s.sessionName}>{sess.name}</div>
-              <div style={s.sessionTime}>{sess.time}</div>
-            </div>
-            <div style={s.badge}>{sess.status}</div>
-          </div>
-        ))}
-      </div>
 
-      {/* ── Continue Watching ── */}
-      <div style={{ ...s.section, paddingTop: 20 }}>
-        <div style={s.sectionHead}>
-          <div style={s.sectionTitle}>Continue Watching</div>
-          <div style={s.seeAll} onClick={onOpenVault}>Vault</div>
-        </div>
-        <div style={s.contentScroll}>
-          {recentContent.map((item, i) => (
-            <div key={item.title} style={s.contentThumb}>
-              <div style={s.thumbImg}>
-                <div style={{ ...s.thumbBg, background: thumbBgs[i % thumbBgs.length] }} />
-                <div style={s.playBtn}><PlayIcon /></div>
-              </div>
-              <div style={s.thumbTitle}>{item.title}</div>
-              <div style={s.thumbDur}>{item.duration}</div>
+        {/* Quick Stats */}
+        <div className="mgw-quick-stats" style={s.quickStats}>
+          {stats.map((st) => (
+            <div key={st.key} style={s.stat}>
+              <div style={s.statVal}>{st.val}</div>
+              <div style={s.statKey}>{st.key}</div>
             </div>
           ))}
         </div>
+
+        {/* Upcoming Sessions */}
+        <div style={{ ...s.section, paddingTop: 20 }}>
+          <div style={s.sectionHead}>
+            <div style={s.sectionTitle}>Upcoming Sessions</div>
+            <div style={s.seeAll} onClick={onViewAllSessions}>View all</div>
+          </div>
+          {sessions.map((sess) => (
+            <div key={sess.name} style={s.sessionCard}>
+              <div style={s.sessionTimeCol}>
+                <div style={s.sessionDay}>{sess.day}</div>
+                <div style={s.sessionMonth}>{sess.month}</div>
+              </div>
+              <div style={s.divider} />
+              <div style={s.sessionInfo}>
+                <div style={s.sessionType}>{sess.type}</div>
+                <div style={s.sessionName}>{sess.name}</div>
+                <div style={s.sessionTime}>{sess.time}</div>
+              </div>
+              <div style={s.badge}>{sess.status}</div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ height: 20 }} />
       </div>
 
-      {/* ── Announcement ── */}
-      {announcement && (
-        <div style={s.announce}>
-          <div style={s.announceIcon}>M</div>
-          <div>
-            <div style={s.announceLabel}>From MGW</div>
-            <div style={s.announceText}>{announcement.text}</div>
-            <div style={s.announceDate}>{announcement.date}</div>
+      {/* ── Right: Main content (continue watching + announcement) ── */}
+      <div className="mgw-dashboard-main">
+        {/* Continue Watching */}
+        <div style={{ ...s.section, paddingTop: 20 }}>
+          <div style={s.sectionHead}>
+            <div style={s.sectionTitle}>Continue Watching</div>
+            <div style={s.seeAll} onClick={onOpenVault}>Vault</div>
+          </div>
+          <div className="mgw-content-scroll" style={s.contentScroll}>
+            {recentContent.map((item, i) => (
+              <div key={item.title} className="mgw-content-thumb" style={s.contentThumb}>
+                <div style={s.thumbImg}>
+                  <div style={{ ...s.thumbBg, background: thumbBgs[i % thumbBgs.length] }} />
+                  <div style={s.playBtn}><PlayIcon /></div>
+                </div>
+                <div style={s.thumbTitle}>{item.title}</div>
+                <div style={s.thumbDur}>{item.duration}</div>
+              </div>
+            ))}
           </div>
         </div>
-      )}
 
-      <div style={{ height: 20 }} />
+        {/* Announcement */}
+        {announcement && (
+          <div style={s.announce}>
+            <div style={s.announceIcon}>M</div>
+            <div>
+              <div style={s.announceLabel}>From MGW</div>
+              <div style={s.announceText}>{announcement.text}</div>
+              <div style={s.announceDate}>{announcement.date}</div>
+            </div>
+          </div>
+        )}
+
+        <div style={{ height: 20 }} />
+      </div>
     </div>
   );
 }

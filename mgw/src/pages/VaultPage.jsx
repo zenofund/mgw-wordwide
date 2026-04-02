@@ -118,14 +118,12 @@ const DEFAULT_CONTENT = [
   { id: 2, type: 'audio', title: 'Conversations Vol. 3', duration: '1h 12m · Premium', locked: true, bg: 2 },
   { id: 3, type: 'video', title: 'The Brand Lens — Part 2', duration: '1h 20m', locked: false, bg: 3 },
   { id: 4, type: 'pdf', title: 'Brand Strategy Framework', duration: '62 pages · Premium', locked: true, bg: 4 },
+  { id: 5, type: 'video', title: 'Founder Mindset Intensive', duration: '55 min', locked: false, bg: 1 },
+  { id: 6, type: 'audio', title: 'Industry Conversations Vol. 4', duration: '1h 5m', locked: true, bg: 2 },
+  { id: 7, type: 'pdf', title: 'Creative Direction Handbook', duration: '48 pages', locked: true, bg: 3 },
+  { id: 8, type: 'video', title: 'Brand Positioning Secrets', duration: '1h 10m', locked: false, bg: 4 },
 ];
 
-/**
- * VaultPage
- * Props:
- *  - content: Array<{ id, type, title, duration, locked, bg }>
- *  - onItemClick: (item) => void
- */
 export default function VaultPage({ content = DEFAULT_CONTENT, onItemClick }) {
   const [activeFilter, setActiveFilter] = useState('All');
 
@@ -135,13 +133,13 @@ export default function VaultPage({ content = DEFAULT_CONTENT, onItemClick }) {
 
   return (
     <div>
-      <div style={s.header}>
+      <div className="mgw-vault-header" style={s.header}>
         <div style={s.title}>Knowledge Vault</div>
         <div style={s.subtitle}>Exclusive content from Mavin Grandpa Worldwide</div>
       </div>
 
       {/* Filters */}
-      <div style={s.filters}>
+      <div className="mgw-vault-filters" style={s.filters}>
         {FILTERS.map((f) => (
           <button
             key={f}
@@ -154,7 +152,7 @@ export default function VaultPage({ content = DEFAULT_CONTENT, onItemClick }) {
       </div>
 
       {/* Grid */}
-      <div style={s.grid}>
+      <div className="mgw-vault-page-grid" style={s.grid}>
         {filtered.map((item) => (
           <div key={item.id} style={s.card} onClick={() => onItemClick?.(item)}>
             <div style={s.thumb}>

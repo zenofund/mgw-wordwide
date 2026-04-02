@@ -135,11 +135,6 @@ const ChevronRight = () => (
   </svg>
 );
 
-/**
- * BookingPage
- * Props:
- *  - onConfirm: ({ type, day, time }) => void
- */
 export default function BookingPage({ onConfirm }) {
   const [selectedType, setSelectedType] = useState('1on1');
   const [selectedDay, setSelectedDay] = useState(8);
@@ -162,8 +157,8 @@ export default function BookingPage({ onConfirm }) {
         <div style={s.subtitle}>Select your mentorship type and preferred time.</div>
       </div>
 
-      {/* Session Types */}
-      <div style={s.typesGrid}>
+      {/* Session Types — above the split layout */}
+      <div className="mgw-booking-types" style={s.typesGrid}>
         {SESSION_TYPES.map((t) => (
           <div
             key={t.id}
@@ -177,81 +172,87 @@ export default function BookingPage({ onConfirm }) {
         ))}
       </div>
 
-      {/* Calendar */}
-      <div style={s.calSection}>
-        <div style={s.calMonthRow}>
-          <div style={s.calMonthName}>April 2026</div>
-          <div style={s.calNav}>
-            <div style={s.calNavBtn}><ChevronLeft /></div>
-            <div style={s.calNavBtn}><ChevronRight /></div>
-          </div>
-        </div>
-        <div style={s.calDaysHeader}>
-          {['Su','Mo','Tu','We','Th','Fr','Sa'].map((d) => (
-            <div key={d} style={s.calDayHd}>{d}</div>
-          ))}
-        </div>
-        <div style={s.calGrid}>
-          {CAL_DAYS.map((d, i) => (
-            <button
-              key={i}
-              style={getDayStyle(d)}
-              onClick={() => d.day && d.state !== 'disabled' && setSelectedDay(d.day)}
-              disabled={!d.day || d.state === 'disabled'}
-            >
-              {d.day || ''}
-            </button>
-          ))}
-        </div>
-      </div>
+      {/* Calendar + Slots — side by side on desktop */}
+      <div className="mgw-booking-body">
 
-      {/* Time Slots */}
-      <div style={s.slotsSection}>
-        <div style={s.slotsTitle}>Available Times — April {selectedDay}</div>
-        <div style={s.slotsGrid}>
-          {TIME_SLOTS.map((sl) => (
-            <button
-              key={sl.time}
-              style={{
-                ...s.slot,
-                ...(sl.booked ? s.slotBooked : {}),
-                ...(selectedTime === sl.time && !sl.booked ? s.slotSelected : {}),
-              }}
-              onClick={() => !sl.booked && setSelectedTime(sl.time)}
-              disabled={sl.booked}
-            >
-              {sl.time}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Confirm */}
-      <div style={s.confirmSection}>
-        <div style={s.summary}>
-          {[
-            { key: 'Type', val: selectedTypeObj?.label === '1-on-1' ? '1-on-1 Mentorship' : 'Group Cohort' },
-            { key: 'Date', val: `Tuesday, April ${selectedDay}` },
-            { key: 'Time', val: `${selectedTime} WAT` },
-            { key: 'Duration', val: selectedType === '1on1' ? '90 minutes' : '2 hours' },
-          ].map((row) => (
-            <div key={row.key} style={s.summaryRow}>
-              <span style={s.summaryKey}>{row.key}</span>
-              <span style={s.summaryVal}>{row.val}</span>
+        {/* Left: Calendar */}
+        <div className="mgw-booking-left" style={s.calSection}>
+          <div style={s.calMonthRow}>
+            <div style={s.calMonthName}>April 2026</div>
+            <div style={s.calNav}>
+              <div style={s.calNavBtn}><ChevronLeft /></div>
+              <div style={s.calNavBtn}><ChevronRight /></div>
             </div>
-          ))}
-          <div style={{ ...s.summaryRow, borderBottom: 'none' }}>
-            <span style={{ ...s.summaryKey, fontWeight: 500, color: '#EAEAEA', fontSize: 13 }}>Total</span>
-            <span style={s.summaryTotal}>{selectedType === '1on1' ? '$300' : '$120'}</span>
+          </div>
+          <div style={s.calDaysHeader}>
+            {['Su','Mo','Tu','We','Th','Fr','Sa'].map((d) => (
+              <div key={d} style={s.calDayHd}>{d}</div>
+            ))}
+          </div>
+          <div style={s.calGrid}>
+            {CAL_DAYS.map((d, i) => (
+              <button
+                key={i}
+                style={getDayStyle(d)}
+                onClick={() => d.day && d.state !== 'disabled' && setSelectedDay(d.day)}
+                disabled={!d.day || d.state === 'disabled'}
+              >
+                {d.day || ''}
+              </button>
+            ))}
           </div>
         </div>
-        <Button
-          variant="primary"
-          size="full"
-          onClick={() => onConfirm?.({ type: selectedType, day: selectedDay, time: selectedTime })}
-        >
-          Confirm &amp; Pay via Paystack
-        </Button>
+
+        {/* Right: Time Slots + Confirm */}
+        <div>
+          <div style={s.slotsSection}>
+            <div style={s.slotsTitle}>Available Times — April {selectedDay}</div>
+            <div style={s.slotsGrid}>
+              {TIME_SLOTS.map((sl) => (
+                <button
+                  key={sl.time}
+                  style={{
+                    ...s.slot,
+                    ...(sl.booked ? s.slotBooked : {}),
+                    ...(selectedTime === sl.time && !sl.booked ? s.slotSelected : {}),
+                  }}
+                  onClick={() => !sl.booked && setSelectedTime(sl.time)}
+                  disabled={sl.booked}
+                >
+                  {sl.time}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div style={s.confirmSection}>
+            <div style={s.summary}>
+              {[
+                { key: 'Type', val: selectedTypeObj?.label === '1-on-1' ? '1-on-1 Mentorship' : 'Group Cohort' },
+                { key: 'Date', val: `Tuesday, April ${selectedDay}` },
+                { key: 'Time', val: `${selectedTime} WAT` },
+                { key: 'Duration', val: selectedType === '1on1' ? '90 minutes' : '2 hours' },
+              ].map((row) => (
+                <div key={row.key} style={s.summaryRow}>
+                  <span style={s.summaryKey}>{row.key}</span>
+                  <span style={s.summaryVal}>{row.val}</span>
+                </div>
+              ))}
+              <div style={{ ...s.summaryRow, borderBottom: 'none' }}>
+                <span style={{ ...s.summaryKey, fontWeight: 500, color: '#EAEAEA', fontSize: 13 }}>Total</span>
+                <span style={s.summaryTotal}>{selectedType === '1on1' ? '$300' : '$120'}</span>
+              </div>
+            </div>
+            <Button
+              variant="primary"
+              size="full"
+              onClick={() => onConfirm?.({ type: selectedType, day: selectedDay, time: selectedTime })}
+            >
+              Confirm &amp; Pay via Paystack
+            </Button>
+          </div>
+        </div>
+
       </div>
     </div>
   );

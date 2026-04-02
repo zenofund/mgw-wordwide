@@ -96,7 +96,6 @@ const HexLogo = () => (
   </svg>
 );
 
-/** Login view */
 function LoginView({ onForgotPassword, onRegister, onSubmit }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -150,7 +149,6 @@ function LoginView({ onForgotPassword, onRegister, onSubmit }) {
   );
 }
 
-/** Register view */
 function RegisterView({ onLogin, onSubmit }) {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
@@ -189,7 +187,6 @@ function RegisterView({ onLogin, onSubmit }) {
   );
 }
 
-/** Forgot Password view */
 function ForgotView({ onBack, onSubmit }) {
   const [email, setEmail] = useState('');
 
@@ -218,14 +215,6 @@ function ForgotView({ onBack, onSubmit }) {
   );
 }
 
-/**
- * AuthPage
- * Props:
- *  - initialView: 'login' | 'register' | 'forgot'  (default: 'login')
- *  - onLogin: (credentials) => void
- *  - onRegister: (data) => void
- *  - onForgotPassword: (email) => void
- */
 export default function AuthPage({
   initialView = 'login',
   onLogin,
@@ -235,37 +224,39 @@ export default function AuthPage({
   const [view, setView] = useState(initialView);
 
   return (
-    <div style={s.wrapper}>
+    <div className="mgw-auth-wrapper" style={s.wrapper}>
       <div style={s.orb1} />
       <div style={s.orb2} />
 
-      {/* Logo */}
-      <div style={s.logoArea}>
-        <div style={s.logoMark}><HexLogo /></div>
-        <div style={s.logoText}>MGW</div>
-        <div style={s.logoSub}>Mavin Grandpa Worldwide</div>
-      </div>
+      <div className="mgw-auth-card-wrap">
+        {/* Logo */}
+        <div className="mgw-auth-logo" style={s.logoArea}>
+          <div style={s.logoMark}><HexLogo /></div>
+          <div style={s.logoText}>MGW</div>
+          <div style={s.logoSub}>Mavin Grandpa Worldwide</div>
+        </div>
 
-      {/* Card */}
-      {view === 'login' && (
-        <LoginView
-          onForgotPassword={() => setView('forgot')}
-          onRegister={() => setView('register')}
-          onSubmit={onLogin}
-        />
-      )}
-      {view === 'register' && (
-        <RegisterView
-          onLogin={() => setView('login')}
-          onSubmit={onRegister}
-        />
-      )}
-      {view === 'forgot' && (
-        <ForgotView
-          onBack={() => setView('login')}
-          onSubmit={onForgotPassword}
-        />
-      )}
+        {/* Card */}
+        {view === 'login' && (
+          <LoginView
+            onForgotPassword={() => setView('forgot')}
+            onRegister={() => setView('register')}
+            onSubmit={onLogin}
+          />
+        )}
+        {view === 'register' && (
+          <RegisterView
+            onLogin={() => setView('login')}
+            onSubmit={onRegister}
+          />
+        )}
+        {view === 'forgot' && (
+          <ForgotView
+            onBack={() => setView('login')}
+            onSubmit={onForgotPassword}
+          />
+        )}
+      </div>
     </div>
   );
 }

@@ -5,7 +5,7 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '18px 20px 14px',
+    padding: '16px 20px',
     position: 'sticky',
     top: 0,
     zIndex: 100,
@@ -14,6 +14,14 @@ const styles = {
     WebkitBackdropFilter: 'blur(12px)',
     borderBottom: '0.5px solid rgba(201,162,39,0.18)',
   },
+  navInner: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: 1200,
+    margin: '0 auto',
+  },
   logo: {
     fontFamily: "'Cormorant Garamond', Georgia, serif",
     fontSize: 15,
@@ -21,11 +29,32 @@ const styles = {
     color: '#C9A227',
     fontWeight: 600,
     textTransform: 'uppercase',
+    flexShrink: 0,
+  },
+  navLinkBtn: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: 11,
+    fontWeight: 400,
+    letterSpacing: '0.1em',
+    textTransform: 'uppercase',
+    color: '#999',
+    padding: '8px 14px',
+    cursor: 'pointer',
+    background: 'none',
+    border: 'none',
+    borderBottom: '1.5px solid transparent',
+    transition: 'all 0.2s',
+    whiteSpace: 'nowrap',
+  },
+  navLinkBtnActive: {
+    color: '#C9A227',
+    borderBottomColor: '#C9A227',
   },
   actions: {
     display: 'flex',
-    gap: 16,
+    gap: 12,
     alignItems: 'center',
+    flexShrink: 0,
   },
   iconBtn: {
     width: 32,
@@ -66,31 +95,43 @@ const UserIcon = () => (
   </svg>
 );
 
-/**
- * Navbar
- * Props:
- *  - onSearchClick: () => void
- *  - onNotificationsClick: () => void
- *  - onProfileClick: () => void
- */
-export default function Navbar({ onSearchClick, onNotificationsClick, onProfileClick }) {
+export default function Navbar({ activePage, onNavigate, tabs = [], onSearchClick, onNotificationsClick, onProfileClick }) {
   return (
     <nav style={styles.nav}>
-      <span style={styles.logo}>MGW</span>
-      <div style={styles.actions}>
-        <button style={styles.iconBtn} onClick={onSearchClick} aria-label="Search">
-          <SearchIcon />
-        </button>
-        <button style={styles.iconBtn} onClick={onNotificationsClick} aria-label="Notifications">
-          <BellIcon />
-        </button>
-        <button
-          style={{ ...styles.iconBtn, ...styles.iconBtnActive }}
-          onClick={onProfileClick}
-          aria-label="Profile"
-        >
-          <UserIcon />
-        </button>
+      <div style={styles.navInner}>
+        <span style={styles.logo}>MGW</span>
+
+        {/* Desktop nav links */}
+        <div className="mgw-nav-links">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              style={{
+                ...styles.navLinkBtn,
+                ...(activePage === tab.id ? styles.navLinkBtnActive : {}),
+              }}
+              onClick={() => onNavigate?.(tab.id)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        <div style={styles.actions}>
+          <button style={styles.iconBtn} onClick={onSearchClick} aria-label="Search">
+            <SearchIcon />
+          </button>
+          <button style={styles.iconBtn} onClick={onNotificationsClick} aria-label="Notifications">
+            <BellIcon />
+          </button>
+          <button
+            style={{ ...styles.iconBtn, ...styles.iconBtnActive }}
+            onClick={onProfileClick}
+            aria-label="Profile"
+          >
+            <UserIcon />
+          </button>
+        </div>
       </div>
     </nav>
   );

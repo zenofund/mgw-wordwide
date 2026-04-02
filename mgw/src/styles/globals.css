@@ -48,3 +48,227 @@ textarea,
 select {
   font-family: var(--sans);
 }
+
+/* ─── Responsive Utilities ─── */
+
+/* Desktop nav links: hidden by default (mobile-first) */
+.mgw-nav-links {
+  display: none;
+}
+
+/* Mobile tabbar: visible by default */
+.mgw-tabbar {
+  display: flex;
+}
+
+@media (min-width: 1024px) {
+  /* Show nav links in navbar, hide the separate tab bar */
+  .mgw-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .mgw-tabbar {
+    display: none;
+  }
+
+  /* Page content max-width container */
+  .mgw-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  /* Hero section */
+  .mgw-hero {
+    height: 640px !important;
+  }
+
+  .mgw-hero-content {
+    width: 500px !important;
+    padding-left: 60px !important;
+  }
+
+  .mgw-hero-title {
+    font-size: 52px !important;
+    line-height: 1.05 !important;
+  }
+
+  .mgw-hero-subtitle {
+    font-size: 15px !important;
+  }
+
+  .mgw-hero-btns {
+    flex-direction: row !important;
+    gap: 12px !important;
+  }
+
+  .mgw-hero-orb1 {
+    width: 400px !important;
+    height: 400px !important;
+    top: -100px !important;
+    right: -60px !important;
+  }
+
+  .mgw-hero-portrait {
+    width: 480px !important;
+    height: 580px !important;
+  }
+
+  /* Stats bar */
+  .mgw-stats-bar {
+    padding: 22px 60px !important;
+    justify-content: center;
+  }
+
+  .mgw-stat-item {
+    max-width: 200px;
+  }
+
+  /* Section padding */
+  .mgw-section {
+    padding: 48px 60px !important;
+  }
+
+  /* Programs: horizontal scroll → 3-col grid */
+  .mgw-programs-scroll {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    overflow-x: unset !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .mgw-program-card {
+    width: auto !important;
+  }
+
+  /* Vault grid: 2-col → 4-col */
+  .mgw-vault-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Vault preview grid on landing */
+  .mgw-vault-preview-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  /* Testimonials */
+  .mgw-testimonials-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  /* Join CTA */
+  .mgw-join-section {
+    padding: 80px 60px !important;
+  }
+
+  .mgw-join-inner {
+    max-width: 540px;
+    margin: 0 auto;
+  }
+
+  .mgw-join-title {
+    font-size: 44px !important;
+  }
+
+  /* Dashboard layout: stack → sidebar + main */
+  .mgw-dashboard-layout {
+    display: grid !important;
+    grid-template-columns: 320px 1fr !important;
+    gap: 0 !important;
+    align-items: start !important;
+  }
+
+  .mgw-dashboard-sidebar {
+    border-right: 0.5px solid rgba(201,162,39,0.18);
+    min-height: calc(100vh - 120px);
+    position: sticky;
+    top: 60px;
+  }
+
+  .mgw-dashboard-main {
+    padding: 0;
+  }
+
+  /* Quick stats: full width on desktop sidebar */
+  .mgw-quick-stats {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  .mgw-content-scroll {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    overflow-x: unset !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .mgw-content-thumb {
+    width: auto !important;
+  }
+
+  /* Booking: stack → side-by-side */
+  .mgw-booking-body {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0 !important;
+    align-items: start !important;
+  }
+
+  .mgw-booking-left {
+    border-right: 0.5px solid rgba(201,162,39,0.18);
+  }
+
+  /* Vault page grid: 2-col → 4-col */
+  .mgw-vault-page-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    padding: 24px 40px !important;
+  }
+
+  .mgw-vault-header {
+    padding: 28px 40px 20px !important;
+  }
+
+  .mgw-vault-filters {
+    padding: 14px 40px !important;
+  }
+
+  /* Auth: full → centered card */
+  .mgw-auth-wrapper {
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 40px 24px !important;
+    min-height: 100vh;
+  }
+
+  .mgw-auth-card-wrap {
+    width: 100%;
+    max-width: 460px;
+  }
+
+  .mgw-auth-logo {
+    padding-top: 40px !important;
+    padding-bottom: 32px !important;
+  }
+
+  /* Section title scale */
+  .mgw-section-title-lg {
+    font-size: 32px !important;
+  }
+
+  .mgw-booking-types {
+    grid-template-columns: repeat(2, 1fr) !important;
+    max-width: 400px;
+  }
+}
+
+/* Pulse animation */
+@keyframes mgw-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
