@@ -153,7 +153,7 @@ export default function BookingPage({ onConfirm }) {
   return (
     <div>
       <div style={s.header}>
-        <div style={s.title}>Book a Session</div>
+        <div className="mgw-booking-title" style={s.title}>Book a Session</div>
         <div style={s.subtitle}>Select your mentorship type and preferred time.</div>
       </div>
 
@@ -166,8 +166,8 @@ export default function BookingPage({ onConfirm }) {
             onClick={() => setSelectedType(t.id)}
           >
             <div style={{ ...s.typeIcon, background: t.iconBg }}>{t.icon}</div>
-            <div style={s.typeName}>{t.label}</div>
-            <div style={s.typePrice}>{t.price}</div>
+            <div className="mgw-type-name" style={s.typeName}>{t.label}</div>
+            <div className="mgw-type-price" style={s.typePrice}>{t.price}</div>
           </div>
         ))}
       </div>
@@ -235,7 +235,7 @@ export default function BookingPage({ onConfirm }) {
               ].map((row) => (
                 <div key={row.key} style={s.summaryRow}>
                   <span style={s.summaryKey}>{row.key}</span>
-                  <span style={s.summaryVal}>{row.val}</span>
+                  <span className="mgw-summary-val" style={s.summaryVal}>{row.val}</span>
                 </div>
               ))}
               <div style={{ ...s.summaryRow, borderBottom: 'none' }}>

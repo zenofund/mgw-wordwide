@@ -134,8 +134,8 @@ export default function VaultPage({ content = DEFAULT_CONTENT, onItemClick }) {
   return (
     <div>
       <div className="mgw-vault-header" style={s.header}>
-        <div style={s.title}>Knowledge Vault</div>
-        <div style={s.subtitle}>Exclusive content from Mavin Grandpa Worldwide</div>
+        <div className="mgw-vault-title-text" style={s.title}>Knowledge Vault</div>
+        <div className="mgw-vault-subtitle" style={s.subtitle}>Exclusive content from Mavin Grandpa Worldwide</div>
       </div>
 
       {/* Filters */}
@@ -164,8 +164,8 @@ export default function VaultPage({ content = DEFAULT_CONTENT, onItemClick }) {
             </div>
             <div style={s.cardInfo}>
               <div style={{ ...s.typePill, ...pillStyles[item.type] }}>{item.type}</div>
-              <div style={s.cardTitle}>{item.title}</div>
-              <div style={s.cardDur}>{item.duration}</div>
+              <div className="mgw-card-title" style={s.cardTitle}>{item.title}</div>
+              <div className="mgw-card-dur" style={s.cardDur}>{item.duration}</div>
             </div>
           </div>
         ))}

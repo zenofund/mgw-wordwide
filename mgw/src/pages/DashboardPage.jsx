@@ -193,16 +193,16 @@ export default function DashboardPage({
         {/* Greeting */}
         <div style={s.greeting}>
           <div style={s.greetingSub}>Welcome back</div>
-          <div style={s.greetingTitle}>{user.name}</div>
-          <div style={s.greetingDate}>{today}</div>
+          <div className="mgw-greeting-title" style={s.greetingTitle}>{user.name}</div>
+          <div className="mgw-greeting-date" style={s.greetingDate}>{today}</div>
         </div>
 
         {/* Quick Stats */}
         <div className="mgw-quick-stats" style={s.quickStats}>
           {stats.map((st) => (
             <div key={st.key} style={s.stat}>
-              <div style={s.statVal}>{st.val}</div>
-              <div style={s.statKey}>{st.key}</div>
+              <div className="mgw-stat-val" style={s.statVal}>{st.val}</div>
+              <div className="mgw-stat-key" style={s.statKey}>{st.key}</div>
             </div>
           ))}
         </div>
@@ -222,8 +222,8 @@ export default function DashboardPage({
               <div style={s.divider} />
               <div style={s.sessionInfo}>
                 <div style={s.sessionType}>{sess.type}</div>
-                <div style={s.sessionName}>{sess.name}</div>
-                <div style={s.sessionTime}>{sess.time}</div>
+                <div className="mgw-session-name" style={s.sessionName}>{sess.name}</div>
+                <div className="mgw-session-time" style={s.sessionTime}>{sess.time}</div>
               </div>
               <div style={s.badge}>{sess.status}</div>
             </div>
@@ -248,7 +248,7 @@ export default function DashboardPage({
                   <div style={{ ...s.thumbBg, background: thumbBgs[i % thumbBgs.length] }} />
                   <div style={s.playBtn}><PlayIcon /></div>
                 </div>
-                <div style={s.thumbTitle}>{item.title}</div>
+                <div className="mgw-thumb-title" style={s.thumbTitle}>{item.title}</div>
                 <div style={s.thumbDur}>{item.duration}</div>
               </div>
             ))}

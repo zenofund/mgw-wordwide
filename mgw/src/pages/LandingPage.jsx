@@ -2,70 +2,52 @@ import React from 'react';
 import Button from '../components/Button';
 
 const s = {
+  /* ── Hero ── */
   hero: {
     position: 'relative',
     height: 520,
     overflow: 'hidden',
-  },
-  heroBg: {
-    position: 'absolute',
-    inset: 0,
     background: 'linear-gradient(160deg, #0e0710 0%, #0A0A0A 40%, #060810 100%)',
   },
-  orb1: {
+  heroOrb1: {
     position: 'absolute',
     width: 220,
     height: 220,
     borderRadius: '50%',
     background: '#6A38C2',
-    filter: 'blur(60px)',
-    opacity: 0.35,
+    filter: 'blur(70px)',
+    opacity: 0.3,
     top: -60,
-    right: -40,
+    left: '30%',
     pointerEvents: 'none',
+    zIndex: 0,
   },
-  orb2: {
+  heroOrb2: {
     position: 'absolute',
     width: 160,
     height: 160,
     borderRadius: '50%',
     background: '#C9A227',
-    filter: 'blur(60px)',
-    opacity: 0.2,
-    bottom: 40,
-    left: -30,
+    filter: 'blur(70px)',
+    opacity: 0.15,
+    bottom: 20,
+    left: '5%',
     pointerEvents: 'none',
+    zIndex: 0,
   },
-  portrait: {
-    position: 'absolute',
-    right: 0,
-    bottom: 0,
-    width: 280,
-    height: 440,
-    display: 'flex',
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  portraitGlow: {
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    bottom: 0,
-    width: 300,
-    background: 'radial-gradient(ellipse at 70% 50%, rgba(106,56,194,0.15) 0%, transparent 70%)',
-    pointerEvents: 'none',
-  },
+
+  /* Mobile-first: absolute hero content */
   heroContent: {
     position: 'absolute',
     left: 0,
     top: 0,
     bottom: 0,
-    width: 230,
+    width: '58%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     padding: '0 0 0 22px',
+    zIndex: 2,
   },
   badge: {
     display: 'inline-flex',
@@ -79,7 +61,7 @@ const s = {
     letterSpacing: '0.15em',
     textTransform: 'uppercase',
     color: '#C9A227',
-    marginBottom: 18,
+    marginBottom: 16,
     width: 'fit-content',
   },
   badgeDot: {
@@ -91,11 +73,11 @@ const s = {
   },
   heroTitle: {
     fontFamily: "'Cormorant Garamond', Georgia, serif",
-    fontSize: 32,
+    fontSize: 30,
     lineHeight: 1.1,
     fontWeight: 600,
     color: '#EAEAEA',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   heroTitleEm: {
     fontStyle: 'italic',
@@ -103,9 +85,9 @@ const s = {
   },
   heroSub: {
     fontSize: 12,
-    lineHeight: 1.6,
+    lineHeight: 1.7,
     color: '#999',
-    marginBottom: 24,
+    marginBottom: 22,
     fontWeight: 300,
   },
   heroBtns: {
@@ -113,6 +95,19 @@ const s = {
     flexDirection: 'column',
     gap: 8,
   },
+
+  /* Mobile portrait */
+  heroPortraitMobile: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    bottom: 0,
+    width: '44%',
+    overflow: 'hidden',
+    zIndex: 1,
+  },
+
+  /* ── Stats ── */
   statsBar: {
     display: 'flex',
     padding: '18px 20px',
@@ -122,6 +117,7 @@ const s = {
     flex: 1,
     textAlign: 'center',
     padding: '0 8px',
+    borderRight: '0.5px solid rgba(201,162,39,0.18)',
   },
   statNum: {
     fontFamily: "'Cormorant Garamond', Georgia, serif",
@@ -137,6 +133,8 @@ const s = {
     textTransform: 'uppercase',
     color: '#999',
   },
+
+  /* ── Sections ── */
   section: {
     padding: '28px 20px',
     borderBottom: '0.5px solid rgba(201,162,39,0.18)',
@@ -161,6 +159,8 @@ const s = {
     lineHeight: 1.6,
     marginBottom: 20,
   },
+
+  /* ── Programs ── */
   programsScroll: {
     display: 'flex',
     gap: 12,
@@ -184,9 +184,7 @@ const s = {
   },
   programAccent: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
+    top: 0, left: 0, right: 0,
     height: 2,
   },
   programTag: {
@@ -227,6 +225,8 @@ const s = {
     textTransform: 'uppercase',
     color: '#999',
   },
+
+  /* ── Vault preview ── */
   vaultGrid: {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
@@ -241,9 +241,7 @@ const s = {
     position: 'relative',
     minHeight: 100,
   },
-  vaultItemWide: {
-    gridColumn: '1 / -1',
-  },
+  vaultItemWide: { gridColumn: '1 / -1' },
   typePill: {
     display: 'inline-flex',
     alignItems: 'center',
@@ -265,10 +263,11 @@ const s = {
   vaultSub: { fontSize: 10, color: '#999' },
   lockIcon: {
     position: 'absolute',
-    top: 12,
-    right: 12,
+    top: 12, right: 12,
     opacity: 0.4,
   },
+
+  /* ── Testimonials ── */
   testimonialCard: {
     background: '#141414',
     border: '0.5px solid rgba(201,162,39,0.18)',
@@ -279,23 +278,17 @@ const s = {
     fontFamily: "'Cormorant Garamond', Georgia, serif",
     fontSize: 16,
     fontStyle: 'italic',
-    lineHeight: 1.5,
+    lineHeight: 1.55,
     color: '#EAEAEA',
     marginBottom: 16,
   },
   testimonialSource: { display: 'flex', alignItems: 'center', gap: 10 },
   avatar: {
-    width: 36,
-    height: 36,
+    width: 36, height: 36,
     borderRadius: '50%',
-    background: 'linear-gradient(135deg, #6A38C2, #00B3FF)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
     fontFamily: "'Cormorant Garamond', Georgia, serif",
-    fontSize: 13,
-    fontWeight: 600,
-    color: 'white',
+    fontSize: 13, fontWeight: 600, color: 'white',
     flexShrink: 0,
   },
   testimonialName: { fontSize: 12, fontWeight: 500, marginBottom: 2 },
@@ -303,6 +296,8 @@ const s = {
   dots: { display: 'flex', gap: 6, marginTop: 16 },
   dot: { width: 5, height: 5, borderRadius: '50%', background: 'rgba(201,162,39,0.18)' },
   dotActive: { width: 16, borderRadius: 3, background: '#C9A227' },
+
+  /* ── Join CTA ── */
   joinSection: {
     padding: '36px 20px',
     textAlign: 'center',
@@ -319,11 +314,7 @@ const s = {
   joinNote: { fontSize: 10, color: '#999', letterSpacing: '0.05em', marginTop: 10 },
 };
 
-const accentColors = {
-  gold: '#C9A227',
-  purple: '#6A38C2',
-  blue: '#00B3FF',
-};
+const accentColors = { gold: '#C9A227', purple: '#6A38C2', blue: '#00B3FF' };
 
 const pillStyles = {
   video: { background: 'rgba(106,56,194,0.2)', color: '#a57df5', border: '0.5px solid rgba(106,56,194,0.3)' },
@@ -337,6 +328,169 @@ const LockIcon = () => (
     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
   </svg>
 );
+
+/* ── Brand Personality Image Panel ── */
+function BrandImage() {
+  return (
+    <div style={{
+      position: 'relative',
+      width: '100%',
+      height: '100%',
+      minHeight: 520,
+      background: 'linear-gradient(145deg, #110820 0%, #0d0d1a 35%, #08050f 70%, #0a0a0a 100%)',
+      overflow: 'hidden',
+    }}>
+      {/* Background glow layers */}
+      <div style={{
+        position: 'absolute', borderRadius: '50%',
+        width: 500, height: 500,
+        background: 'radial-gradient(circle, rgba(106,56,194,0.22) 0%, transparent 70%)',
+        top: '-10%', right: '-10%',
+        pointerEvents: 'none',
+      }} />
+      <div style={{
+        position: 'absolute', borderRadius: '50%',
+        width: 300, height: 300,
+        background: 'radial-gradient(circle, rgba(201,162,39,0.12) 0%, transparent 70%)',
+        bottom: '10%', left: '-5%',
+        pointerEvents: 'none',
+      }} />
+
+      {/* Thin gold vertical line left edge */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0, bottom: 0,
+        width: 1,
+        background: 'linear-gradient(180deg, transparent 0%, rgba(201,162,39,0.5) 30%, rgba(201,162,39,0.5) 70%, transparent 100%)',
+      }} />
+
+      {/* Gold corner accents */}
+      {/* Top-left */}
+      <div style={{ position: 'absolute', top: 32, left: 32, width: 24, height: 24,
+        borderTop: '1px solid rgba(201,162,39,0.6)', borderLeft: '1px solid rgba(201,162,39,0.6)' }} />
+      {/* Top-right */}
+      <div style={{ position: 'absolute', top: 32, right: 32, width: 24, height: 24,
+        borderTop: '1px solid rgba(201,162,39,0.6)', borderRight: '1px solid rgba(201,162,39,0.6)' }} />
+      {/* Bottom-left */}
+      <div style={{ position: 'absolute', bottom: 32, left: 32, width: 24, height: 24,
+        borderBottom: '1px solid rgba(201,162,39,0.6)', borderLeft: '1px solid rgba(201,162,39,0.6)' }} />
+      {/* Bottom-right */}
+      <div style={{ position: 'absolute', bottom: 32, right: 32, width: 24, height: 24,
+        borderBottom: '1px solid rgba(201,162,39,0.6)', borderRight: '1px solid rgba(201,162,39,0.6)' }} />
+
+      {/* Center portrait frame */}
+      <div style={{
+        position: 'absolute',
+        top: '50%', left: '50%',
+        transform: 'translate(-50%, -50%)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 0,
+        textAlign: 'center',
+        zIndex: 2,
+      }}>
+        {/* Outer ring */}
+        <div style={{
+          width: 180, height: 180,
+          borderRadius: '50%',
+          border: '1px solid rgba(201,162,39,0.25)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          marginBottom: 28,
+          position: 'relative',
+        }}>
+          {/* Inner ring */}
+          <div style={{
+            width: 160, height: 160,
+            borderRadius: '50%',
+            border: '0.5px solid rgba(201,162,39,0.15)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            overflow: 'hidden',
+            background: 'linear-gradient(155deg, #1e0f38 0%, #150d28 40%, #0d0820 100%)',
+          }}>
+            {/* Silhouette / photo placeholder */}
+            <svg width="90" height="90" viewBox="0 0 100 100" fill="none">
+              <circle cx="50" cy="36" r="22" fill="rgba(201,162,39,0.18)" />
+              <ellipse cx="50" cy="88" rx="32" ry="22" fill="rgba(201,162,39,0.12)" />
+            </svg>
+          </div>
+
+          {/* Small gold dot at top of ring */}
+          <div style={{
+            position: 'absolute', top: -4, left: '50%', transform: 'translateX(-50%)',
+            width: 8, height: 8, borderRadius: '50%',
+            background: '#C9A227',
+            boxShadow: '0 0 8px rgba(201,162,39,0.6)',
+          }} />
+        </div>
+
+        {/* Name */}
+        <div style={{
+          fontFamily: "'Cormorant Garamond', Georgia, serif",
+          fontSize: 13,
+          letterSpacing: '0.35em',
+          textTransform: 'uppercase',
+          color: 'rgba(201,162,39,0.5)',
+          marginBottom: 6,
+        }}>Mavin Grandpa</div>
+
+        {/* Decorative line with diamond */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+          <div style={{ width: 40, height: 0.5, background: 'rgba(201,162,39,0.3)' }} />
+          <div style={{
+            width: 5, height: 5,
+            background: 'rgba(201,162,39,0.5)',
+            transform: 'rotate(45deg)',
+          }} />
+          <div style={{ width: 40, height: 0.5, background: 'rgba(201,162,39,0.3)' }} />
+        </div>
+
+        {/* Tagline */}
+        <div style={{
+          fontFamily: "'DM Sans', sans-serif",
+          fontSize: 9,
+          letterSpacing: '0.2em',
+          textTransform: 'uppercase',
+          color: 'rgba(201,162,39,0.35)',
+        }}>Worldwide</div>
+      </div>
+
+      {/* Bottom gradient fade */}
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0, height: 80,
+        background: 'linear-gradient(0deg, #0A0A0A 0%, transparent 100%)',
+        pointerEvents: 'none',
+      }} />
+    </div>
+  );
+}
+
+/* Mobile portrait placeholder */
+function MobilePortrait() {
+  return (
+    <div style={{
+      width: '100%', height: '100%',
+      background: 'linear-gradient(180deg, #2a1a4a 0%, #1a1030 50%, #0d0820 100%)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      position: 'relative',
+    }}>
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: 'radial-gradient(ellipse at 60% 40%, rgba(106,56,194,0.2) 0%, transparent 70%)',
+      }} />
+      <svg width="80" height="80" viewBox="0 0 100 100" fill="none" style={{ opacity: 0.25 }}>
+        <circle cx="50" cy="36" r="22" fill="#C9A227" />
+        <ellipse cx="50" cy="88" rx="32" ry="22" fill="#C9A227" />
+      </svg>
+      <span style={{
+        position: 'absolute', bottom: 40,
+        fontFamily: "'Cormorant Garamond', serif",
+        fontSize: 10, letterSpacing: '0.3em',
+        color: '#C9A227', opacity: 0.4,
+        textTransform: 'uppercase',
+      }}>MGW</span>
+    </div>
+  );
+}
 
 const PROGRAMS = [
   { tag: 'Flagship', name: 'Creative Mastery', desc: 'One-on-one mentorship for creative directors and brand visionaries.', price: '$1,200', duration: '8 Weeks', accent: 'gold' },
@@ -352,24 +506,18 @@ const VAULT_ITEMS = [
 const TESTIMONIALS = [
   {
     quote: '"Mavin Grandpa reshaped how I think about creative direction. My brand doubled its reach within three months of our sessions."',
-    name: 'Adaeze J.',
-    role: 'Creative Director, Lagos',
-    initials: 'AJ',
-    gradient: 'linear-gradient(135deg, #6A38C2, #00B3FF)',
+    name: 'Adaeze J.', role: 'Creative Director, Lagos',
+    initials: 'AJ', gradient: 'linear-gradient(135deg, #6A38C2, #00B3FF)',
   },
   {
     quote: '"The Brand Architecture intensive was transformative. Worth every dollar — the clarity I gained was unparalleled."',
-    name: 'Emeka T.',
-    role: 'Founder, Accra',
-    initials: 'ET',
-    gradient: 'linear-gradient(135deg, #C9A227, #6A38C2)',
+    name: 'Emeka T.', role: 'Founder, Accra',
+    initials: 'ET', gradient: 'linear-gradient(135deg, #C9A227, #6A38C2)',
   },
   {
     quote: '"As a creative entrepreneur, the Founder\'s Circle gave me frameworks I still use daily. Game-changing community."',
-    name: 'Sola M.',
-    role: 'Brand Strategist, Nairobi',
-    initials: 'SM',
-    gradient: 'linear-gradient(135deg, #00B3FF, #C9A227)',
+    name: 'Sola M.', role: 'Brand Strategist, Nairobi',
+    initials: 'SM', gradient: 'linear-gradient(135deg, #00B3FF, #C9A227)',
   },
 ];
 
@@ -384,39 +532,20 @@ export default function LandingPage({ onJoinMembership, onBookSession, onBecomeM
     <div>
       {/* ── Hero ── */}
       <div className="mgw-hero" style={s.hero}>
-        <div style={s.heroBg} />
-        <div className="mgw-hero-orb1" style={s.orb1} />
-        <div style={s.orb2} />
+        {/* Background orbs */}
+        <div style={s.heroOrb1} />
+        <div style={s.heroOrb2} />
 
-        <div className="mgw-hero-portrait" style={s.portrait}>
-          <div style={{
-            width: 240, height: 400,
-            background: 'linear-gradient(180deg, #2a1a4a 0%, #1a1030 50%, #0d0820 100%)',
-            borderRadius: '120px 120px 0 0',
-            opacity: 0.85,
-            position: 'relative',
-          }}>
-            <div style={{
-              position: 'absolute', top: 30, left: '50%', transform: 'translateX(-50%)',
-              width: 80, height: 80, borderRadius: '50%',
-              background: 'linear-gradient(145deg, #3d2060, #251245)',
-            }} />
-            <span style={{
-              position: 'absolute', bottom: 60, left: '50%', transform: 'translateX(-50%)',
-              fontFamily: "'Cormorant Garamond', serif", fontSize: 11, letterSpacing: '0.3em',
-              color: '#C9A227', opacity: 0.5,
-            }}>MGW</span>
-          </div>
-        </div>
-        <div style={s.portraitGlow} />
-
-        <div className="mgw-hero-content" style={s.heroContent}>
-          <div style={s.badge}>
+        {/* Left: Hero Content */}
+        <div className="mgw-hero-left" style={s.heroContent}>
+          <div className="mgw-hero-badge" style={s.badge}>
             <span style={s.badgeDot} />
             Private Circle
           </div>
           <h1 className="mgw-hero-title" style={s.heroTitle}>
-            Mentorship for <em style={s.heroTitleEm}>Visionary</em> Creatives
+            Mentorship for{' '}
+            <em style={s.heroTitleEm}>Visionary</em>{' '}
+            Creatives
           </h1>
           <p className="mgw-hero-subtitle" style={s.heroSub}>
             Join a private circle of creators, founders, and industry leaders learning from Mavin Grandpa.
@@ -425,6 +554,16 @@ export default function LandingPage({ onJoinMembership, onBookSession, onBecomeM
             <Button variant="primary" size="md" onClick={onJoinMembership}>Join Membership</Button>
             <Button variant="ghost" size="md" onClick={onBookSession}>Book Session</Button>
           </div>
+        </div>
+
+        {/* Right: Brand Personality Image (desktop only) */}
+        <div className="mgw-hero-right">
+          <BrandImage />
+        </div>
+
+        {/* Mobile portrait (visible on mobile only) */}
+        <div className="mgw-hero-portrait-mobile" style={s.heroPortraitMobile}>
+          <MobilePortrait />
         </div>
       </div>
 
@@ -435,8 +574,8 @@ export default function LandingPage({ onJoinMembership, onBookSession, onBecomeM
             ...s.statItem,
             borderRight: i < STATS.length - 1 ? '0.5px solid rgba(201,162,39,0.18)' : 'none',
           }}>
-            <div style={s.statNum}>{st.num}</div>
-            <div style={s.statLabel}>{st.label}</div>
+            <div className="mgw-stat-num" style={s.statNum}>{st.num}</div>
+            <div className="mgw-stat-label" style={s.statLabel}>{st.label}</div>
           </div>
         ))}
       </div>
@@ -444,19 +583,19 @@ export default function LandingPage({ onJoinMembership, onBookSession, onBecomeM
       {/* ── Programs ── */}
       <div className="mgw-section" style={s.section}>
         <div className="mgw-inner">
-          <div style={s.sectionLabel}>Programs</div>
+          <div className="mgw-section-label" style={s.sectionLabel}>Programs</div>
           <div className="mgw-section-title-lg" style={s.sectionTitle}>Mentorship Tracks</div>
-          <div style={s.sectionSub}>Structured programs designed for creative professionals at every stage.</div>
+          <div className="mgw-section-sub" style={s.sectionSub}>Structured programs designed for creative professionals at every stage.</div>
           <div className="mgw-programs-scroll" style={s.programsScroll}>
             {PROGRAMS.map((p) => (
               <div key={p.name} className="mgw-program-card" style={s.programCard}>
                 <div style={{ ...s.programAccent, background: accentColors[p.accent] }} />
-                <div style={s.programTag}>{p.tag}</div>
-                <div style={s.programName}>{p.name}</div>
-                <div style={s.programDesc}>{p.desc}</div>
+                <div className="mgw-program-tag" style={s.programTag}>{p.tag}</div>
+                <div className="mgw-program-name" style={s.programName}>{p.name}</div>
+                <div className="mgw-program-desc" style={s.programDesc}>{p.desc}</div>
                 <div style={s.programMeta}>
                   <div>
-                    <div style={s.programPrice}>{p.price}</div>
+                    <div className="mgw-program-price" style={s.programPrice}>{p.price}</div>
                     <div style={s.programDuration}>{p.duration}</div>
                   </div>
                 </div>
@@ -469,21 +608,21 @@ export default function LandingPage({ onJoinMembership, onBookSession, onBecomeM
       {/* ── Vault Preview ── */}
       <div className="mgw-section" style={s.section}>
         <div className="mgw-inner">
-          <div style={s.sectionLabel}>Knowledge</div>
+          <div className="mgw-section-label" style={s.sectionLabel}>Knowledge</div>
           <div className="mgw-section-title-lg" style={s.sectionTitle}>Private Vault</div>
-          <div style={s.sectionSub}>Exclusive content from decades of creative industry mastery.</div>
+          <div className="mgw-section-sub" style={s.sectionSub}>Exclusive content from decades of creative industry mastery.</div>
           <div className="mgw-vault-preview-grid" style={s.vaultGrid}>
             {VAULT_ITEMS.map((item) => (
               <div key={item.title} style={s.vaultItem}>
                 <div style={{ ...s.typePill, ...pillStyles[item.type] }}>{item.type}</div>
-                <div style={s.vaultTitle}>{item.title}</div>
+                <div className="mgw-vault-item-title" style={s.vaultTitle}>{item.title}</div>
                 <div style={s.vaultSub}>{item.sub}</div>
                 {item.locked && <div style={s.lockIcon}><LockIcon /></div>}
               </div>
             ))}
             <div style={{ ...s.vaultItem, ...s.vaultItemWide }}>
               <div style={{ ...s.typePill, ...pillStyles.pdf }}>Guide</div>
-              <div style={s.vaultTitle}>The MGW Brand Strategy Framework — Complete Edition</div>
+              <div className="mgw-vault-item-title" style={s.vaultTitle}>The MGW Brand Strategy Framework — Complete Edition</div>
               <div style={s.vaultSub}>62 pages · Premium members only</div>
               <div style={s.lockIcon}><LockIcon /></div>
             </div>
@@ -494,12 +633,12 @@ export default function LandingPage({ onJoinMembership, onBookSession, onBecomeM
       {/* ── Testimonials ── */}
       <div className="mgw-section" style={s.section}>
         <div className="mgw-inner">
-          <div style={s.sectionLabel}>Testimonials</div>
+          <div className="mgw-section-label" style={s.sectionLabel}>Testimonials</div>
           <div className="mgw-section-title-lg" style={s.sectionTitle}>What Leaders Say</div>
           <div className="mgw-testimonials-grid" style={{ marginTop: 4 }}>
             {TESTIMONIALS.map((t, i) => (
               <div key={i} style={s.testimonialCard}>
-                <div style={s.testimonialQuote}>{t.quote}</div>
+                <div className="mgw-testimonial-quote" style={s.testimonialQuote}>{t.quote}</div>
                 <div style={s.testimonialSource}>
                   <div style={{ ...s.avatar, background: t.gradient }}>{t.initials}</div>
                   <div>
@@ -527,7 +666,7 @@ export default function LandingPage({ onJoinMembership, onBookSession, onBecomeM
           <div className="mgw-join-title" style={s.joinTitle}>
             Join the <em style={{ fontStyle: 'italic', color: '#C9A227' }}>Inner Circle</em>
           </div>
-          <p style={s.joinSub}>
+          <p className="mgw-join-sub" style={s.joinSub}>
             A private membership for serious creatives. Access all programs, the Knowledge Vault, and priority consulting.
           </p>
           <Button variant="primary" size="full" onClick={onBecomeMember}>Become a Member</Button>

@@ -102,7 +102,7 @@ function LoginView({ onForgotPassword, onRegister, onSubmit }) {
 
   return (
     <div style={s.card}>
-      <div style={s.cardTitle}>Welcome back</div>
+      <div className="mgw-auth-card-title" style={s.cardTitle}>Welcome back</div>
       <div style={s.cardSub}>Sign in to your private circle account</div>
 
       <div style={s.formGroup}>
@@ -155,7 +155,7 @@ function RegisterView({ onLogin, onSubmit }) {
 
   return (
     <div style={s.card}>
-      <div style={s.cardTitle}>Join the Circle</div>
+      <div className="mgw-auth-card-title" style={s.cardTitle}>Join the Circle</div>
       <div style={s.cardSub}>Create your private membership account</div>
 
       {[
@@ -192,7 +192,7 @@ function ForgotView({ onBack, onSubmit }) {
 
   return (
     <div style={s.card}>
-      <div style={s.cardTitle}>Reset Password</div>
+      <div className="mgw-auth-card-title" style={s.cardTitle}>Reset Password</div>
       <div style={s.cardSub}>Enter your email and we'll send a reset link.</div>
 
       <div style={s.formGroup}>
