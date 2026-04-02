@@ -7,47 +7,21 @@ const s = {
     position: 'relative',
     height: 520,
     overflow: 'hidden',
-    background: 'linear-gradient(160deg, #0e0710 0%, #0A0A0A 40%, #060810 100%)',
-  },
-  heroOrb1: {
-    position: 'absolute',
-    width: 220,
-    height: 220,
-    borderRadius: '50%',
-    background: '#6A38C2',
-    filter: 'blur(70px)',
-    opacity: 0.3,
-    top: -60,
-    left: '30%',
-    pointerEvents: 'none',
-    zIndex: 0,
-  },
-  heroOrb2: {
-    position: 'absolute',
-    width: 160,
-    height: 160,
-    borderRadius: '50%',
-    background: '#C9A227',
-    filter: 'blur(70px)',
-    opacity: 0.15,
-    bottom: 20,
-    left: '5%',
-    pointerEvents: 'none',
-    zIndex: 0,
+    background: '#08050f',
   },
 
-  /* Mobile-first: absolute hero content */
+  /* Mobile-first: absolute hero content — full width, text over bg image */
   heroContent: {
     position: 'absolute',
     left: 0,
     top: 0,
     bottom: 0,
-    width: '58%',
+    right: 0,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    padding: '0 0 0 22px',
-    zIndex: 2,
+    padding: '0 24px',
+    zIndex: 3,
   },
   badge: {
     display: 'inline-flex',
@@ -94,17 +68,6 @@ const s = {
     display: 'flex',
     flexDirection: 'column',
     gap: 8,
-  },
-
-  /* Mobile portrait */
-  heroPortraitMobile: {
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    bottom: 0,
-    width: '44%',
-    overflow: 'hidden',
-    zIndex: 1,
   },
 
   /* ── Stats ── */
@@ -464,33 +427,6 @@ function BrandImage() {
   );
 }
 
-/* Mobile portrait placeholder */
-function MobilePortrait() {
-  return (
-    <div style={{
-      width: '100%', height: '100%',
-      background: 'linear-gradient(180deg, #2a1a4a 0%, #1a1030 50%, #0d0820 100%)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      position: 'relative',
-    }}>
-      <div style={{
-        position: 'absolute', inset: 0,
-        background: 'radial-gradient(ellipse at 60% 40%, rgba(106,56,194,0.2) 0%, transparent 70%)',
-      }} />
-      <svg width="80" height="80" viewBox="0 0 100 100" fill="none" style={{ opacity: 0.25 }}>
-        <circle cx="50" cy="36" r="22" fill="#C9A227" />
-        <ellipse cx="50" cy="88" rx="32" ry="22" fill="#C9A227" />
-      </svg>
-      <span style={{
-        position: 'absolute', bottom: 40,
-        fontFamily: "'Cormorant Garamond', serif",
-        fontSize: 10, letterSpacing: '0.3em',
-        color: '#C9A227', opacity: 0.4,
-        textTransform: 'uppercase',
-      }}>MGW</span>
-    </div>
-  );
-}
 
 const PROGRAMS = [
   { tag: 'Flagship', name: 'Creative Mastery', desc: 'One-on-one mentorship for creative directors and brand visionaries.', price: '$1,200', duration: '8 Weeks', accent: 'gold' },
@@ -532,9 +468,14 @@ export default function LandingPage({ onJoinMembership, onBookSession, onBecomeM
     <div>
       {/* ── Hero ── */}
       <div className="mgw-hero" style={s.hero}>
-        {/* Background orbs */}
-        <div style={s.heroOrb1} />
-        <div style={s.heroOrb2} />
+
+        {/* Mobile: Brand image as full background (hidden on desktop) */}
+        <div className="mgw-hero-bg-image">
+          <BrandImage />
+        </div>
+
+        {/* Mobile: Gradient overlay so text is readable over the bg image */}
+        <div className="mgw-hero-text-overlay" />
 
         {/* Left: Hero Content */}
         <div className="mgw-hero-left" style={s.heroContent}>
@@ -556,15 +497,11 @@ export default function LandingPage({ onJoinMembership, onBookSession, onBecomeM
           </div>
         </div>
 
-        {/* Right: Brand Personality Image (desktop only) */}
+        {/* Right: Brand Personality Image (desktop only, right column) */}
         <div className="mgw-hero-right">
           <BrandImage />
         </div>
 
-        {/* Mobile portrait (visible on mobile only) */}
-        <div className="mgw-hero-portrait-mobile" style={s.heroPortraitMobile}>
-          <MobilePortrait />
-        </div>
       </div>
 
       {/* ── Stats ── */}
