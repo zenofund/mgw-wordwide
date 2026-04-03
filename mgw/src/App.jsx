@@ -8,15 +8,25 @@ import AboutPage from './pages/AboutPage';
 import DashboardPage from './pages/DashboardPage';
 import VaultPage from './pages/VaultPage';
 import BookingPage from './pages/BookingPage';
+import SessionsPage from './pages/SessionsPage';
 import ConsultancyPage from './pages/ConsultancyPage';
 import AuthPage from './pages/AuthPage';
 import AdminPage from './pages/AdminPage';
 
+const INITIAL_SESSIONS = [
+  { id: 's1', title: 'Creative Direction Deep Dive', type: '1-on-1', date: 'Apr 10, 2026', time: '11:00 AM', price: '$300', status: 'Scheduled', zoom: null },
+  { id: 's2', title: "Founder's Circle — April Cohort", type: 'Group', date: 'Apr 14, 2026', time: '3:00 PM', price: '$480', status: 'Open', zoom: null },
+  { id: 's3', title: 'Brand Architecture Intensive', type: 'Intensive', date: 'Apr 18, 2026', time: '9:00 AM', price: '$2,500', status: 'Full', zoom: null },
+  { id: 's4', title: 'Creative Strategy Session', type: '1-on-1', date: 'Apr 22, 2026', time: '2:00 PM', price: '$300', status: 'Scheduled', zoom: null },
+  { id: 's5', title: 'Masterclass: Music Business 101', type: 'Masterclass', date: 'Apr 28, 2026', time: '6:00 PM', price: '$120', status: 'Open', zoom: null },
+];
+
 const TABS = [
-  { id: 'about',   label: 'MGW' },
-  { id: 'consult', label: 'Consult' },
-  { id: 'booking', label: 'Booking' },
-  { id: 'vault',   label: 'Vault' },
+  { id: 'about',    label: 'MGW' },
+  { id: 'consult',  label: 'Consult' },
+  { id: 'sessions', label: 'Sessions' },
+  { id: 'booking',  label: 'Booking' },
+  { id: 'vault',    label: 'Vault' },
 ];
 
 const GATED = new Set(['dashboard', 'vault']);
@@ -91,6 +101,19 @@ export default function App() {
     { time: '4:30 PM',  booked: false },
   ]);
 
+  const [sessions, setSessions] = useState(() => {
+    try {
+      const stored = localStorage.getItem('mgw_sessions');
+      return stored ? JSON.parse(stored) : INITIAL_SESSIONS;
+    } catch {
+      return INITIAL_SESSIONS;
+    }
+  });
+
+  useEffect(() => {
+    try { localStorage.setItem('mgw_sessions', JSON.stringify(sessions)); } catch {}
+  }, [sessions]);
+
   const [bookings, setBookings] = useState(() => {
     try {
       const stored = localStorage.getItem('mgw_bookings');
@@ -101,10 +124,21 @@ export default function App() {
   });
 
   useEffect(() => {
-    try {
-      localStorage.setItem('mgw_bookings', JSON.stringify(bookings));
-    } catch { /* quota exceeded — ignore */ }
+    try { localStorage.setItem('mgw_bookings', JSON.stringify(bookings)); } catch {}
   }, [bookings]);
+
+  useEffect(() => {
+    const onStorage = (e) => {
+      if (e.key === 'mgw_bookings' && e.newValue) {
+        try { setBookings(JSON.parse(e.newValue)); } catch {}
+      }
+      if (e.key === 'mgw_sessions' && e.newValue) {
+        try { setSessions(JSON.parse(e.newValue)); } catch {}
+      }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
 
   const [authInitialView, setAuthInitialView] = useState('login');
 
@@ -147,7 +181,7 @@ export default function App() {
     const booking = {
       id: `BK-${Date.now()}`,
       ...data,
-      userName: user?.name || data.email || 'Guest',
+      userName: data.userName || user?.name || data.email || 'Guest',
       status: 'Pending',
       submittedAt: new Date().toISOString(),
       zoom: null,
@@ -172,6 +206,8 @@ export default function App() {
         setAnnouncements={setAnnouncements}
         bookings={bookings}
         setBookings={setBookings}
+        sessions={sessions}
+        setSessions={setSessions}
       />
     );
   }
@@ -228,7 +264,7 @@ export default function App() {
           <DashboardPage
             user={user}
             vaultItems={accessibleVault}
-            onViewAllSessions={() => navigate('booking')}
+            onViewAllSessions={() => navigate('sessions')}
             onOpenVault={() => navigate('vault')}
             announcement={announcements.filter(a => a.published)[0] || null}
           />
@@ -250,6 +286,15 @@ export default function App() {
             timeSlots={timeSlots}
             user={user}
             onConfirm={handleBookingConfirm}
+          />
+        )}
+
+        {activePage === 'sessions' && (
+          <SessionsPage
+            sessions={sessions}
+            user={user}
+            onBook={handleBookingConfirm}
+            onNavigate={navigate}
           />
         )}
 

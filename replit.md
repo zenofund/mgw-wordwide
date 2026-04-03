@@ -15,6 +15,7 @@ A mentorship and consulting platform for Mavin Grandpa Worldwide (MGW). Built as
 - `DashboardPage` — Member dashboard with sessions, continue watching, announcements
 - `VaultPage` — Filterable content grid (video, audio, PDF) + detail player view
 - `BookingPage` — Session type selector, calendar, time slots, booking summary, Paystack payment
+- `SessionsPage` — Public-facing sessions browser: filter by status/type, per-session Book modal, feeds into shared bookings state; requires login to book
 - `AuthPage` — Login, Register, Forgot Password
 - `AdminPage` — Full admin panel with: Overview, Bookings (user requests), Sessions, Programs, Vault, Plans, Consultancy, Members, Announcements
 
@@ -51,7 +52,7 @@ A mentorship and consulting platform for Mavin Grandpa Worldwide (MGW). Built as
 - Mobile-first (base styles via inline JS)
 - Desktop breakpoint at **1024px** via CSS classes in `globals.css`
 - Mobile: tab bar below navbar; Desktop: nav links embedded in navbar, tab bar hidden
-- Key responsive classes: `mgw-hero`, `mgw-programs-scroll`, `mgw-vault-page-grid`, `mgw-dashboard-layout`, `mgw-booking-body`, `mgw-auth-wrapper`, `mgw-vault-detail-layout`, `mgw-vault-detail-main`, `mgw-vault-detail-sidebar`, `mgw-footer-grid`
+- Key responsive classes: `mgw-hero`, `mgw-programs-scroll`, `mgw-vault-page-grid`, `mgw-dashboard-layout`, `mgw-booking-body`, `mgw-auth-wrapper`, `mgw-vault-detail-layout`, `mgw-vault-detail-main`, `mgw-vault-detail-sidebar`, `mgw-footer-grid`, `mgw-sessions-outer`, `mgw-sessions-grid`
 
 ## Design Tokens
 - Gold: `#C9A227`

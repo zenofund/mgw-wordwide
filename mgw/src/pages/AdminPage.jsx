@@ -197,20 +197,13 @@ function OverviewSection() {
   );
 }
 
-function SessionsSection({ availableDays, setAvailableDays, timeSlots, setTimeSlots }) {
+function SessionsSection({ availableDays, setAvailableDays, timeSlots, setTimeSlots, sessions, setSessions }) {
   const [tab, setTab] = useState('sessions');
   const [showModal, setShowModal] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [zoomLoading, setZoomLoading] = useState(false);
   const [zoomError, setZoomError] = useState('');
   const [form, setForm] = useState({ title: '', type: '1-on-1', date: '', time: '', price: '', status: 'Scheduled', createZoom: true });
-  const [sessions, setSessions] = useState([
-    { title: 'Creative Direction Deep Dive', type: '1-on-1', date: 'Apr 10, 2026', time: '11:00 AM', price: '$300', status: 'Scheduled', zoom: null },
-    { title: "Founder's Circle — April Cohort", type: 'Group', date: 'Apr 14, 2026', time: '3:00 PM', price: '$480', status: 'Open', zoom: null },
-    { title: 'Brand Architecture Intensive', type: 'Intensive', date: 'Apr 18, 2026', time: '9:00 AM', price: '$2,500', status: 'Full', zoom: null },
-    { title: 'Creative Strategy Session', type: '1-on-1', date: 'Apr 22, 2026', time: '2:00 PM', price: '$300', status: 'Scheduled', zoom: null },
-    { title: 'Masterclass: Music Business 101', type: 'Masterclass', date: 'Apr 28, 2026', time: '6:00 PM', price: '$120', status: 'Open', zoom: null },
-  ]);
   const [newSlotTime, setNewSlotTime] = useState('');
 
   const zoomLink = (zoom) => zoom?.joinUrl ? (
@@ -259,9 +252,9 @@ function SessionsSection({ availableDays, setAvailableDays, timeSlots, setTimeSl
     }
 
     if (editIndex !== null) {
-      setSessions(prev => prev.map((s, idx) => idx === editIndex ? row : s));
+      setSessions(prev => prev.map((s, idx) => idx === editIndex ? { ...row, id: s.id } : s));
     } else {
-      setSessions(prev => [row, ...prev]);
+      setSessions(prev => [{ ...row, id: `s${Date.now()}` }, ...prev]);
     }
     setShowModal(false);
   };
@@ -1281,10 +1274,10 @@ function BookingsSection({ bookings, setBookings }) {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '6px 20px' }}>
         {[
-          { k: 'Session',  v: b.typeLabel || b.type },
-          { k: 'Date',     v: `April ${b.day}, 2026` },
-          { k: 'Time',     v: `${b.time} WAT` },
-          { k: 'Amount',   v: b.price },
+          { k: 'Session',  v: b.sessionTitle || b.typeLabel || b.type },
+          { k: 'Date',     v: b.sessionDate || (b.day ? `April ${b.day}, 2026` : '—') },
+          { k: 'Time',     v: b.time ? `${b.time} WAT` : '—' },
+          { k: 'Amount',   v: b.price || '—' },
           { k: 'Ref',      v: b.paystackRef ? b.paystackRef.slice(-10) : '—' },
         ].map(row => (
           <div key={row.k}>
@@ -1367,7 +1360,7 @@ function BookingsSection({ bookings, setBookings }) {
   );
 }
 
-export default function AdminPage({ onExit, availableDays, setAvailableDays, timeSlots, setTimeSlots, plans, setPlans, vaultItems, setVaultItems, announcements, setAnnouncements, bookings = [], setBookings }) {
+export default function AdminPage({ onExit, availableDays, setAvailableDays, timeSlots, setTimeSlots, plans, setPlans, vaultItems, setVaultItems, announcements, setAnnouncements, bookings = [], setBookings, sessions = [], setSessions }) {
   const [activeSection, setActiveSection] = useState('overview');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -1376,7 +1369,7 @@ export default function AdminPage({ onExit, availableDays, setAvailableDays, tim
   const sections = {
     overview:       <OverviewSection />,
     bookings:       <BookingsSection bookings={bookings} setBookings={setBookings} />,
-    sessions:       <SessionsSection availableDays={availableDays} setAvailableDays={setAvailableDays} timeSlots={timeSlots} setTimeSlots={setTimeSlots} />,
+    sessions:       <SessionsSection availableDays={availableDays} setAvailableDays={setAvailableDays} timeSlots={timeSlots} setTimeSlots={setTimeSlots} sessions={sessions} setSessions={setSessions} />,
     programs:       <ProgramsSection />,
     vault:          <VaultSection vaultItems={vaultItems} setVaultItems={setVaultItems} plans={plans} />,
     plans:          <PlansSection plans={plans} setPlans={setPlans} />,
