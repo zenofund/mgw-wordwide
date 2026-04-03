@@ -519,6 +519,107 @@ select {
   }
 }
 
+/* ── Admin Panel ── */
+
+/* Sidebar — full width on mobile (overlay), fixed on desktop */
+.mgw-admin-sidebar {
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  width: 220px;
+  background: #0d0d0d;
+  border-right: 0.5px solid rgba(201,162,39,0.18);
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform 0.25s ease;
+  overflow-y: auto;
+}
+
+.mgw-admin-sidebar.open {
+  transform: translateX(0);
+}
+
+.mgw-admin-sidebar-label {
+  display: inline;
+}
+
+/* Mobile topbar (hamburger) */
+.mgw-admin-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+/* Stats grid: 2 columns on mobile */
+.mgw-admin-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+/* Two-col for overview cards */
+.mgw-admin-two-col {
+  grid-template-columns: 1fr;
+}
+
+/* Plans grid: 1 col on mobile */
+.mgw-admin-plans-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+/* Consultancy services grid: 1 col mobile */
+.mgw-consult-grid {
+  grid-template-columns: 1fr !important;
+}
+
+@media (min-width: 640px) {
+  .mgw-consult-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .mgw-admin-plans-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* Sidebar always visible on desktop */
+  .mgw-admin-sidebar {
+    transform: translateX(0) !important;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    flex-shrink: 0;
+  }
+
+  /* Hide mobile topbar on desktop */
+  .mgw-admin-topbar {
+    display: none;
+  }
+
+  /* Main content pushed right by sidebar width */
+  .mgw-admin-stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .mgw-admin-two-col {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .mgw-consult-grid {
+    grid-template-columns: 1fr 1fr 1fr !important;
+  }
+
+  .mgw-consult-title {
+    font-size: 52px !important;
+  }
+}
+
 /* Pulse animation */
 @keyframes mgw-pulse {
   0%, 100% { opacity: 1; }

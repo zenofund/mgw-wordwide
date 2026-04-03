@@ -7,13 +7,16 @@ import AboutPage from './pages/AboutPage';
 import DashboardPage from './pages/DashboardPage';
 import VaultPage from './pages/VaultPage';
 import BookingPage from './pages/BookingPage';
+import ConsultancyPage from './pages/ConsultancyPage';
 import AuthPage from './pages/AuthPage';
+import AdminPage from './pages/AdminPage';
 
 const TABS = [
   { id: 'about', label: 'MGW' },
   { id: 'dashboard', label: 'Dashboard' },
   { id: 'vault', label: 'Vault' },
   { id: 'booking', label: 'Booking' },
+  { id: 'consult', label: 'Consult' },
   { id: 'auth', label: 'Login' },
 ];
 
@@ -51,6 +54,11 @@ const tabActiveStyle = {
 
 export default function App() {
   const [activePage, setActivePage] = useState('landing');
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  if (isAdmin) {
+    return <AdminPage onExit={() => { setIsAdmin(false); setActivePage('landing'); }} />;
+  }
 
   return (
     <div style={{ background: '#0A0A0A', minHeight: '100vh' }}>
@@ -111,12 +119,19 @@ export default function App() {
         />
       )}
 
+      {activePage === 'consult' && (
+        <ConsultancyPage />
+      )}
+
       {activePage === 'auth' && (
         <AuthPage
           initialView="login"
           onLogin={(creds) => {
-            console.log('Login:', creds);
-            setActivePage('dashboard');
+            if (creds.email === 'admin@mgw.com') {
+              setIsAdmin(true);
+            } else {
+              setActivePage('dashboard');
+            }
           }}
           onRegister={(data) => {
             console.log('Register:', data);
