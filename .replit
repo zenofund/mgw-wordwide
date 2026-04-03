@@ -40,3 +40,8 @@ externalPort = 80
 [[ports]]
 localPort = 5001
 externalPort = 3000
+
+[userenv]
+
+[userenv.development]
+VITE_SITE_URL = "https://97646357-9d0c-474b-88c8-4ceae9aaee60-00-1ou2zjcq8f7y7.janeway.replit.dev"
