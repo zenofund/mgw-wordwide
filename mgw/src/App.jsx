@@ -56,8 +56,28 @@ export default function App() {
   const [activePage, setActivePage] = useState('landing');
   const [isAdmin, setIsAdmin] = useState(false);
 
+  const [availableDays, setAvailableDays] = useState(
+    new Set([7, 8, 9, 10, 13, 14, 15, 17, 21, 22, 23, 24, 27, 28, 29, 30])
+  );
+  const [timeSlots, setTimeSlots] = useState([
+    { time: '9:00 AM', booked: true },
+    { time: '10:00 AM', booked: false },
+    { time: '11:30 AM', booked: false },
+    { time: '1:00 PM', booked: true },
+    { time: '3:00 PM', booked: false },
+    { time: '4:30 PM', booked: false },
+  ]);
+
   if (isAdmin) {
-    return <AdminPage onExit={() => { setIsAdmin(false); setActivePage('landing'); }} />;
+    return (
+      <AdminPage
+        onExit={() => { setIsAdmin(false); setActivePage('landing'); }}
+        availableDays={availableDays}
+        setAvailableDays={setAvailableDays}
+        timeSlots={timeSlots}
+        setTimeSlots={setTimeSlots}
+      />
+    );
   }
 
   return (
@@ -72,7 +92,6 @@ export default function App() {
         onProfileClick={() => setActivePage('auth')}
       />
 
-      {/* Mobile-only Tab Bar */}
       <div className="mgw-tabbar" style={tabBarStyles}>
         {TABS.map((tab) => (
           <button
@@ -85,7 +104,6 @@ export default function App() {
         ))}
       </div>
 
-      {/* Pages */}
       {activePage === 'landing' && (
         <LandingPage
           onJoinMembership={() => setActivePage('auth')}
@@ -94,9 +112,7 @@ export default function App() {
         />
       )}
 
-      {activePage === 'about' && (
-        <AboutPage />
-      )}
+      {activePage === 'about' && <AboutPage />}
 
       {activePage === 'dashboard' && (
         <DashboardPage
@@ -106,22 +122,18 @@ export default function App() {
       )}
 
       {activePage === 'vault' && (
-        <VaultPage
-          onItemClick={(item) => console.log('Open:', item.title)}
-        />
+        <VaultPage onItemClick={(item) => console.log('Open:', item.title)} />
       )}
 
       {activePage === 'booking' && (
         <BookingPage
-          onConfirm={(data) => {
-            console.log('Booking confirmed:', data);
-          }}
+          availableDays={availableDays}
+          timeSlots={timeSlots}
+          onConfirm={(data) => console.log('Booking confirmed:', data)}
         />
       )}
 
-      {activePage === 'consult' && (
-        <ConsultancyPage />
-      )}
+      {activePage === 'consult' && <ConsultancyPage />}
 
       {activePage === 'auth' && (
         <AuthPage

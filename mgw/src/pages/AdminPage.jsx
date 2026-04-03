@@ -195,7 +195,8 @@ function OverviewSection() {
   );
 }
 
-function SessionsSection() {
+function SessionsSection({ availableDays, setAvailableDays, timeSlots, setTimeSlots }) {
+  const [tab, setTab] = useState('sessions');
   const [showModal, setShowModal] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [form, setForm] = useState({ title: '', type: '1-on-1', date: '', time: '', price: '', status: 'Scheduled' });
@@ -206,6 +207,7 @@ function SessionsSection() {
     { title: 'Creative Strategy Session', type: '1-on-1', date: 'Apr 22, 2026', time: '2:00 PM', price: '$300', status: 'Scheduled' },
     { title: 'Masterclass: Music Business 101', type: 'Masterclass', date: 'Apr 28, 2026', time: '6:00 PM', price: '$120', status: 'Open' },
   ]);
+  const [newSlotTime, setNewSlotTime] = useState('');
 
   const rows = sessions.map(s => [s.title, s.type, s.date, s.time, s.price, <Badge label={s.status} color={sessionStatusColor(s.status)} />]);
 
@@ -231,12 +233,159 @@ function SessionsSection() {
     setShowModal(false);
   };
 
+  const toggleDay = (day) => {
+    setAvailableDays(prev => {
+      const next = new Set(prev);
+      if (next.has(day)) { next.delete(day); } else { next.add(day); }
+      return next;
+    });
+  };
+
+  const toggleSlotBooked = (i) => {
+    setTimeSlots(prev => prev.map((sl, idx) => idx === i ? { ...sl, booked: !sl.booked } : sl));
+  };
+
+  const addSlot = () => {
+    const t = newSlotTime.trim();
+    if (!t) return;
+    setTimeSlots(prev => [...prev, { time: t, booked: false }]);
+    setNewSlotTime('');
+  };
+
+  const removeSlot = (i) => {
+    setTimeSlots(prev => prev.filter((_, idx) => idx !== i));
+  };
+
+  const APRIL_OFFSET = 3;
+  const APRIL_DAYS = 30;
+  const calCells = [...Array(APRIL_OFFSET).fill(null), ...Array.from({ length: APRIL_DAYS }, (_, i) => i + 1)];
+
+  const tabBtn = (id, label) => (
+    <button
+      onClick={() => setTab(id)}
+      style={{
+        background: tab === id ? 'rgba(201,162,39,0.12)' : 'none',
+        border: tab === id ? `0.5px solid rgba(201,162,39,0.35)` : '0.5px solid transparent',
+        color: tab === id ? GOLD : '#888',
+        borderRadius: 6, padding: '7px 16px', cursor: 'pointer',
+        fontFamily: "'DM Sans', sans-serif", fontSize: 11,
+        letterSpacing: '0.05em', textTransform: 'uppercase',
+      }}
+    >{label}</button>
+  );
+
   return (
     <div>
-      <SectionHeader title="Sessions" sub="Manage and schedule all mentorship and masterclass sessions." action="+ New Session" onAction={openAdd} />
-      <div style={{ background: SURFACE, border: `0.5px solid ${BORDER}`, borderRadius: 10, padding: '6px 8px', overflowX: 'auto' }}>
-        <Table cols={['Title', 'Type', 'Date', 'Time', 'Price', 'Status']} rows={rows} onEdit={openEdit} onDelete={i => setSessions(prev => prev.filter((_, idx) => idx !== i))} />
+      <SectionHeader title="Sessions" sub="Manage booked sessions and control availability on the booking page." action={tab === 'sessions' ? '+ New Session' : undefined} onAction={openAdd} />
+
+      <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+        {tabBtn('sessions', 'Sessions')}
+        {tabBtn('availability', 'Availability')}
       </div>
+
+      {tab === 'sessions' && (
+        <div style={{ background: SURFACE, border: `0.5px solid ${BORDER}`, borderRadius: 10, padding: '6px 8px', overflowX: 'auto' }}>
+          <Table cols={['Title', 'Type', 'Date', 'Time', 'Price', 'Status']} rows={rows} onEdit={openEdit} onDelete={i => setSessions(prev => prev.filter((_, idx) => idx !== i))} />
+        </div>
+      )}
+
+      {tab === 'availability' && (
+        <div style={{ display: 'grid', gap: 16 }} className="mgw-admin-two-col">
+
+          {/* Calendar Availability */}
+          <div style={{ background: SURFACE, border: `0.5px solid ${BORDER}`, borderRadius: 10, padding: '18px 16px' }}>
+            <div style={{ fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase', color: TEXT_DIM, marginBottom: 4 }}>Available Days — April 2026</div>
+            <div style={{ fontSize: 11, color: '#555', marginBottom: 16 }}>Click a day to toggle it open or blocked on the booking calendar.</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2, textAlign: 'center', marginBottom: 6 }}>
+              {['Su','Mo','Tu','We','Th','Fr','Sa'].map(d => (
+                <div key={d} style={{ fontSize: 9, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#555', padding: '4px 0' }}>{d}</div>
+              ))}
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 3 }}>
+              {calCells.map((day, i) => {
+                if (!day) return <div key={i} />;
+                const available = availableDays?.has(day);
+                return (
+                  <button
+                    key={i}
+                    onClick={() => toggleDay(day)}
+                    style={{
+                      aspectRatio: '1',
+                      border: 'none',
+                      borderRadius: '50%',
+                      fontSize: 11,
+                      cursor: 'pointer',
+                      fontFamily: "'DM Sans', sans-serif",
+                      background: available ? 'rgba(201,162,39,0.18)' : '#1a1a1a',
+                      color: available ? GOLD : '#444',
+                      fontWeight: available ? 500 : 300,
+                      transition: 'all 0.15s',
+                    }}
+                  >
+                    {day}
+                  </button>
+                );
+              })}
+            </div>
+            <div style={{ display: 'flex', gap: 14, marginTop: 14 }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10, color: '#666' }}>
+                <span style={{ width: 10, height: 10, borderRadius: '50%', background: 'rgba(201,162,39,0.18)', display: 'inline-block' }} />
+                Available
+              </span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10, color: '#666' }}>
+                <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#1a1a1a', border: '0.5px solid #333', display: 'inline-block' }} />
+                Blocked
+              </span>
+            </div>
+          </div>
+
+          {/* Time Slots */}
+          <div style={{ background: SURFACE, border: `0.5px solid ${BORDER}`, borderRadius: 10, padding: '18px 16px' }}>
+            <div style={{ fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase', color: TEXT_DIM, marginBottom: 4 }}>Time Slots</div>
+            <div style={{ fontSize: 11, color: '#555', marginBottom: 16 }}>These slots appear on the booking page. Toggle booked/available or remove them.</div>
+
+            <div style={{ marginBottom: 16 }}>
+              {timeSlots?.map((sl, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '9px 0', borderBottom: `0.5px solid rgba(255,255,255,0.04)` }}>
+                  <span style={{ fontSize: 12, color: sl.booked ? '#555' : '#EAEAEA', textDecoration: sl.booked ? 'line-through' : 'none' }}>{sl.time}</span>
+                  <div style={{ display: 'flex', gap: 6 }}>
+                    <button
+                      onClick={() => toggleSlotBooked(i)}
+                      style={{ background: sl.booked ? 'rgba(201,162,39,0.1)' : 'rgba(80,200,120,0.1)', border: `0.5px solid ${sl.booked ? 'rgba(201,162,39,0.3)' : 'rgba(80,200,120,0.3)'}`, color: sl.booked ? GOLD : '#5CC88A', borderRadius: 4, padding: '3px 10px', fontSize: 9, cursor: 'pointer', letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: "'DM Sans', sans-serif" }}
+                    >
+                      {sl.booked ? 'Booked' : 'Open'}
+                    </button>
+                    <button
+                      onClick={() => removeSlot(i)}
+                      style={{ background: 'none', border: '0.5px solid rgba(220,60,60,0.3)', color: '#c55', borderRadius: 4, padding: '3px 10px', fontSize: 9, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ display: 'flex', gap: 8 }}>
+              <input
+                value={newSlotTime}
+                onChange={e => setNewSlotTime(e.target.value)}
+                placeholder="e.g. 2:00 PM"
+                style={{ flex: 1, background: '#1a1a1a', border: `0.5px solid ${BORDER}`, borderRadius: 6, padding: '8px 12px', color: '#EAEAEA', fontFamily: "'DM Sans', sans-serif", fontSize: 12, outline: 'none' }}
+                onKeyDown={e => e.key === 'Enter' && addSlot()}
+              />
+              <button
+                onClick={addSlot}
+                style={{ background: GOLD, color: '#0A0A0A', border: 'none', borderRadius: 6, padding: '8px 16px', fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", whiteSpace: 'nowrap' }}
+              >
+                + Add Slot
+              </button>
+            </div>
+          </div>
+
+        </div>
+      )}
+
       {showModal && (
         <Modal title={editIndex !== null ? 'Edit Session' : 'Create New Session'} onClose={() => setShowModal(false)}>
           <Field label="Session Title" value={form.title} onChange={v => setForm(f => ({ ...f, title: v }))} />
@@ -612,13 +761,13 @@ function MembersSection() {
   );
 }
 
-export default function AdminPage({ onExit }) {
+export default function AdminPage({ onExit, availableDays, setAvailableDays, timeSlots, setTimeSlots }) {
   const [activeSection, setActiveSection] = useState('overview');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const sections = {
     overview:    <OverviewSection />,
-    sessions:    <SessionsSection />,
+    sessions:    <SessionsSection availableDays={availableDays} setAvailableDays={setAvailableDays} timeSlots={timeSlots} setTimeSlots={setTimeSlots} />,
     programs:    <ProgramsSection />,
     vault:       <VaultSection />,
     plans:       <PlansSection />,

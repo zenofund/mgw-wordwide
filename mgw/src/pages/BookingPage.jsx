@@ -99,27 +99,9 @@ const SESSION_TYPES = [
   { id: 'group', label: 'Group', price: '$120 / 2 hrs', iconBg: 'rgba(106,56,194,0.2)', icon: '◈' },
 ];
 
-const CAL_DAYS = [
-  { day: null }, { day: null }, { day: null },
-  { day: 1, state: 'disabled' }, { day: 2, state: 'today' }, { day: 3, state: 'disabled' }, { day: 4, state: 'disabled' },
-  { day: 5, state: 'disabled' }, { day: 6, state: 'disabled' }, { day: 7, state: 'available' }, { day: 8, state: 'available' },
-  { day: 9, state: 'available' }, { day: 10, state: 'available' }, { day: 11, state: 'disabled' },
-  { day: 12, state: 'disabled' }, { day: 13, state: 'available' }, { day: 14, state: 'available' },
-  { day: 15, state: 'available' }, { day: 16, state: 'disabled' }, { day: 17, state: 'available' },
-  { day: 18, state: 'disabled' }, { day: 19, state: 'disabled' }, { day: 20, state: 'disabled' },
-  { day: 21, state: 'available' }, { day: 22, state: 'available' }, { day: 23, state: 'available' },
-  { day: 24, state: 'available' }, { day: 25, state: 'disabled' }, { day: 26, state: 'disabled' },
-  { day: 27, state: 'available' }, { day: 28, state: 'available' }, { day: 29, state: 'available' }, { day: 30, state: 'available' },
-];
-
-const TIME_SLOTS = [
-  { time: '9:00 AM', booked: true },
-  { time: '10:00 AM', booked: false },
-  { time: '11:30 AM', booked: false },
-  { time: '1:00 PM', booked: true },
-  { time: '3:00 PM', booked: false },
-  { time: '4:30 PM', booked: false },
-];
+const TODAY = 2;
+const APRIL_OFFSET = 3;
+const APRIL_DAYS = 30;
 
 const ChevronLeft = () => (
   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="2">
@@ -133,20 +115,29 @@ const ChevronRight = () => (
   </svg>
 );
 
-export default function BookingPage({ onConfirm }) {
+export default function BookingPage({ onConfirm, availableDays, timeSlots }) {
   const [selectedType, setSelectedType] = useState('1on1');
   const [selectedDay, setSelectedDay] = useState(8);
   const [selectedTime, setSelectedTime] = useState('10:00 AM');
 
   const selectedTypeObj = SESSION_TYPES.find((t) => t.id === selectedType);
 
-  const getDayStyle = (d) => {
-    if (!d.day) return s.calDay;
-    if (d.state === 'disabled') return { ...s.calDay, ...s.calDayDisabled };
-    if (d.day === selectedDay) return { ...s.calDay, ...s.calDayAvailable, ...s.calDaySelected };
-    if (d.state === 'today') return { ...s.calDay, ...s.calDayToday };
+  const calCells = [
+    ...Array(APRIL_OFFSET).fill(null),
+    ...Array.from({ length: APRIL_DAYS }, (_, i) => i + 1),
+  ];
+
+  const isDayAvailable = (day) => availableDays ? availableDays.has(day) : false;
+
+  const getDayStyle = (day) => {
+    if (day === null) return s.calDay;
+    if (day === selectedDay && isDayAvailable(day)) return { ...s.calDay, ...s.calDayAvailable, ...s.calDaySelected };
+    if (day === TODAY) return isDayAvailable(day) ? { ...s.calDay, ...s.calDayToday } : { ...s.calDay, ...s.calDayDisabled };
+    if (!isDayAvailable(day)) return { ...s.calDay, ...s.calDayDisabled };
     return { ...s.calDay, ...s.calDayAvailable };
   };
+
+  const slots = timeSlots || [];
 
   return (
     <div>
@@ -155,7 +146,6 @@ export default function BookingPage({ onConfirm }) {
         <div style={s.subtitle}>Select your mentorship type and preferred time.</div>
       </div>
 
-      {/* Session Types — above the split layout */}
       <div className="mgw-booking-types" style={s.typesGrid}>
         {SESSION_TYPES.map((t) => (
           <div
@@ -170,64 +160,66 @@ export default function BookingPage({ onConfirm }) {
         ))}
       </div>
 
-      {/* Calendar + Slots — side by side on desktop */}
       <div className="mgw-booking-body">
 
-        {/* Left: Calendar */}
         <div className="mgw-booking-left" style={s.calSection}>
           <div style={s.calMonthRow}>
-            <div style={s.calMonthName}>April 2026</div>
+            <div className="mgw-cal-month-name" style={s.calMonthName}>April 2026</div>
             <div style={s.calNav}>
               <div style={s.calNavBtn}><ChevronLeft /></div>
               <div style={s.calNavBtn}><ChevronRight /></div>
             </div>
           </div>
           <div style={s.calDaysHeader}>
-            {['Su','Mo','Tu','We','Th','Fr','Sa'].map((d) => (
+            {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((d) => (
               <div key={d} style={s.calDayHd}>{d}</div>
             ))}
           </div>
           <div style={s.calGrid}>
-            {CAL_DAYS.map((d, i) => (
+            {calCells.map((day, i) => (
               <button
                 key={i}
-                style={getDayStyle(d)}
-                onClick={() => d.day && d.state !== 'disabled' && setSelectedDay(d.day)}
-                disabled={!d.day || d.state === 'disabled'}
+                style={getDayStyle(day)}
+                onClick={() => day && isDayAvailable(day) && setSelectedDay(day)}
+                disabled={!day || !isDayAvailable(day)}
               >
-                {d.day || ''}
+                {day || ''}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Right: Time Slots + Confirm */}
         <div>
           <div style={s.slotsSection}>
             <div style={s.slotsTitle}>Available Times — April {selectedDay}</div>
-            <div style={s.slotsGrid}>
-              {TIME_SLOTS.map((sl) => (
-                <button
-                  key={sl.time}
-                  style={{
-                    ...s.slot,
-                    ...(sl.booked ? s.slotBooked : {}),
-                    ...(selectedTime === sl.time && !sl.booked ? s.slotSelected : {}),
-                  }}
-                  onClick={() => !sl.booked && setSelectedTime(sl.time)}
-                  disabled={sl.booked}
-                >
-                  {sl.time}
-                </button>
-              ))}
-            </div>
+            {slots.length === 0 ? (
+              <div style={{ fontSize: 12, color: '#666', fontStyle: 'italic' }}>No time slots configured.</div>
+            ) : (
+              <div style={s.slotsGrid}>
+                {slots.map((sl) => (
+                  <button
+                    key={sl.time}
+                    style={{
+                      ...s.slot,
+                      ...(sl.booked ? s.slotBooked : {}),
+                      ...(selectedTime === sl.time && !sl.booked ? s.slotSelected : {}),
+                    }}
+                    className="mgw-slot"
+                    onClick={() => !sl.booked && setSelectedTime(sl.time)}
+                    disabled={sl.booked}
+                  >
+                    {sl.time}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <div style={s.confirmSection}>
             <div style={s.summary}>
               {[
                 { key: 'Type', val: selectedTypeObj?.label === '1-on-1' ? '1-on-1 Mentorship' : 'Group Cohort' },
-                { key: 'Date', val: `Tuesday, April ${selectedDay}` },
+                { key: 'Date', val: `April ${selectedDay}, 2026` },
                 { key: 'Time', val: `${selectedTime} WAT` },
                 { key: 'Duration', val: selectedType === '1on1' ? '90 minutes' : '2 hours' },
               ].map((row) => (
@@ -238,7 +230,7 @@ export default function BookingPage({ onConfirm }) {
               ))}
               <div style={{ ...s.summaryRow, borderBottom: 'none' }}>
                 <span style={{ ...s.summaryKey, fontWeight: 500, color: '#EAEAEA', fontSize: 13 }}>Total</span>
-                <span style={s.summaryTotal}>{selectedType === '1on1' ? '$300' : '$120'}</span>
+                <span className="mgw-summary-total" style={s.summaryTotal}>{selectedType === '1on1' ? '$300' : '$120'}</span>
               </div>
             </div>
             <Button
