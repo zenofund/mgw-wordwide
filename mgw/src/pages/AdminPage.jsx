@@ -467,23 +467,86 @@ function ProgramsSection() {
   );
 }
 
+const SOURCE_OPTIONS = {
+  Video:               ['YouTube', 'Vimeo', 'Server'],
+  Audio:               ['YouTube', 'Spotify', 'Server'],
+  PDF:                 ['Server'],
+  Masterclass:         ['YouTube', 'Vimeo', 'Server'],
+  'Workshop Recording':['YouTube', 'Vimeo', 'Server'],
+};
+
+const SOURCE_ICONS = {
+  YouTube: '▶',
+  Vimeo:   '◉',
+  Spotify: '♪',
+  Server:  '⬆',
+};
+
+const SOURCE_HINT = {
+  YouTube: 'https://www.youtube.com/watch?v=...',
+  Vimeo:   'https://vimeo.com/...',
+  Spotify: 'https://open.spotify.com/track/... or episode link',
+  Server:  null,
+};
+
+function SourceInput({ source, url, onUrl }) {
+  if (source === 'Server') {
+    return (
+      <div style={{ marginBottom: 14 }}>
+        <label style={{ display: 'block', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: TEXT_DIM, marginBottom: 6 }}>Upload File</label>
+        <div style={{ border: `0.5px dashed ${BORDER}`, borderRadius: 6, padding: '22px', textAlign: 'center', color: TEXT_DIM, fontSize: 12, cursor: 'pointer', background: '#0e0e0e' }}>
+          <div style={{ fontSize: 20, marginBottom: 8 }}>⬆</div>
+          Click to select or drag & drop file here
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div style={{ marginBottom: 14 }}>
+      <label style={{ display: 'block', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: TEXT_DIM, marginBottom: 6 }}>{source} URL</label>
+      <input
+        type="url"
+        value={url}
+        onChange={e => onUrl(e.target.value)}
+        placeholder={SOURCE_HINT[source]}
+        style={{ width: '100%', background: '#1a1a1a', border: `0.5px solid ${BORDER}`, borderRadius: 6, padding: '9px 12px', color: '#EAEAEA', fontFamily: "'DM Sans', sans-serif", fontSize: 12, outline: 'none', boxSizing: 'border-box' }}
+      />
+    </div>
+  );
+}
+
 function VaultSection() {
   const [showModal, setShowModal] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
-  const [form, setForm] = useState({ title: '', type: 'Video', duration: '', tier: 'Inner Circle', status: 'Published' });
+  const [form, setForm] = useState({ title: '', type: 'Video', source: 'YouTube', url: '', duration: '', tier: 'Inner Circle', status: 'Published' });
   const [items, setItems] = useState([
-    { title: 'The Creative Brief Masterclass', type: 'Video', duration: '48 min', tier: 'Inner Circle', status: 'Published' },
-    { title: 'Industry Conversations Vol. 3', type: 'Audio', duration: '1 hr 12 min', tier: 'Creative Circle', status: 'Published' },
-    { title: 'Brand Architecture Framework', type: 'PDF', duration: '24 pages', tier: 'Inner Circle', status: 'Published' },
-    { title: 'Artist Management Blueprint', type: 'Video', duration: '1 hr 5 min', tier: 'Premium', status: 'Draft' },
-    { title: 'The Business of Music in Africa', type: 'Masterclass', duration: '2 hr 30 min', tier: 'All Tiers', status: 'Published' },
+    { title: 'The Creative Brief Masterclass', type: 'Video', source: 'YouTube', url: 'https://youtube.com/watch?v=example', duration: '48 min', tier: 'Inner Circle', status: 'Published' },
+    { title: 'Industry Conversations Vol. 3', type: 'Audio', source: 'Spotify', url: 'https://open.spotify.com/episode/example', duration: '1 hr 12 min', tier: 'Creative Circle', status: 'Published' },
+    { title: 'Brand Architecture Framework', type: 'PDF', source: 'Server', url: '', duration: '24 pages', tier: 'Inner Circle', status: 'Published' },
+    { title: 'Artist Management Blueprint', type: 'Video', source: 'Vimeo', url: 'https://vimeo.com/example', duration: '1 hr 5 min', tier: 'Premium', status: 'Draft' },
+    { title: 'The Business of Music in Africa', type: 'Masterclass', source: 'YouTube', url: 'https://youtube.com/watch?v=example2', duration: '2 hr 30 min', tier: 'All Tiers', status: 'Published' },
   ]);
 
   const statusColor = (s) => s === 'Published' ? 'green' : s === 'Draft' ? 'gold' : 'purple';
-  const rows = items.map(v => [v.title, v.type, v.duration, v.tier, <Badge label={v.status} color={statusColor(v.status)} />]);
+
+  const sourceTag = (src) => (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', gap: 4,
+      fontSize: 9, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '2px 7px',
+      borderRadius: 10, fontWeight: 500,
+      background: src === 'YouTube' ? 'rgba(255,0,0,0.12)' : src === 'Vimeo' ? 'rgba(26,183,234,0.12)' : src === 'Spotify' ? 'rgba(29,185,84,0.12)' : 'rgba(201,162,39,0.12)',
+      color: src === 'YouTube' ? '#ff6b6b' : src === 'Vimeo' ? '#4ecde6' : src === 'Spotify' ? '#1db954' : GOLD,
+    }}>
+      {SOURCE_ICONS[src]} {src}
+    </span>
+  );
+
+  const rows = items.map(v => [v.title, v.type, sourceTag(v.source), v.duration, v.tier, <Badge label={v.status} color={statusColor(v.status)} />]);
+
+  const getDefaultSource = (type) => (SOURCE_OPTIONS[type] || ['Server'])[0];
 
   const openAdd = () => {
-    setForm({ title: '', type: 'Video', duration: '', tier: 'Inner Circle', status: 'Published' });
+    setForm({ title: '', type: 'Video', source: 'YouTube', url: '', duration: '', tier: 'Inner Circle', status: 'Published' });
     setEditIndex(null);
     setShowModal(true);
   };
@@ -494,8 +557,17 @@ function VaultSection() {
     setShowModal(true);
   };
 
+  const handleTypeChange = (type) => {
+    const sources = SOURCE_OPTIONS[type] || ['Server'];
+    const source = sources.includes(form.source) ? form.source : sources[0];
+    setForm(f => ({ ...f, type, source, url: '' }));
+  };
+
   const handleSave = () => {
-    const row = { title: form.title, type: form.type, duration: form.duration, tier: form.tier, status: form.status };
+    const row = {
+      title: form.title, type: form.type, source: form.source,
+      url: form.url, duration: form.duration, tier: form.tier, status: form.status,
+    };
     if (editIndex !== null) {
       setItems(prev => prev.map((v, idx) => idx === editIndex ? row : v));
     } else {
@@ -504,29 +576,62 @@ function VaultSection() {
     setShowModal(false);
   };
 
+  const availableSources = SOURCE_OPTIONS[form.type] || ['Server'];
+
   return (
     <div>
       <SectionHeader title="Vault Content" sub="Manage exclusive educational content across all membership tiers." action="+ Upload Content" onAction={openAdd} />
       <div style={{ background: SURFACE, border: `0.5px solid ${BORDER}`, borderRadius: 10, padding: '6px 8px', overflowX: 'auto' }}>
-        <Table cols={['Title', 'Type', 'Length', 'Tier', 'Status']} rows={rows} onEdit={openEdit} onDelete={i => setItems(prev => prev.filter((_, idx) => idx !== i))} />
+        <Table cols={['Title', 'Type', 'Source', 'Length', 'Tier', 'Status']} rows={rows} onEdit={openEdit} onDelete={i => setItems(prev => prev.filter((_, idx) => idx !== i))} />
       </div>
+
       {showModal && (
-        <Modal title={editIndex !== null ? 'Edit Content' : 'Upload Vault Content'} onClose={() => setShowModal(false)}>
+        <Modal title={editIndex !== null ? 'Edit Content' : 'Add Vault Content'} onClose={() => setShowModal(false)}>
           <Field label="Title" value={form.title} onChange={v => setForm(f => ({ ...f, title: v }))} />
-          <Field label="Content Type" type="select" value={form.type} onChange={v => setForm(f => ({ ...f, type: v }))} options={['Video', 'Audio', 'PDF', 'Masterclass', 'Workshop Recording']} />
+
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <Field label="Duration / Length" value={form.duration} onChange={v => setForm(f => ({ ...f, duration: v }))} />
+            <Field label="Content Type" type="select" value={form.type} onChange={handleTypeChange} options={['Video', 'Audio', 'PDF', 'Masterclass', 'Workshop Recording']} />
             <Field label="Membership Tier" type="select" value={form.tier} onChange={v => setForm(f => ({ ...f, tier: v }))} options={['All Tiers', 'Creative Circle', 'Inner Circle', 'Premium']} />
           </div>
-          <Field label="Status" type="select" value={form.status} onChange={v => setForm(f => ({ ...f, status: v }))} options={['Published', 'Draft', 'Archived']} />
-          {editIndex === null && (
-            <div style={{ marginBottom: 14 }}>
-              <label style={{ display: 'block', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: TEXT_DIM, marginBottom: 6 }}>Upload File</label>
-              <div style={{ border: `0.5px dashed ${BORDER}`, borderRadius: 6, padding: '20px', textAlign: 'center', color: TEXT_DIM, fontSize: 12, cursor: 'pointer' }}>
-                Click to select or drag & drop file here
-              </div>
+
+          {/* Source selector — shown for all types, PDF is locked to Server */}
+          <div style={{ marginBottom: 14 }}>
+            <label style={{ display: 'block', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: TEXT_DIM, marginBottom: 8 }}>Media Source</label>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {availableSources.map(src => (
+                <button
+                  key={src}
+                  onClick={() => setForm(f => ({ ...f, source: src, url: '' }))}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 6,
+                    padding: '8px 14px', borderRadius: 7, cursor: 'pointer',
+                    fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: form.source === src ? 500 : 300,
+                    border: form.source === src
+                      ? `0.5px solid ${src === 'YouTube' ? '#ff6b6b' : src === 'Vimeo' ? '#4ecde6' : src === 'Spotify' ? '#1db954' : GOLD}`
+                      : `0.5px solid ${BORDER}`,
+                    background: form.source === src
+                      ? src === 'YouTube' ? 'rgba(255,0,0,0.1)' : src === 'Vimeo' ? 'rgba(26,183,234,0.1)' : src === 'Spotify' ? 'rgba(29,185,84,0.1)' : 'rgba(201,162,39,0.1)'
+                      : '#1a1a1a',
+                    color: form.source === src
+                      ? src === 'YouTube' ? '#ff6b6b' : src === 'Vimeo' ? '#4ecde6' : src === 'Spotify' ? '#1db954' : GOLD
+                      : '#666',
+                    transition: 'all 0.15s',
+                  }}
+                >
+                  <span>{SOURCE_ICONS[src]}</span> {src}
+                </button>
+              ))}
             </div>
-          )}
+          </div>
+
+          {/* URL or file upload based on source */}
+          <SourceInput source={form.source} url={form.url} onUrl={v => setForm(f => ({ ...f, url: v }))} />
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <Field label="Duration / Length" value={form.duration} onChange={v => setForm(f => ({ ...f, duration: v }))} />
+            <Field label="Status" type="select" value={form.status} onChange={v => setForm(f => ({ ...f, status: v }))} options={['Published', 'Draft', 'Archived']} />
+          </div>
+
           <SaveBtn onClick={handleSave}>{editIndex !== null ? 'Update Content' : 'Save Content'}</SaveBtn>
         </Modal>
       )}
