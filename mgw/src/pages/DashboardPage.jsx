@@ -164,6 +164,7 @@ const PlayIcon = () => (
 
 export default function DashboardPage({
   user = { name: 'Chisom Adeyemi' },
+  vaultItems = [],
   stats = [
     { val: '3', key: 'Sessions' },
     { val: '14', key: 'Saved' },
@@ -173,15 +174,17 @@ export default function DashboardPage({
     { day: '08', month: 'Apr', type: '1-on-1 Mentorship', name: 'Creative Vision Intensive', time: '10:00 AM — 11:30 AM WAT', status: 'Confirmed' },
     { day: '15', month: 'Apr', type: 'Group Cohort', name: "Founder's Circle — Week 4", time: '2:00 PM — 4:00 PM WAT', status: 'Upcoming' },
   ],
-  recentContent = [
-    { title: 'Creative Brief Masterclass', duration: '32 min left' },
-    { title: 'Industry Conversations III', duration: '58 min left' },
-    { title: 'The Brand Lens — Session 2', duration: 'Full · 1h 20m' },
-  ],
   announcement = { text: 'New masterclass dropping this Friday — Brand Architecture for the Digital Era.', date: 'Posted 2 days ago' },
   onViewAllSessions,
   onOpenVault,
 }) {
+  const recentContent = vaultItems.length > 0
+    ? vaultItems.slice(0, 3).map(v => ({ title: v.title, duration: v.duration, type: v.type, bg: v.bg }))
+    : [
+        { title: 'Creative Brief Masterclass', duration: '32 min left', type: 'video', bg: 1 },
+        { title: 'Industry Conversations III', duration: '58 min left', type: 'audio', bg: 2 },
+        { title: 'The Brand Lens — Session 2', duration: 'Full · 1h 20m', type: 'video', bg: 3 },
+      ];
   const today = new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
   return (

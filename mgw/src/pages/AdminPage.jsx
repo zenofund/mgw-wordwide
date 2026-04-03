@@ -573,17 +573,13 @@ function SourceInput({ source, url, onUrl }) {
   );
 }
 
-function VaultSection() {
+const TYPE_FORM_MAP = { video: 'Video', audio: 'Audio', pdf: 'PDF', masterclass: 'Masterclass', 'workshop recording': 'Workshop Recording' };
+
+function VaultSection({ vaultItems, setVaultItems, plans }) {
   const [showModal, setShowModal] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
-  const [form, setForm] = useState({ title: '', type: 'Video', source: 'YouTube', url: '', duration: '', tier: 'Inner Circle', status: 'Published' });
-  const [items, setItems] = useState([
-    { title: 'The Creative Brief Masterclass', type: 'Video', source: 'YouTube', url: 'https://youtube.com/watch?v=example', duration: '48 min', tier: 'Inner Circle', status: 'Published' },
-    { title: 'Industry Conversations Vol. 3', type: 'Audio', source: 'Spotify', url: 'https://open.spotify.com/episode/example', duration: '1 hr 12 min', tier: 'Creative Circle', status: 'Published' },
-    { title: 'Brand Architecture Framework', type: 'PDF', source: 'Server', url: '', duration: '24 pages', tier: 'Inner Circle', status: 'Published' },
-    { title: 'Artist Management Blueprint', type: 'Video', source: 'Vimeo', url: 'https://vimeo.com/example', duration: '1 hr 5 min', tier: 'Premium', status: 'Draft' },
-    { title: 'The Business of Music in Africa', type: 'Masterclass', source: 'YouTube', url: 'https://youtube.com/watch?v=example2', duration: '2 hr 30 min', tier: 'All Tiers', status: 'Published' },
-  ]);
+  const EMPTY_FORM = { title: '', description: '', type: 'Video', source: 'YouTube', url: '', duration: '', accessPlans: [], series: '', seriesOrder: '', status: 'Published' };
+  const [form, setForm] = useState(EMPTY_FORM);
 
   const statusColor = (s) => s === 'Published' ? 'green' : s === 'Draft' ? 'gold' : 'purple';
 
@@ -599,18 +595,41 @@ function VaultSection() {
     </span>
   );
 
-  const rows = items.map(v => [v.title, v.type, sourceTag(v.source), v.duration, v.tier, <Badge label={v.status} color={statusColor(v.status)} />]);
+  const accessLabel = (item) => {
+    if (!item.accessPlans || item.accessPlans.length === 0) return 'All Plans';
+    return item.accessPlans.join(', ');
+  };
 
-  const getDefaultSource = (type) => (SOURCE_OPTIONS[type] || ['Server'])[0];
+  const rows = vaultItems.map(v => [
+    v.title,
+    TYPE_FORM_MAP[v.type?.toLowerCase()] || v.type,
+    sourceTag(v.source),
+    v.duration,
+    v.series || '—',
+    accessLabel(v),
+    <Badge label={v.status} color={statusColor(v.status)} />,
+  ]);
 
   const openAdd = () => {
-    setForm({ title: '', type: 'Video', source: 'YouTube', url: '', duration: '', tier: 'Inner Circle', status: 'Published' });
+    setForm(EMPTY_FORM);
     setEditIndex(null);
     setShowModal(true);
   };
 
   const openEdit = (i) => {
-    setForm({ ...items[i] });
+    const v = vaultItems[i];
+    setForm({
+      title: v.title || '',
+      description: v.description || '',
+      type: TYPE_FORM_MAP[v.type?.toLowerCase()] || 'Video',
+      source: v.source || 'YouTube',
+      url: v.url || '',
+      duration: v.duration || '',
+      accessPlans: v.accessPlans || [],
+      series: v.series || '',
+      seriesOrder: v.seriesOrder != null ? String(v.seriesOrder) : '',
+      status: v.status || 'Published',
+    });
     setEditIndex(i);
     setShowModal(true);
   };
@@ -621,15 +640,34 @@ function VaultSection() {
     setForm(f => ({ ...f, type, source, url: '' }));
   };
 
+  const togglePlan = (planName, checked) => {
+    setForm(f => {
+      const next = checked
+        ? [...f.accessPlans.filter(p => p !== planName), planName]
+        : f.accessPlans.filter(p => p !== planName);
+      return { ...f, accessPlans: next };
+    });
+  };
+
   const handleSave = () => {
-    const row = {
-      title: form.title, type: form.type, source: form.source,
-      url: form.url, duration: form.duration, tier: form.tier, status: form.status,
+    const item = {
+      id: editIndex !== null ? vaultItems[editIndex].id : Date.now(),
+      title: form.title,
+      description: form.description,
+      type: form.type.toLowerCase(),
+      source: form.source,
+      url: form.url,
+      duration: form.duration,
+      accessPlans: form.accessPlans,
+      series: form.series,
+      seriesOrder: parseInt(form.seriesOrder) || 0,
+      status: form.status,
+      bg: editIndex !== null ? (vaultItems[editIndex].bg || 1) : ((vaultItems.length % 4) + 1),
     };
     if (editIndex !== null) {
-      setItems(prev => prev.map((v, idx) => idx === editIndex ? row : v));
+      setVaultItems(prev => prev.map((v, idx) => idx === editIndex ? item : v));
     } else {
-      setItems(prev => [row, ...prev]);
+      setVaultItems(prev => [item, ...prev]);
     }
     setShowModal(false);
   };
@@ -638,21 +676,19 @@ function VaultSection() {
 
   return (
     <div>
-      <SectionHeader title="Vault Content" sub="Manage exclusive educational content across all membership tiers." action="+ Upload Content" onAction={openAdd} />
+      <SectionHeader title="Vault Content" sub="Manage exclusive educational content — map to plans, group into series." action="+ Upload Content" onAction={openAdd} />
       <div style={{ background: SURFACE, border: `0.5px solid ${BORDER}`, borderRadius: 10, padding: '6px 8px', overflowX: 'auto' }}>
-        <Table cols={['Title', 'Type', 'Source', 'Length', 'Tier', 'Status']} rows={rows} onEdit={openEdit} onDelete={i => setItems(prev => prev.filter((_, idx) => idx !== i))} />
+        <Table cols={['Title', 'Type', 'Source', 'Length', 'Series', 'Access', 'Status']} rows={rows} onEdit={openEdit} onDelete={i => setVaultItems(prev => prev.filter((_, idx) => idx !== i))} />
       </div>
 
       {showModal && (
-        <Modal title={editIndex !== null ? 'Edit Content' : 'Add Vault Content'} onClose={() => setShowModal(false)}>
+        <Modal title={editIndex !== null ? 'Edit Vault Content' : 'Add Vault Content'} onClose={() => setShowModal(false)}>
           <Field label="Title" value={form.title} onChange={v => setForm(f => ({ ...f, title: v }))} />
+          <Field label="Description" type="textarea" value={form.description} onChange={v => setForm(f => ({ ...f, description: v }))} />
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <Field label="Content Type" type="select" value={form.type} onChange={handleTypeChange} options={['Video', 'Audio', 'PDF', 'Masterclass', 'Workshop Recording']} />
-            <Field label="Membership Tier" type="select" value={form.tier} onChange={v => setForm(f => ({ ...f, tier: v }))} options={['All Tiers', 'Creative Circle', 'Inner Circle', 'Premium']} />
-          </div>
+          <Field label="Content Type" type="select" value={form.type} onChange={handleTypeChange} options={['Video', 'Audio', 'PDF', 'Masterclass', 'Workshop Recording']} />
 
-          {/* Source selector — shown for all types, PDF is locked to Server */}
+          {/* Source selector */}
           <div style={{ marginBottom: 14 }}>
             <label style={{ display: 'block', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: TEXT_DIM, marginBottom: 8 }}>Media Source</label>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
@@ -682,12 +718,49 @@ function VaultSection() {
             </div>
           </div>
 
-          {/* URL or file upload based on source */}
           <SourceInput source={form.source} url={form.url} onUrl={v => setForm(f => ({ ...f, url: v }))} />
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <Field label="Duration / Length" value={form.duration} onChange={v => setForm(f => ({ ...f, duration: v }))} />
             <Field label="Status" type="select" value={form.status} onChange={v => setForm(f => ({ ...f, status: v }))} options={['Published', 'Draft', 'Archived']} />
+          </div>
+
+          {/* Series */}
+          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 12 }}>
+            <Field label="Series Name (optional)" value={form.series} onChange={v => setForm(f => ({ ...f, series: v }))} />
+            <Field label="Episode #" value={form.seriesOrder} onChange={v => setForm(f => ({ ...f, seriesOrder: v }))} />
+          </div>
+
+          {/* Plan access */}
+          <div style={{ marginBottom: 14 }}>
+            <label className="mgw-admin-field-label" style={{ display: 'block', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: TEXT_DIM, marginBottom: 10 }}>
+              Available to Plans
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px', borderRadius: 6, background: form.accessPlans.length === 0 ? 'rgba(201,162,39,0.07)' : '#1a1a1a', border: `0.5px solid ${form.accessPlans.length === 0 ? BORDER : 'rgba(255,255,255,0.06)'}`, cursor: 'pointer', marginBottom: 6 }}>
+              <input
+                type="checkbox"
+                checked={form.accessPlans.length === 0}
+                onChange={() => setForm(f => ({ ...f, accessPlans: [] }))}
+                style={{ accentColor: GOLD, width: 14, height: 14 }}
+              />
+              <span style={{ fontSize: 12, color: form.accessPlans.length === 0 ? GOLD : '#EAEAEA', fontFamily: "'DM Sans', sans-serif" }}>All Plans (no restriction)</span>
+            </label>
+            {(plans || []).map(plan => {
+              const checked = form.accessPlans.includes(plan.name);
+              return (
+                <label key={plan.name} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px', borderRadius: 6, background: checked ? `${plan.color}0f` : '#1a1a1a', border: `0.5px solid ${checked ? `${plan.color}40` : 'rgba(255,255,255,0.06)'}`, cursor: 'pointer', marginBottom: 6, transition: 'all 0.15s' }}>
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={e => togglePlan(plan.name, e.target.checked)}
+                    style={{ accentColor: plan.color || GOLD, width: 14, height: 14 }}
+                  />
+                  <span style={{ width: 8, height: 8, borderRadius: '50%', background: plan.color || GOLD, flexShrink: 0 }} />
+                  <span style={{ fontSize: 12, color: checked ? plan.color || GOLD : '#EAEAEA', fontFamily: "'DM Sans', sans-serif" }}>{plan.name}</span>
+                  <span style={{ marginLeft: 'auto', fontSize: 10, color: '#555' }}>{plan.price}/{plan.billing === 'Free' ? 'Free' : 'mo'}</span>
+                </label>
+              );
+            })}
           </div>
 
           <SaveBtn onClick={handleSave}>{editIndex !== null ? 'Update Content' : 'Save Content'}</SaveBtn>
@@ -1145,7 +1218,7 @@ function AnnouncementsSection({ announcements, setAnnouncements }) {
   );
 }
 
-export default function AdminPage({ onExit, availableDays, setAvailableDays, timeSlots, setTimeSlots, plans, setPlans, announcements, setAnnouncements }) {
+export default function AdminPage({ onExit, availableDays, setAvailableDays, timeSlots, setTimeSlots, plans, setPlans, vaultItems, setVaultItems, announcements, setAnnouncements }) {
   const [activeSection, setActiveSection] = useState('overview');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -1153,7 +1226,7 @@ export default function AdminPage({ onExit, availableDays, setAvailableDays, tim
     overview:       <OverviewSection />,
     sessions:       <SessionsSection availableDays={availableDays} setAvailableDays={setAvailableDays} timeSlots={timeSlots} setTimeSlots={setTimeSlots} />,
     programs:       <ProgramsSection />,
-    vault:          <VaultSection />,
+    vault:          <VaultSection vaultItems={vaultItems} setVaultItems={setVaultItems} plans={plans} />,
     plans:          <PlansSection plans={plans} setPlans={setPlans} />,
     consultancy:    <ConsultancyAdminSection />,
     members:        <MembersSection />,
