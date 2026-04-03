@@ -696,15 +696,10 @@ function VaultSection() {
   );
 }
 
-function PlansSection() {
+function PlansSection({ plans, setPlans }) {
   const [showModal, setShowModal] = useState(false);
   const [editPlan, setEditPlan] = useState(null);
   const [form, setForm] = useState({ name: '', price: '', billing: 'Monthly', sessions: '', vault: 'Partial', status: 'Active' });
-  const [plans, setPlans] = useState([
-    { name: 'Open Access', price: '$0', billing: 'Free', features: ['Community access', 'Monthly digest', 'Limited vault'], color: '#555', members: 472 },
-    { name: 'Creative Circle', price: '$49', billing: 'per month', features: ['Full vault access', '2 group sessions/mo', 'Priority support', 'Community access'], color: PURPLE, members: 1104 },
-    { name: 'Inner Circle', price: '$149', billing: 'per month', features: ['All Creative Circle perks', '4 sessions/mo (1-on-1)', 'Direct messaging', 'Exclusive content', 'Event invitations'], color: GOLD, members: 842 },
-  ]);
 
   const openAdd = () => {
     setForm({ name: '', price: '', billing: 'Monthly', sessions: '', vault: 'Partial' });
@@ -923,7 +918,7 @@ function MembersSection() {
   );
 }
 
-export default function AdminPage({ onExit, availableDays, setAvailableDays, timeSlots, setTimeSlots }) {
+export default function AdminPage({ onExit, availableDays, setAvailableDays, timeSlots, setTimeSlots, plans, setPlans }) {
   const [activeSection, setActiveSection] = useState('overview');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -932,7 +927,7 @@ export default function AdminPage({ onExit, availableDays, setAvailableDays, tim
     sessions:    <SessionsSection availableDays={availableDays} setAvailableDays={setAvailableDays} timeSlots={timeSlots} setTimeSlots={setTimeSlots} />,
     programs:    <ProgramsSection />,
     vault:       <VaultSection />,
-    plans:       <PlansSection />,
+    plans:       <PlansSection plans={plans} setPlans={setPlans} />,
     consultancy: <ConsultancyAdminSection />,
     members:     <MembersSection />,
   };

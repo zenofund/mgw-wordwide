@@ -96,7 +96,7 @@ const UserIcon = () => (
   </svg>
 );
 
-export default function Navbar({ activePage, onNavigate, onLogoClick, tabs = [], onSearchClick, onNotificationsClick, onProfileClick }) {
+export default function Navbar({ activePage, onNavigate, onLogoClick, tabs = [], user, onSearchClick, onNotificationsClick, onProfileClick }) {
   return (
     <nav style={styles.nav}>
       <div style={styles.navInner}>
@@ -140,7 +140,13 @@ export default function Navbar({ activePage, onNavigate, onLogoClick, tabs = [],
             onClick={onProfileClick}
             aria-label="Profile"
           >
-            <UserIcon />
+            {user ? (
+              <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 15, color: '#C9A227', fontWeight: 700, lineHeight: 1 }}>
+                {user.name?.charAt(0)?.toUpperCase() || 'M'}
+              </span>
+            ) : (
+              <UserIcon />
+            )}
           </button>
         </div>
       </div>

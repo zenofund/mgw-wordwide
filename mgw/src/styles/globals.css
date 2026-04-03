@@ -689,3 +689,65 @@ select {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.4; }
 }
+
+/* ── Auth — Plans carousel (mobile: horizontal swipe) ── */
+.mgw-auth-card-wrap {
+  width: 100%;
+}
+
+.mgw-plans-scroll {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  gap: 14px;
+  padding-bottom: 16px;
+  scrollbar-width: none;
+  margin: 0 -4px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.mgw-plans-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.mgw-plan-card {
+  min-width: 78vw;
+  max-width: 78vw;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 600px) {
+  .mgw-plan-card {
+    min-width: 56vw;
+    max-width: 56vw;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mgw-auth-card-wrap {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .mgw-plans-scroll {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    overflow-x: unset !important;
+    scroll-snap-type: unset !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .mgw-plan-card {
+    min-width: unset !important;
+    max-width: unset !important;
+    flex-shrink: unset !important;
+    scroll-snap-align: unset !important;
+  }
+}
