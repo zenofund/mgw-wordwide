@@ -2,13 +2,18 @@
   "name": "mgw-platform",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "Mavin Grandpa Worldwide — Mentorship & Consulting Platform",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently \"vite\" \"node server.js\"",
+    "server": "node server.js",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "concurrently": "^9.1.2",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

@@ -107,8 +107,8 @@ const Field = ({ label, type = 'text', value, onChange, options }) => (
   </div>
 );
 
-const SaveBtn = ({ children, onClick }) => (
-  <button onClick={onClick} style={{ marginTop: 8, width: '100%', background: GOLD, color: '#0A0A0A', border: 'none', borderRadius: 6, padding: '11px', fontWeight: 600, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontSize: 12, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+const SaveBtn = ({ children, onClick, disabled }) => (
+  <button onClick={!disabled ? onClick : undefined} style={{ marginTop: 8, width: '100%', background: disabled ? '#555' : GOLD, color: '#0A0A0A', border: 'none', borderRadius: 6, padding: '11px', fontWeight: 600, cursor: disabled ? 'not-allowed' : 'pointer', fontFamily: "'DM Sans', sans-serif", fontSize: 12, letterSpacing: '0.05em', textTransform: 'uppercase', opacity: disabled ? 0.7 : 1, transition: 'background 0.2s, opacity 0.2s' }}>
     {children}
   </button>
 );
@@ -199,32 +199,63 @@ function SessionsSection({ availableDays, setAvailableDays, timeSlots, setTimeSl
   const [tab, setTab] = useState('sessions');
   const [showModal, setShowModal] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
-  const [form, setForm] = useState({ title: '', type: '1-on-1', date: '', time: '', price: '', status: 'Scheduled' });
+  const [zoomLoading, setZoomLoading] = useState(false);
+  const [zoomError, setZoomError] = useState('');
+  const [form, setForm] = useState({ title: '', type: '1-on-1', date: '', time: '', price: '', status: 'Scheduled', createZoom: true });
   const [sessions, setSessions] = useState([
-    { title: 'Creative Direction Deep Dive', type: '1-on-1', date: 'Apr 10, 2026', time: '11:00 AM', price: '$300', status: 'Scheduled' },
-    { title: "Founder's Circle — April Cohort", type: 'Group', date: 'Apr 14, 2026', time: '3:00 PM', price: '$480', status: 'Open' },
-    { title: 'Brand Architecture Intensive', type: 'Intensive', date: 'Apr 18, 2026', time: '9:00 AM', price: '$2,500', status: 'Full' },
-    { title: 'Creative Strategy Session', type: '1-on-1', date: 'Apr 22, 2026', time: '2:00 PM', price: '$300', status: 'Scheduled' },
-    { title: 'Masterclass: Music Business 101', type: 'Masterclass', date: 'Apr 28, 2026', time: '6:00 PM', price: '$120', status: 'Open' },
+    { title: 'Creative Direction Deep Dive', type: '1-on-1', date: 'Apr 10, 2026', time: '11:00 AM', price: '$300', status: 'Scheduled', zoom: null },
+    { title: "Founder's Circle — April Cohort", type: 'Group', date: 'Apr 14, 2026', time: '3:00 PM', price: '$480', status: 'Open', zoom: null },
+    { title: 'Brand Architecture Intensive', type: 'Intensive', date: 'Apr 18, 2026', time: '9:00 AM', price: '$2,500', status: 'Full', zoom: null },
+    { title: 'Creative Strategy Session', type: '1-on-1', date: 'Apr 22, 2026', time: '2:00 PM', price: '$300', status: 'Scheduled', zoom: null },
+    { title: 'Masterclass: Music Business 101', type: 'Masterclass', date: 'Apr 28, 2026', time: '6:00 PM', price: '$120', status: 'Open', zoom: null },
   ]);
   const [newSlotTime, setNewSlotTime] = useState('');
 
-  const rows = sessions.map(s => [s.title, s.type, s.date, s.time, s.price, <Badge label={s.status} color={sessionStatusColor(s.status)} />]);
+  const zoomLink = (zoom) => zoom?.joinUrl ? (
+    <a href={zoom.joinUrl} target="_blank" rel="noreferrer" style={{ color: '#4A90D9', fontSize: 10, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 10, background: 'rgba(74,144,217,0.12)', border: '0.5px solid rgba(74,144,217,0.3)', whiteSpace: 'nowrap' }}>
+      ▶ Join Zoom
+    </a>
+  ) : <span style={{ fontSize: 10, color: '#444' }}>—</span>;
+
+  const rows = sessions.map(s => [s.title, s.type, s.date, s.time, s.price, <Badge label={s.status} color={sessionStatusColor(s.status)} />, zoomLink(s.zoom)]);
 
   const openAdd = () => {
-    setForm({ title: '', type: '1-on-1', date: '', time: '', price: '', status: 'Scheduled' });
+    setForm({ title: '', type: '1-on-1', date: '', time: '', price: '', status: 'Scheduled', createZoom: true });
+    setZoomError('');
     setEditIndex(null);
     setShowModal(true);
   };
 
   const openEdit = (i) => {
-    setForm({ ...sessions[i] });
+    setForm({ ...sessions[i], createZoom: false });
+    setZoomError('');
     setEditIndex(i);
     setShowModal(true);
   };
 
-  const handleSave = () => {
-    const row = { title: form.title, type: form.type, date: form.date, time: form.time, price: form.price, status: form.status };
+  const handleSave = async () => {
+    setZoomError('');
+    const row = { title: form.title, type: form.type, date: form.date, time: form.time, price: form.price, status: form.status, zoom: editIndex !== null ? sessions[editIndex].zoom : null };
+
+    if (form.createZoom && editIndex === null) {
+      setZoomLoading(true);
+      try {
+        const res = await fetch('/api/zoom/create-meeting', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: form.title, date: form.date, time: form.time, type: form.type }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to create Zoom meeting');
+        row.zoom = data;
+      } catch (err) {
+        setZoomError(err.message);
+        setZoomLoading(false);
+        return;
+      }
+      setZoomLoading(false);
+    }
+
     if (editIndex !== null) {
       setSessions(prev => prev.map((s, idx) => idx === editIndex ? row : s));
     } else {
@@ -285,7 +316,7 @@ function SessionsSection({ availableDays, setAvailableDays, timeSlots, setTimeSl
 
       {tab === 'sessions' && (
         <div style={{ background: SURFACE, border: `0.5px solid ${BORDER}`, borderRadius: 10, padding: '6px 8px', overflowX: 'auto' }}>
-          <Table cols={['Title', 'Type', 'Date', 'Time', 'Price', 'Status']} rows={rows} onEdit={openEdit} onDelete={i => setSessions(prev => prev.filter((_, idx) => idx !== i))} />
+          <Table cols={['Title', 'Type', 'Date', 'Time', 'Price', 'Status', 'Meeting']} rows={rows} onEdit={openEdit} onDelete={i => setSessions(prev => prev.filter((_, idx) => idx !== i))} />
         </div>
       )}
 
@@ -387,18 +418,44 @@ function SessionsSection({ availableDays, setAvailableDays, timeSlots, setTimeSl
       )}
 
       {showModal && (
-        <Modal title={editIndex !== null ? 'Edit Session' : 'Create New Session'} onClose={() => setShowModal(false)}>
+        <Modal title={editIndex !== null ? 'Edit Session' : 'Create New Session'} onClose={() => !zoomLoading && setShowModal(false)}>
           <Field label="Session Title" value={form.title} onChange={v => setForm(f => ({ ...f, title: v }))} />
           <Field label="Type" type="select" value={form.type} onChange={v => setForm(f => ({ ...f, type: v }))} options={['1-on-1', 'Group', 'Intensive', 'Masterclass', 'Workshop']} />
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <Field label="Date" type="text" value={form.date} onChange={v => setForm(f => ({ ...f, date: v }))} />
-            <Field label="Time" type="text" value={form.time} onChange={v => setForm(f => ({ ...f, time: v }))} />
+            <Field label="Date" type="text" value={form.date} onChange={v => setForm(f => ({ ...f, date: v }))} placeholder="Apr 10, 2026" />
+            <Field label="Time" type="text" value={form.time} onChange={v => setForm(f => ({ ...f, time: v }))} placeholder="11:00 AM" />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <Field label="Price" type="text" value={form.price} onChange={v => setForm(f => ({ ...f, price: v }))} />
             <Field label="Status" type="select" value={form.status} onChange={v => setForm(f => ({ ...f, status: v }))} options={['Scheduled', 'Open', 'Full', 'Cancelled']} />
           </div>
-          <SaveBtn onClick={handleSave}>{editIndex !== null ? 'Update Session' : 'Create Session'}</SaveBtn>
+
+          {editIndex === null && (
+            <div style={{ background: 'rgba(74,144,217,0.06)', border: '0.5px solid rgba(74,144,217,0.25)', borderRadius: 10, padding: '12px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+              <div>
+                <div style={{ color: '#4A90D9', fontSize: 13, fontWeight: 600, marginBottom: 2 }}>Generate Zoom Meeting</div>
+                <div style={{ color: '#888', fontSize: 11 }}>Automatically creates a scheduled Zoom meeting and stores the join link.</div>
+              </div>
+              <div
+                onClick={() => setForm(f => ({ ...f, createZoom: !f.createZoom }))}
+                style={{ width: 40, height: 22, borderRadius: 11, background: form.createZoom ? '#4A90D9' : '#333', cursor: 'pointer', position: 'relative', flexShrink: 0, transition: 'background 0.2s' }}
+              >
+                <div style={{ position: 'absolute', top: 3, left: form.createZoom ? 21 : 3, width: 16, height: 16, borderRadius: '50%', background: '#fff', transition: 'left 0.2s' }} />
+              </div>
+            </div>
+          )}
+
+          {zoomError && (
+            <div style={{ background: 'rgba(220,60,60,0.1)', border: '0.5px solid rgba(220,60,60,0.3)', borderRadius: 8, padding: '10px 12px', color: '#FF6B6B', fontSize: 12 }}>
+              {zoomError}
+            </div>
+          )}
+
+          <SaveBtn onClick={handleSave} disabled={zoomLoading}>
+            {zoomLoading
+              ? 'Creating Zoom Meeting…'
+              : editIndex !== null ? 'Update Session' : (form.createZoom ? 'Create Session + Zoom' : 'Create Session')}
+          </SaveBtn>
         </Modal>
       )}
     </div>
