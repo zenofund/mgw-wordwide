@@ -3,13 +3,6 @@ import React from 'react';
 const GOLD = '#C9A227';
 const BORDER = 'rgba(201,162,39,0.18)';
 
-const LINKS = [
-  { label: 'MGW', href: '#mgw' },
-  { label: 'Consult', href: '#consult' },
-  { label: 'Booking', href: '#booking' },
-  { label: 'Vault', href: '#vault' },
-];
-
 const SOCIALS = [
   {
     label: 'Instagram',
@@ -39,170 +32,171 @@ const SOCIALS = [
   },
 ];
 
-export default function Footer({ onNavigate }) {
+export default function Footer({ onNavigate, isDashboard = false }) {
   const year = new Date().getFullYear();
 
   return (
-    <footer style={{
-      background: 'inherit',
-      borderTop: `0.5px solid ${BORDER}`,
-      padding: '48px 24px 28px',
-      fontFamily: "'DM Sans', sans-serif",
-    }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+    <footer
+      className={`mgw-footer-wrap${isDashboard ? ' mgw-footer-dashboard' : ''}`}
+      style={{ background: 'inherit', fontFamily: "'DM Sans', sans-serif" }}
+    >
+      <div className="mgw-footer-full" style={{ borderTop: `0.5px solid ${BORDER}`, padding: '48px 24px 28px' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <div className="mgw-footer-grid">
 
-        <div className="mgw-footer-grid">
-          <div className="mgw-footer-brand-col">
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-              <div style={{
-                width: 36, height: 36, borderRadius: '50%',
-                background: 'rgba(201,162,39,0.12)',
-                border: '0.5px solid rgba(201,162,39,0.35)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontFamily: "'Cormorant Garamond', Georgia, serif",
-                fontSize: 15, color: GOLD, fontWeight: 600,
-              }}>M</div>
-              <div>
-                <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 17, color: '#EAEAEA', letterSpacing: '0.03em' }}>
-                  Mavin Grandpa
-                </div>
-                <div style={{ fontSize: 9, letterSpacing: '0.25em', textTransform: 'uppercase', color: GOLD, marginTop: 1 }}>
-                  Worldwide
+            <div className="mgw-footer-brand-col">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+                <div style={{
+                  width: 36, height: 36, borderRadius: '50%',
+                  background: 'rgba(201,162,39,0.12)',
+                  border: '0.5px solid rgba(201,162,39,0.35)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontFamily: "'Cormorant Garamond', Georgia, serif",
+                  fontSize: 15, color: GOLD, fontWeight: 600,
+                }}>M</div>
+                <div>
+                  <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 17, color: '#EAEAEA', letterSpacing: '0.03em' }}>
+                    Mavin Grandpa
+                  </div>
+                  <div style={{ fontSize: 9, letterSpacing: '0.25em', textTransform: 'uppercase', color: GOLD, marginTop: 1 }}>
+                    Worldwide
+                  </div>
                 </div>
               </div>
-            </div>
-            <p style={{ fontSize: 12, color: '#666', lineHeight: 1.75, maxWidth: 280, marginBottom: 20 }}>
-              A private circle of mentorship for visionary creatives, founders, and industry leaders.
-            </p>
-            <div style={{ display: 'flex', gap: 10 }}>
-              {SOCIALS.map(s => (
-                <a
-                  key={s.label}
-                  href="#"
-                  aria-label={s.label}
-                  title={s.label}
-                  style={{
-                    width: 34, height: 34, borderRadius: 8,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: 'rgba(255,255,255,0.04)',
-                    border: `0.5px solid ${BORDER}`,
-                    color: '#666',
-                    transition: 'color 0.2s, border-color 0.2s',
-                  }}
-                  onMouseEnter={e => { e.currentTarget.style.color = GOLD; e.currentTarget.style.borderColor = 'rgba(201,162,39,0.4)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.color = '#666'; e.currentTarget.style.borderColor = BORDER; }}
-                >
-                  {s.icon}
-                </a>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <div style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: GOLD, marginBottom: 16 }}>Platform</div>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {[
-                { label: 'Home', page: 'landing' },
-                { label: 'About', page: 'about' },
-                { label: 'Booking', page: 'booking' },
-                { label: 'Consultancy', page: 'consult' },
-                { label: 'Knowledge Vault', page: 'vault' },
-              ].map(link => (
-                <li key={link.page}>
-                  <button
-                    onClick={() => onNavigate?.(link.page)}
+              <p style={{ fontSize: 12, color: '#888', lineHeight: 1.75, maxWidth: 280, marginBottom: 20 }}>
+                A private circle of mentorship for visionary creatives, founders, and industry leaders.
+              </p>
+              <div style={{ display: 'flex', gap: 10 }}>
+                {SOCIALS.map(s => (
+                  <a
+                    key={s.label}
+                    href="#"
+                    aria-label={s.label}
+                    title={s.label}
                     style={{
-                      background: 'none', border: 'none', padding: 0,
-                      fontSize: 13, color: '#666', cursor: 'pointer',
-                      fontFamily: "'DM Sans', sans-serif",
-                      transition: 'color 0.2s',
+                      width: 34, height: 34, borderRadius: 8,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: `0.5px solid ${BORDER}`,
+                      color: '#888',
+                      transition: 'color 0.2s, border-color 0.2s',
                     }}
-                    onMouseEnter={e => { e.currentTarget.style.color = '#EAEAEA'; }}
-                    onMouseLeave={e => { e.currentTarget.style.color = '#666'; }}
+                    onMouseEnter={e => { e.currentTarget.style.color = GOLD; e.currentTarget.style.borderColor = 'rgba(201,162,39,0.4)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.color = '#888'; e.currentTarget.style.borderColor = BORDER; }}
                   >
-                    {link.label}
+                    {s.icon}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <div style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: GOLD, marginBottom: 16 }}>Platform</div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {[
+                  { label: 'About MGW', page: 'about' },
+                  { label: 'Booking', page: 'booking' },
+                  { label: 'Consultancy', page: 'consult' },
+                  { label: 'Knowledge Vault', page: 'vault' },
+                ].map(link => (
+                  <li key={link.page}>
+                    <button
+                      onClick={() => onNavigate?.(link.page)}
+                      style={{
+                        background: 'none', border: 'none', padding: 0,
+                        fontSize: 13, color: '#888', cursor: 'pointer',
+                        fontFamily: "'DM Sans', sans-serif",
+                        transition: 'color 0.2s',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.color = '#EAEAEA'; }}
+                      onMouseLeave={e => { e.currentTarget.style.color = '#888'; }}
+                    >
+                      {link.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <div style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: GOLD, marginBottom: 16 }}>Membership</div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {['Open Access', 'Creative Circle', 'Inner Circle'].map(plan => (
+                  <li key={plan}>
+                    <button
+                      onClick={() => onNavigate?.('auth', { view: 'plans' })}
+                      style={{
+                        background: 'none', border: 'none', padding: 0,
+                        fontSize: 13, color: '#888', cursor: 'pointer',
+                        fontFamily: "'DM Sans', sans-serif",
+                        transition: 'color 0.2s',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.color = '#EAEAEA'; }}
+                      onMouseLeave={e => { e.currentTarget.style.color = '#888'; }}
+                    >
+                      {plan}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <div style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: GOLD, marginBottom: 16 }}>Contact</div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <li style={{ fontSize: 13, color: '#888' }}>hello@mavingrandpa.com</li>
+                <li style={{ fontSize: 13, color: '#888' }}>Lagos, Nigeria</li>
+                <li style={{ marginTop: 6 }}>
+                  <button
+                    onClick={() => onNavigate?.('booking')}
+                    style={{
+                      background: 'rgba(201,162,39,0.08)', border: `0.5px solid rgba(201,162,39,0.3)`,
+                      borderRadius: 6, padding: '8px 16px', color: GOLD,
+                      fontSize: 11, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                      letterSpacing: '0.04em',
+                      transition: 'background 0.2s',
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(201,162,39,0.14)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'rgba(201,162,39,0.08)'; }}
+                  >
+                    Book a Session
                   </button>
                 </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <div style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: GOLD, marginBottom: 16 }}>Membership</div>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {['Open Access', 'Creative Circle', 'Inner Circle'].map(plan => (
-                <li key={plan}>
-                  <button
-                    onClick={() => onNavigate?.('auth', { view: 'plans' })}
-                    style={{
-                      background: 'none', border: 'none', padding: 0,
-                      fontSize: 13, color: '#666', cursor: 'pointer',
-                      fontFamily: "'DM Sans', sans-serif",
-                      transition: 'color 0.2s',
-                    }}
-                    onMouseEnter={e => { e.currentTarget.style.color = '#EAEAEA'; }}
-                    onMouseLeave={e => { e.currentTarget.style.color = '#666'; }}
-                  >
-                    {plan}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <div style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: GOLD, marginBottom: 16 }}>Contact</div>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <li style={{ fontSize: 13, color: '#666' }}>hello@mavingrandpa.com</li>
-              <li style={{ fontSize: 13, color: '#666' }}>Lagos, Nigeria</li>
-              <li style={{ marginTop: 6 }}>
-                <button
-                  onClick={() => onNavigate?.('booking')}
-                  style={{
-                    background: 'rgba(201,162,39,0.08)', border: `0.5px solid rgba(201,162,39,0.3)`,
-                    borderRadius: 6, padding: '8px 16px', color: GOLD,
-                    fontSize: 11, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-                    letterSpacing: '0.04em',
-                    transition: 'background 0.2s',
-                  }}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(201,162,39,0.14)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(201,162,39,0.08)'; }}
-                >
-                  Book a Session
-                </button>
-              </li>
-            </ul>
+              </ul>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div style={{
-          marginTop: 40,
-          paddingTop: 20,
-          borderTop: `0.5px solid rgba(255,255,255,0.05)`,
+      <div
+        className={`mgw-footer-copyright${isDashboard ? '' : ' mgw-footer-copyright-hide-desktop'}`}
+        style={{
+          borderTop: `0.5px solid rgba(201,162,39,0.15)`,
+          padding: '16px 24px',
           display: 'flex',
           flexWrap: 'wrap',
           gap: 12,
           justifyContent: 'space-between',
           alignItems: 'center',
-        }}>
-          <div style={{ fontSize: 11, color: '#444', letterSpacing: '0.03em' }}>
-            © {year} Mavin Grandpa Worldwide. All rights reserved.
-          </div>
-          <div style={{ display: 'flex', gap: 20 }}>
-            {['Privacy Policy', 'Terms of Use'].map(t => (
-              <a
-                key={t}
-                href="#"
-                style={{ fontSize: 11, color: '#444', transition: 'color 0.2s' }}
-                onMouseEnter={e => { e.currentTarget.style.color = '#888'; }}
-                onMouseLeave={e => { e.currentTarget.style.color = '#444'; }}
-              >
-                {t}
-              </a>
-            ))}
-          </div>
+          maxWidth: '100%',
+        }}
+      >
+        <div style={{ fontSize: 11, color: '#AAAAAA', letterSpacing: '0.03em' }}>
+          © {year} Mavin Grandpa Worldwide. All rights reserved.
         </div>
-
+        <div style={{ display: 'flex', gap: 20 }}>
+          {['Privacy Policy', 'Terms of Use'].map(t => (
+            <a
+              key={t}
+              href="#"
+              style={{ fontSize: 11, color: '#AAAAAA', transition: 'color 0.2s', textDecoration: 'none' }}
+              onMouseEnter={e => { e.currentTarget.style.color = '#EAEAEA'; }}
+              onMouseLeave={e => { e.currentTarget.style.color = '#AAAAAA'; }}
+            >
+              {t}
+            </a>
+          ))}
+        </div>
       </div>
     </footer>
   );
