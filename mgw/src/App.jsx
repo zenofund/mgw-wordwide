@@ -13,10 +13,10 @@ import AdminPage from './pages/AdminPage';
 
 const TABS = [
   { id: 'about',     label: 'MGW' },
-  { id: 'dashboard', label: 'Dashboard' },
-  { id: 'vault',     label: 'Vault' },
-  { id: 'booking',   label: 'Booking' },
   { id: 'consult',   label: 'Consult' },
+  { id: 'booking',   label: 'Booking' },
+  { id: 'vault',     label: 'Vault' },
+  { id: 'dashboard', label: 'Dashboard' },
 ];
 
 const GATED = new Set(['dashboard', 'vault']);
