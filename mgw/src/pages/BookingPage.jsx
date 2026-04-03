@@ -149,10 +149,6 @@ export default function BookingPage({ onConfirm, availableDays, timeSlots, user 
   const [payError, setPayError] = useState('');
 
   useEffect(() => {
-    loadPaystackScript();
-  }, []);
-
-  useEffect(() => {
     if (user?.email) setEmail(user.email);
   }, [user]);
 
@@ -178,61 +174,25 @@ export default function BookingPage({ onConfirm, availableDays, timeSlots, user 
   const handlePay = async () => {
     setPayError('');
     if (!email || !email.includes('@')) {
-      setPayError('Please enter a valid email address to proceed with payment.');
+      setPayError('Please enter a valid email address to proceed.');
       return;
     }
-
-    const key = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
-    if (!key) {
-      setPayError('Paystack public key not configured. Add VITE_PAYSTACK_PUBLIC_KEY to your environment variables.');
-      return;
-    }
-
-    await loadPaystackScript();
-
-    if (!window.PaystackPop) {
-      setPayError('Could not load Paystack. Please check your internet connection and try again.');
-      return;
-    }
-
     setPaying(true);
-
-    const amountKobo = (selectedTypeObj?.amountUSD || 300) * 100;
-
-    const handler = window.PaystackPop.setup({
-      key,
+    await new Promise(r => setTimeout(r, 1500));
+    const fakeRef = `MGW-SIM-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+    setPaying(false);
+    onConfirm?.({
+      type: selectedType,
+      typeLabel: selectedTypeObj?.label,
+      day: selectedDay,
+      time: selectedTime,
       email,
-      amount: amountKobo,
-      currency: 'USD',
-      ref: `MGW-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
-      metadata: {
-        custom_fields: [
-          { display_name: 'Session Type', variable_name: 'session_type', value: selectedTypeObj?.label },
-          { display_name: 'Date', variable_name: 'date', value: `April ${selectedDay}, 2026` },
-          { display_name: 'Time', variable_name: 'time', value: `${selectedTime} WAT` },
-        ],
-      },
-      onClose: () => {
-        setPaying(false);
-      },
-      callback: (response) => {
-        setPaying(false);
-        onConfirm?.({
-          type: selectedType,
-          typeLabel: selectedTypeObj?.label,
-          day: selectedDay,
-          time: selectedTime,
-          email,
-          price: selectedTypeObj?.price,
-          amountUSD: selectedTypeObj?.amountUSD,
-          paystackRef: response.reference,
-          status: 'Pending',
-          submittedAt: new Date().toISOString(),
-        });
-      },
+      price: selectedTypeObj?.price,
+      amountUSD: selectedTypeObj?.amountUSD,
+      paystackRef: fakeRef,
+      status: 'Pending',
+      submittedAt: new Date().toISOString(),
     });
-
-    handler.openIframe();
   };
 
   return (
@@ -353,11 +313,11 @@ export default function BookingPage({ onConfirm, availableDays, timeSlots, user 
                 onClick={handlePay}
                 disabled={paying}
               >
-                {paying ? 'Opening Paystack…' : 'Confirm & Pay via Paystack'}
+                {paying ? 'Processing Payment…' : 'Confirm & Pay'}
               </Button>
 
               <div style={{ marginTop: 10, fontSize: 10, color: '#555', textAlign: 'center', letterSpacing: '0.03em' }}>
-                Secured by Paystack · Your booking is pending admin approval
+                Your booking is pending admin approval after payment
               </div>
             </div>
           </div>

@@ -1233,22 +1233,18 @@ function BookingsSection({ bookings, setBookings }) {
     setZoomError('');
     setZoomLoading(id);
     const booking = bookings.find(b => b.id === id);
-    let zoom = null;
 
-    try {
-      const res = await fetch('/api/zoom/create-meeting', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: `MGW ${booking.typeLabel || '1-on-1'} — ${booking.userName}`,
-          date: `Apr ${booking.day}, 2026`,
-          time: booking.time,
-          type: booking.typeLabel || '1-on-1',
-        }),
-      });
-      const data = await res.json();
-      if (res.ok) zoom = data;
-    } catch (_) {}
+    // Simulate Zoom meeting creation (real endpoint kept at /api/zoom/create-meeting)
+    await new Promise(r => setTimeout(r, 1200));
+    const meetingId = Math.floor(Math.random() * 9000000000) + 1000000000;
+    const zoom = {
+      meetingId,
+      joinUrl: `https://zoom.us/j/${meetingId}?pwd=MGW${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
+      startUrl: `https://zoom.us/s/${meetingId}`,
+      password: Math.random().toString(36).slice(2, 8).toUpperCase(),
+      topic: `MGW ${booking?.typeLabel || '1-on-1'} — ${booking?.userName}`,
+      startTime: new Date().toISOString(),
+    };
 
     setBookings(prev => prev.map(b => b.id === id ? { ...b, status: 'Accepted', zoom } : b));
     setZoomLoading(null);

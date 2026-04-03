@@ -793,25 +793,21 @@ select {
   }
 }
 
-/* ── Footer ── */
-.mgw-footer-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px 20px;
+/* ── Footer copyright bar ── */
+.mgw-footer-bar {
+  padding: 14px 24px;
+  border-top: 0.5px solid rgba(201,162,39,0.12);
+  text-align: center;
 }
 
-.mgw-footer-brand-col {
-  grid-column: 1 / -1;
+/* mobile-only footer: hidden on desktop */
+.mgw-footer-mobile-only {
+  display: block;
 }
 
-@media (min-width: 768px) {
-  .mgw-footer-grid {
-    grid-template-columns: 2fr 1fr 1fr 1fr;
-    gap: 0 40px;
-  }
-
-  .mgw-footer-brand-col {
-    grid-column: auto;
+@media (min-width: 1024px) {
+  .mgw-footer-mobile-only {
+    display: none;
   }
 }
 

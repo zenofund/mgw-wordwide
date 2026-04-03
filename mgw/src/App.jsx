@@ -47,7 +47,7 @@ const tabStyle = {
   letterSpacing: '0.1em',
   textTransform: 'uppercase',
   color: '#999',
-  padding: '12px 14px',
+  padding: '8px 10px',
   cursor: 'pointer',
   whiteSpace: 'nowrap',
   transition: 'all 0.2s',
@@ -174,9 +174,6 @@ export default function App() {
     !v.accessPlans || v.accessPlans.length === 0 || (user?.plan?.name && v.accessPlans.includes(user.plan.name))
   );
 
-  const pagesWithFooter = ['landing', 'about', 'consult', 'booking', 'vault', 'dashboard', 'profile'];
-  const showFooter = pagesWithFooter.includes(activePage);
-
   return (
     <div style={{ background: '#0A0A0A', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Navbar
@@ -261,9 +258,7 @@ export default function App() {
         )}
       </div>
 
-      {showFooter && (
-        <Footer onNavigate={navigate} />
-      )}
+      <Footer alwaysShow={user && (activePage === 'dashboard' || activePage === 'vault')} />
     </div>
   );
 }
