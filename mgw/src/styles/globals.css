@@ -921,3 +921,79 @@ select {
     scroll-snap-align: unset !important;
   }
 }
+
+/* ── Settings Page ── */
+.mgw-settings-outer {
+  width: 100%;
+  padding-bottom: 60px;
+}
+
+.mgw-settings-layout {
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px;
+  gap: 0;
+}
+
+/* Sidebar nav — hidden on mobile */
+.mgw-settings-nav {
+  display: none;
+}
+
+/* Mobile tab strip — visible on mobile */
+.mgw-settings-tabs {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 16px;
+  margin-bottom: 8px;
+}
+
+.mgw-settings-tabs::-webkit-scrollbar { display: none; }
+
+/* Content panel */
+.mgw-settings-content {
+  flex: 1;
+}
+
+/* Hide nav label text on mobile icon strip */
+.mgw-settings-nav-label {
+  display: inline;
+}
+
+@media (min-width: 1024px) {
+  .mgw-settings-outer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px 80px;
+  }
+
+  .mgw-settings-layout {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 48px;
+    padding: 0;
+  }
+
+  .mgw-settings-nav {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 90px;
+    gap: 2px;
+  }
+
+  /* Hide mobile tab strip on desktop */
+  .mgw-settings-tabs {
+    display: none;
+  }
+
+  .mgw-settings-content {
+    min-width: 0;
+    max-width: 620px;
+  }
+}

@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import logoImg from '@assets/logo_1775177601310.webp';
+
+const GOLD = '#C9A227';
 
 const styles = {
   nav: {
@@ -23,15 +25,6 @@ const styles = {
     maxWidth: 1200,
     margin: '0 auto',
   },
-  logo: {
-    fontFamily: "'Cormorant Garamond', Georgia, serif",
-    fontSize: 15,
-    letterSpacing: '0.12em',
-    color: '#C9A227',
-    fontWeight: 600,
-    textTransform: 'uppercase',
-    flexShrink: 0,
-  },
   navLinkBtn: {
     fontFamily: "'DM Sans', sans-serif",
     fontSize: 11,
@@ -48,8 +41,8 @@ const styles = {
     whiteSpace: 'nowrap',
   },
   navLinkBtnActive: {
-    color: '#C9A227',
-    borderBottomColor: '#C9A227',
+    color: GOLD,
+    borderBottomColor: GOLD,
   },
   actions: {
     display: 'flex',
@@ -90,13 +83,171 @@ const BellIcon = () => (
 );
 
 const UserIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C9A227" strokeWidth="1.5">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={GOLD} strokeWidth="1.5">
     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
     <circle cx="12" cy="7" r="4" />
   </svg>
 );
 
-export default function Navbar({ activePage, onNavigate, onLogoClick, tabs = [], user, onSearchClick, onNotificationsClick, onProfileClick }) {
+const DROPDOWN_ITEMS = [
+  { id: 'dashboard', label: 'Dashboard',   icon: '⊞' },
+  { id: 'settings',  label: 'Settings',    icon: '⚙' },
+  { id: 'profile',   label: 'My Profile',  icon: '◯' },
+];
+
+function ProfileDropdown({ user, onNavigate, onLogout, onClose }) {
+  const tierColors = { free: '#555', standard: '#6A38C2', premium: GOLD };
+  const tierColor = tierColors[user?.tier] || '#555';
+
+  return (
+    <div style={{
+      position: 'absolute',
+      top: 'calc(100% + 10px)',
+      right: 0,
+      width: 220,
+      background: '#141414',
+      border: '0.5px solid rgba(201,162,39,0.25)',
+      borderRadius: 12,
+      overflow: 'hidden',
+      boxShadow: '0 16px 40px rgba(0,0,0,0.6)',
+      zIndex: 200,
+    }}>
+      {/* User info */}
+      <div style={{
+        padding: '14px 16px',
+        borderBottom: '0.5px solid rgba(201,162,39,0.12)',
+        background: 'rgba(201,162,39,0.04)',
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10,
+        }}>
+          <div style={{
+            width: 36,
+            height: 36,
+            borderRadius: '50%',
+            background: `${GOLD}18`,
+            border: `1px solid ${GOLD}40`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontFamily: "'Cormorant Garamond', Georgia, serif",
+            fontSize: 16,
+            color: GOLD,
+            fontWeight: 700,
+            flexShrink: 0,
+          }}>
+            {user.name?.charAt(0)?.toUpperCase() || 'M'}
+          </div>
+          <div style={{ overflow: 'hidden' }}>
+            <div style={{
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              fontSize: 14,
+              color: '#EAEAEA',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}>
+              {user.name}
+            </div>
+            {user.plan && (
+              <div style={{
+                fontSize: 9,
+                color: tierColor,
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                marginTop: 2,
+              }}>
+                {user.plan.name}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Nav items */}
+      <div style={{ padding: '6px 0' }}>
+        {DROPDOWN_ITEMS.map(item => (
+          <button
+            key={item.id}
+            onClick={() => { onNavigate(item.id); onClose(); }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              width: '100%',
+              padding: '10px 16px',
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              color: '#BBBBB',
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 13,
+              transition: 'background 0.15s',
+              textAlign: 'left',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = '#EAEAEA'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#BBBBBB'; }}
+          >
+            <span style={{ fontSize: 13, color: '#666', width: 18, textAlign: 'center' }}>{item.icon}</span>
+            <span style={{ color: '#BBBBBB' }}>{item.label}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Sign out */}
+      <div style={{ borderTop: '0.5px solid rgba(201,162,39,0.1)', padding: '6px 0 4px' }}>
+        <button
+          onClick={() => { onLogout(); onClose(); }}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            width: '100%',
+            padding: '10px 16px',
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 13,
+            color: '#cc5555',
+            transition: 'background 0.15s',
+            textAlign: 'left',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(220,60,60,0.06)'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+        >
+          <span style={{ fontSize: 13, width: 18, textAlign: 'center' }}>→</span>
+          Sign Out
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default function Navbar({ activePage, onNavigate, onLogoClick, tabs = [], user, onSearchClick, onNotificationsClick, onProfileClick, onLogout }) {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const profileRef = useRef(null);
+
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  const handleProfileClick = () => {
+    if (user) {
+      setDropdownOpen(prev => !prev);
+    } else {
+      onProfileClick?.();
+    }
+  };
+
   return (
     <nav style={styles.nav}>
       <div style={styles.navInner}>
@@ -135,19 +286,37 @@ export default function Navbar({ activePage, onNavigate, onLogoClick, tabs = [],
           <button style={styles.iconBtn} onClick={onNotificationsClick} aria-label="Notifications">
             <BellIcon />
           </button>
-          <button
-            style={{ ...styles.iconBtn, ...styles.iconBtnActive }}
-            onClick={onProfileClick}
-            aria-label="Profile"
-          >
-            {user ? (
-              <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 15, color: '#C9A227', fontWeight: 700, lineHeight: 1 }}>
-                {user.name?.charAt(0)?.toUpperCase() || 'M'}
-              </span>
-            ) : (
-              <UserIcon />
+
+          {/* Profile button + dropdown */}
+          <div ref={profileRef} style={{ position: 'relative' }}>
+            <button
+              style={{
+                ...styles.iconBtn,
+                ...styles.iconBtnActive,
+                ...(dropdownOpen ? { borderColor: 'rgba(201,162,39,0.6)', background: 'rgba(201,162,39,0.12)' } : {}),
+              }}
+              onClick={handleProfileClick}
+              aria-label="Profile"
+              aria-expanded={dropdownOpen}
+            >
+              {user ? (
+                <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 15, color: GOLD, fontWeight: 700, lineHeight: 1 }}>
+                  {user.name?.charAt(0)?.toUpperCase() || 'M'}
+                </span>
+              ) : (
+                <UserIcon />
+              )}
+            </button>
+
+            {dropdownOpen && user && (
+              <ProfileDropdown
+                user={user}
+                onNavigate={onNavigate}
+                onLogout={onLogout}
+                onClose={() => setDropdownOpen(false)}
+              />
             )}
-          </button>
+          </div>
         </div>
       </div>
     </nav>

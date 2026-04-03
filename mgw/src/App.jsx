@@ -12,6 +12,7 @@ import SessionsPage from './pages/SessionsPage';
 import ConsultancyPage from './pages/ConsultancyPage';
 import AuthPage from './pages/AuthPage';
 import AdminPage from './pages/AdminPage';
+import SettingsPage from './pages/SettingsPage';
 
 const INITIAL_SESSIONS = [
   { id: 's1', title: 'Creative Direction Deep Dive', type: '1-on-1', date: 'Apr 10, 2026', time: '11:00 AM', price: '$300', status: 'Scheduled', zoom: null },
@@ -29,7 +30,7 @@ const TABS = [
   { id: 'vault',    label: 'Vault' },
 ];
 
-const GATED = new Set(['dashboard', 'vault']);
+const GATED = new Set(['dashboard', 'vault', 'settings', 'profile']);
 
 const INITIAL_VAULT_ITEMS = [
   { id: 1, type: 'video', title: 'Creative Brief Masterclass',    duration: '48 min',   accessPlans: [],                               series: 'Brand Foundations',       seriesOrder: 1, description: 'A deep dive into the fundamentals of creative briefing — how to communicate vision, align teams, and unlock great work.',       bg: 1, status: 'Published', source: 'YouTube', url: '' },
@@ -177,6 +178,10 @@ export default function App() {
     setActivePage('landing');
   };
 
+  const handleUpdateUser = (updates) => {
+    setUser(prev => prev ? { ...prev, ...updates } : prev);
+  };
+
   const handleBookingConfirm = (data) => {
     const booking = {
       id: `BK-${Date.now()}`,
@@ -233,7 +238,8 @@ export default function App() {
         user={user}
         onSearchClick={() => console.log('search')}
         onNotificationsClick={() => console.log('notifications')}
-        onProfileClick={() => user ? setActivePage('profile') : setActivePage('auth')}
+        onProfileClick={() => setActivePage('auth')}
+        onLogout={handleLogout}
       />
 
       <div className="mgw-tabbar" style={tabBarStyles}>
@@ -313,6 +319,16 @@ export default function App() {
 
         {activePage === 'profile' && user && (
           <ProfilePage user={user} onLogout={handleLogout} onNavigate={navigate} />
+        )}
+
+        {activePage === 'settings' && user && (
+          <SettingsPage
+            user={user}
+            plans={plans}
+            onNavigate={navigate}
+            onUpdateUser={handleUpdateUser}
+            onLogout={handleLogout}
+          />
         )}
       </div>
 

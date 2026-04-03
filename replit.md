@@ -16,11 +16,12 @@ A mentorship and consulting platform for Mavin Grandpa Worldwide (MGW). Built as
 - `VaultPage` — Filterable content grid (video, audio, PDF) + detail player view
 - `BookingPage` — Session type selector, calendar, time slots, booking summary, Paystack payment
 - `SessionsPage` — Public-facing sessions browser: filter by status/type, per-session Book modal, feeds into shared bookings state; requires login to book
+- `SettingsPage` — Account settings page with 5 sections: Profile (edit name/email/phone/bio/password), About & Share (app info + social share buttons), Subscription (current plan + upgrade/downgrade), Terms of Use, Privacy Policy
 - `AuthPage` — Login, Register, Forgot Password
 - `AdminPage` — Full admin panel with: Overview, Bookings (user requests), Sessions, Programs, Vault, Plans, Consultancy, Members, Announcements
 
 ## Components
-- `Navbar` — Sticky top nav; shows nav links inline on desktop (≥1024px), icon buttons only on mobile
+- `Navbar` — Sticky top nav; shows nav links inline on desktop (≥1024px), icon buttons only on mobile; profile avatar opens a dropdown with Dashboard, Settings, My Profile, and Sign Out when logged in
 - `Footer` — Stylish minimal footer with brand info, nav links, membership plans, contact; shown across all main pages; inherits theme background
 - `Button` — `primary`, `ghost`, `danger` variants; `sm`, `md`, `lg`, `full` sizes
 
