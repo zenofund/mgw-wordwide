@@ -5,13 +5,13 @@ const PURPLE = '#6A38C2';
 const BLUE   = '#00B3FF';
 
 const s = {
-  header:          { padding: '22px 20px 16px' },
+  header:          { padding: '22px 0 16px' },
   title:           { fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 26, fontWeight: 500, marginBottom: 4 },
   subtitle:        { fontSize: 11, color: '#999' },
-  filters:         { display: 'flex', gap: 8, padding: '14px 20px', overflowX: 'auto', scrollbarWidth: 'none' },
+  filters:         { display: 'flex', gap: 8, padding: '14px 0', overflowX: 'auto', scrollbarWidth: 'none' },
   filterPill:      { flexShrink: 0, fontSize: 10, letterSpacing: '0.08em', padding: '6px 14px', borderRadius: 20, border: '0.5px solid rgba(201,162,39,0.18)', color: '#999', cursor: 'pointer', background: 'transparent', fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s' },
   filterPillActive:{ background: GOLD, color: '#0A0A0A', borderColor: GOLD },
-  grid:            { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, padding: '16px 20px' },
+  grid:            { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, padding: '16px 0' },
   card:            { background: '#141414', border: '0.5px solid rgba(201,162,39,0.18)', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', transition: 'border-color 0.2s' },
   thumb:           { width: '100%', aspectRatio: '16/9', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' },
   thumbBg:         { position: 'absolute', inset: 0 },
@@ -517,7 +517,7 @@ export default function VaultPage({ allItems, userTier = 'free', userPlanName, p
   }
 
   return (
-    <div className="mgw-vault-outer">
+    <div className="mgw-page-container">
       <div className="mgw-vault-header" style={s.header}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
           <div>

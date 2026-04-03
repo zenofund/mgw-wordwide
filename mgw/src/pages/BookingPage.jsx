@@ -4,14 +4,14 @@ import Button from '../components/Button';
 const GOLD = '#C9A227';
 
 const s = {
-  header: { padding: '22px 20px 16px' },
+  header: { padding: '22px 0 16px' },
   title: { fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 26, fontWeight: 500, marginBottom: 4 },
   subtitle: { fontSize: 11, color: '#999' },
   typesGrid: {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
     gap: 10,
-    padding: '18px 20px',
+    padding: '18px 0',
   },
   typeCard: {
     background: '#141414',
@@ -35,7 +35,7 @@ const s = {
   },
   typeName: { fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 14, fontWeight: 500, marginBottom: 3 },
   typePrice: { fontSize: 10, color: '#C9A227', letterSpacing: '0.05em' },
-  calSection: { padding: '18px 20px' },
+  calSection: { padding: '18px 0' },
   calMonthRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 },
   calMonthName: { fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 16, fontWeight: 500 },
   calNav: { display: 'flex', gap: 10 },
@@ -61,7 +61,7 @@ const s = {
   calDaySelected: { background: '#C9A227', color: '#0A0A0A', fontWeight: 500 },
   calDayToday: { border: '0.5px solid #C9A227', color: '#C9A227' },
   calDayDisabled: { opacity: 0.3, cursor: 'default' },
-  slotsSection: { padding: '18px 20px' },
+  slotsSection: { padding: '18px 0' },
   slotsTitle: { fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 15, fontWeight: 500, marginBottom: 12 },
   slotsGrid: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 },
   slot: {
@@ -220,7 +220,7 @@ export default function BookingPage({ onConfirm, availableDays, timeSlots, user 
 
   return (
     <div style={{ background: '#0A0A0A', color: '#EAEAEA', minHeight: '100vh' }}>
-      <div className="mgw-booking-outer">
+      <div className="mgw-page-container">
         <div style={s.header}>
           <div className="mgw-booking-title" style={s.title}>Book a Session</div>
           <div style={s.subtitle}>Select your mentorship type and preferred time.</div>

@@ -86,7 +86,7 @@ const s = {
   page: { background: '#0A0A0A', color: '#EAEAEA', minHeight: '100vh' },
 
   hero: {
-    padding: '60px 24px 40px',
+    padding: '60px 0 40px',
     textAlign: 'center',
     position: 'relative',
     overflow: 'hidden',
@@ -112,7 +112,7 @@ const s = {
     maxWidth: 520, margin: '0 auto 28px', position: 'relative',
   },
 
-  servicesSection: { padding: '8px 20px 48px' },
+  servicesSection: { padding: '8px 0 48px' },
   sectionLabel: {
     fontSize: 9, letterSpacing: '0.25em', textTransform: 'uppercase',
     color: '#C9A227', marginBottom: 12,
@@ -161,7 +161,7 @@ const s = {
   cardMetaVal: { color: '#C9A227', fontWeight: 500, fontSize: 11 },
 
   bookSection: {
-    padding: '8px 20px 60px',
+    padding: '8px 0 60px',
   },
   bookCard: {
     background: 'linear-gradient(145deg, #141020 0%, #0e0c18 100%)',
@@ -219,6 +219,7 @@ export default function ConsultancyPage() {
 
   return (
     <div style={s.page}>
+      <div className="mgw-page-container">
 
       {/* Hero */}
       <div style={s.hero}>
@@ -238,7 +239,6 @@ export default function ConsultancyPage() {
 
       {/* Services Grid */}
       <div style={s.servicesSection}>
-        <div className="mgw-inner">
           <div style={s.sectionLabel}>Services</div>
           <div className="mgw-consult-title-lg" style={s.sectionTitle}>Creative Consultancy Offerings</div>
           <div style={s.sectionSub}>Tailored engagements for brands, artists, and creative leaders who demand the best.</div>
@@ -282,12 +282,10 @@ export default function ConsultancyPage() {
               />
             ))}
           </div>
-        </div>
       </div>
 
       {/* Booking Form */}
       <div id="book-consult" style={s.bookSection}>
-        <div className="mgw-inner">
           <div style={s.bookCard}>
             <div style={s.bookTitle}>Request a Consultation</div>
             <div style={s.bookSub}>Complete the form below. We will review your inquiry and get back within 48 hours.</div>
@@ -332,8 +330,9 @@ export default function ConsultancyPage() {
               </form>
             )}
           </div>
-        </div>
       </div>
+
+      </div>{/* /mgw-page-container */}
     </div>
   );
 }

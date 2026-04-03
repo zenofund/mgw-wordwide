@@ -386,12 +386,12 @@ select {
   /* ── Vault page ── */
   .mgw-vault-page-grid {
     grid-template-columns: repeat(4, 1fr) !important;
-    padding: 28px 48px !important;
+    padding: 28px 0 !important;
     gap: 16px !important;
   }
 
   .mgw-vault-header {
-    padding: 36px 48px 24px !important;
+    padding: 36px 0 24px !important;
   }
 
   .mgw-vault-title-text {
@@ -403,7 +403,7 @@ select {
   }
 
   .mgw-vault-filters {
-    padding: 16px 48px !important;
+    padding: 16px 0 !important;
   }
 
   .mgw-card-title {
@@ -811,41 +811,34 @@ select {
   }
 }
 
-/* ── Booking page outer container ── */
-.mgw-booking-outer {
+/* ═══════════════════════════════════════════════════
+   SINGLE SOURCE OF TRUTH — page container
+   Used by: Consult, Sessions, Booking, Vault
+   ═══════════════════════════════════════════════════ */
+.mgw-page-container {
   width: 100%;
+  padding: 0 20px;
 }
 
 @media (min-width: 1024px) {
-  .mgw-booking-outer {
+  .mgw-page-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 48px;
   }
 }
 
-/* ── Vault page outer container ── */
-.mgw-vault-outer {
-  width: 100%;
-}
-
-@media (min-width: 1024px) {
-  .mgw-vault-outer {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-}
+/* Legacy aliases — kept for back-compat but no extra sizing rules */
+.mgw-booking-outer { width: 100%; }
+.mgw-vault-outer   { width: 100%; }
+.mgw-sessions-outer { width: 100%; }
 
 /* ── Sessions page ── */
-.mgw-sessions-outer {
-  width: 100%;
-}
-
 .mgw-sessions-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 14px;
-  padding: 0 20px 40px;
+  padding: 0 0 40px;
 }
 
 @media (min-width: 680px) {

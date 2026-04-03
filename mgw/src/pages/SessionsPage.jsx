@@ -322,8 +322,8 @@ export default function SessionsPage({ sessions = [], user, onBook, onNavigate }
 
   return (
     <div style={{ background: '#0A0A0A', color: '#EAEAEA', minHeight: '100vh' }}>
-      <div className="mgw-sessions-outer">
-        <div style={{ padding: '28px 20px 16px' }}>
+      <div className="mgw-page-container">
+        <div style={{ padding: '28px 0 16px' }}>
           <div style={{ fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: GOLD, marginBottom: 6 }}>
             Live &amp; Upcoming
           </div>
@@ -335,7 +335,7 @@ export default function SessionsPage({ sessions = [], user, onBook, onNavigate }
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: 8, padding: '0 20px 20px', overflowX: 'auto', scrollbarWidth: 'none' }}>
+        <div style={{ display: 'flex', gap: 8, padding: '0 0 20px', overflowX: 'auto', scrollbarWidth: 'none' }}>
           {FILTER_OPTIONS.map(f => (
             <button
               key={f}
@@ -382,7 +382,7 @@ export default function SessionsPage({ sessions = [], user, onBook, onNavigate }
         )}
 
         {!user && visible.length > 0 && (
-          <div style={{ margin: '0 20px 40px', background: 'rgba(201,162,39,0.05)', border: `0.5px solid ${BORDER}`, borderRadius: 10, padding: '16px 18px', display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+          <div style={{ margin: '0 0 40px', background: 'rgba(201,162,39,0.05)', border: `0.5px solid ${BORDER}`, borderRadius: 10, padding: '16px 18px', display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
             <div style={{ flex: 1, minWidth: 200 }}>
               <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 15, marginBottom: 3 }}>
                 Sign in to book a session
