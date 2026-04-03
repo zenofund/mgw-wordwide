@@ -91,7 +91,20 @@ export default function App() {
     { time: '4:30 PM',  booked: false },
   ]);
 
-  const [bookings, setBookings] = useState([]);
+  const [bookings, setBookings] = useState(() => {
+    try {
+      const stored = localStorage.getItem('mgw_bookings');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('mgw_bookings', JSON.stringify(bookings));
+    } catch { /* quota exceeded — ignore */ }
+  }, [bookings]);
 
   const [authInitialView, setAuthInitialView] = useState('login');
 
@@ -258,7 +271,12 @@ export default function App() {
         )}
       </div>
 
-      <Footer alwaysShow={user && (activePage === 'dashboard' || activePage === 'vault')} />
+      <Footer alwaysShow={
+        activePage === 'landing' ||
+        activePage === 'consult' ||
+        activePage === 'booking' ||
+        (user && (activePage === 'dashboard' || activePage === 'vault'))
+      } />
     </div>
   );
 }
