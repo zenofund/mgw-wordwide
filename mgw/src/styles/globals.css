@@ -457,6 +457,68 @@ select {
   }
 }
 
+/* ── About Page ── */
+
+/* Mobile: page stacks vertically */
+.mgw-about-page {
+  flex-direction: column !important;
+}
+
+@media (min-width: 1024px) {
+  .mgw-about-page {
+    flex-direction: row !important;
+  }
+}
+
+/* Mobile: stack vertically */
+.mgw-about-left {
+  width: 100% !important;
+  height: 65vw;
+  min-height: 260px;
+  max-height: 420px;
+  position: relative !important;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* Mobile: image just fills its container normally */
+.mgw-about-sticky-img {
+  position: relative !important;
+  height: 100% !important;
+  top: auto !important;
+}
+
+.mgw-about-right {
+  padding: 36px 24px 60px !important;
+  max-width: 100% !important;
+}
+
+@media (min-width: 1024px) {
+  .mgw-about-left {
+    width: 40% !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    position: relative !important;
+    overflow: visible;
+  }
+
+  /* Desktop: sticky image — stays in view while text scrolls */
+  .mgw-about-sticky-img {
+    position: sticky !important;
+    top: 64px !important;
+    height: calc(100vh - 64px) !important;
+  }
+
+  .mgw-about-right {
+    padding: 64px 60px 80px 56px !important;
+  }
+
+  .mgw-about-heading {
+    font-size: 52px !important;
+  }
+}
+
 /* Pulse animation */
 @keyframes mgw-pulse {
   0%, 100% { opacity: 1; }

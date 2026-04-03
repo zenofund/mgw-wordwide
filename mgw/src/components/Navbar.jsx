@@ -96,15 +96,21 @@ const UserIcon = () => (
   </svg>
 );
 
-export default function Navbar({ activePage, onNavigate, tabs = [], onSearchClick, onNotificationsClick, onProfileClick }) {
+export default function Navbar({ activePage, onNavigate, onLogoClick, tabs = [], onSearchClick, onNotificationsClick, onProfileClick }) {
   return (
     <nav style={styles.nav}>
       <div style={styles.navInner}>
-        <img
-          src={logoImg}
-          alt="MGW"
-          style={{ height: 42, width: 42, objectFit: 'contain', flexShrink: 0 }}
-        />
+        <button
+          onClick={onLogoClick}
+          aria-label="Home"
+          style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center' }}
+        >
+          <img
+            src={logoImg}
+            alt="MGW"
+            style={{ height: 50, width: 50, objectFit: 'contain' }}
+          />
+        </button>
 
         {/* Desktop nav links */}
         <div className="mgw-nav-links">

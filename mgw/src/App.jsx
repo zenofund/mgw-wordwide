@@ -3,13 +3,14 @@ import './styles/globals.css';
 
 import Navbar from './components/Navbar';
 import LandingPage from './pages/LandingPage';
+import AboutPage from './pages/AboutPage';
 import DashboardPage from './pages/DashboardPage';
 import VaultPage from './pages/VaultPage';
 import BookingPage from './pages/BookingPage';
 import AuthPage from './pages/AuthPage';
 
 const TABS = [
-  { id: 'landing', label: 'Home' },
+  { id: 'about', label: 'MGW' },
   { id: 'dashboard', label: 'Dashboard' },
   { id: 'vault', label: 'Vault' },
   { id: 'booking', label: 'Booking' },
@@ -56,6 +57,7 @@ export default function App() {
       <Navbar
         activePage={activePage}
         onNavigate={setActivePage}
+        onLogoClick={() => setActivePage('landing')}
         tabs={TABS}
         onSearchClick={() => console.log('search')}
         onNotificationsClick={() => console.log('notifications')}
@@ -82,6 +84,10 @@ export default function App() {
           onBookSession={() => setActivePage('booking')}
           onBecomeMember={() => setActivePage('auth')}
         />
+      )}
+
+      {activePage === 'about' && (
+        <AboutPage />
       )}
 
       {activePage === 'dashboard' && (
