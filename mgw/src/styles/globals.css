@@ -682,6 +682,43 @@ select {
   .mgw-consult-title-lg {
     font-size: 32px !important;
   }
+
+  /* ── Admin desktop text scaling ── */
+
+  /* Stat cards */
+  .mgw-admin-stat-label { font-size: 12px !important; }
+  .mgw-admin-stat-value { font-size: 34px !important; }
+  .mgw-admin-stat-delta { font-size: 12px !important; }
+
+  /* Section headers */
+  .mgw-admin-section-title { font-size: 27px !important; }
+  .mgw-admin-section-sub   { font-size: 14px !important; }
+  .mgw-admin-section-action { font-size: 13px !important; }
+
+  /* Data tables */
+  .mgw-admin-table    { font-size: 14px !important; }
+  .mgw-admin-table-th { font-size: 11px !important; }
+  .mgw-admin-table-td { font-size: 14px !important; }
+  .mgw-admin-table-btn { font-size: 12px !important; }
+
+  /* Badges */
+  .mgw-admin-badge { font-size: 11px !important; }
+
+  /* Modal */
+  .mgw-admin-modal-title { font-size: 24px !important; }
+
+  /* Form fields */
+  .mgw-admin-field-label { font-size: 12px !important; }
+  .mgw-admin-field-input { font-size: 14px !important; }
+
+  /* Save button */
+  .mgw-admin-save-btn { font-size: 13px !important; }
+
+  /* Sidebar */
+  .mgw-admin-nav-item     { font-size: 14px !important; }
+  .mgw-admin-sidebar-label { font-size: 14px !important; }
+  .mgw-admin-sidebar-eyebrow { font-size: 11px !important; }
+  .mgw-admin-sidebar-brand   { font-size: 19px !important; }
 }
 
 /* Pulse animation */

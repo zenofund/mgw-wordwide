@@ -27,31 +27,31 @@ const SIDEBAR_ITEMS = [
 const StatCard = ({ label, value, delta, accent = GOLD }) => (
   <div style={{ background: SURFACE, border: `0.5px solid ${BORDER}`, borderRadius: 10, padding: '18px 16px', position: 'relative', overflow: 'hidden' }}>
     <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, ${accent}, transparent)` }} />
-    <div style={{ fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase', color: TEXT_DIM, marginBottom: 8 }}>{label}</div>
-    <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 28, color: accent, fontWeight: 600, lineHeight: 1 }}>{value}</div>
-    {delta && <div style={{ fontSize: 10, color: '#5a9', marginTop: 6 }}>{delta}</div>}
+    <div className="mgw-admin-stat-label" style={{ fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase', color: TEXT_DIM, marginBottom: 8 }}>{label}</div>
+    <div className="mgw-admin-stat-value" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 28, color: accent, fontWeight: 600, lineHeight: 1 }}>{value}</div>
+    {delta && <div className="mgw-admin-stat-delta" style={{ fontSize: 10, color: '#5a9', marginTop: 6 }}>{delta}</div>}
   </div>
 );
 
 const SectionHeader = ({ title, sub, action, onAction }) => (
   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
     <div>
-      <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 22, fontWeight: 500, marginBottom: 4 }}>{title}</div>
-      {sub && <div style={{ fontSize: 12, color: TEXT_DIM }}>{sub}</div>}
+      <div className="mgw-admin-section-title" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 22, fontWeight: 500, marginBottom: 4 }}>{title}</div>
+      {sub && <div className="mgw-admin-section-sub" style={{ fontSize: 12, color: TEXT_DIM }}>{sub}</div>}
     </div>
     {action && (
-      <button onClick={onAction} style={{ background: GOLD, color: '#0A0A0A', border: 'none', borderRadius: 6, padding: '8px 16px', fontSize: 11, fontWeight: 600, cursor: 'pointer', letterSpacing: '0.05em', textTransform: 'uppercase', fontFamily: "'DM Sans', sans-serif", flexShrink: 0 }}>{action}</button>
+      <button onClick={onAction} className="mgw-admin-section-action" style={{ background: GOLD, color: '#0A0A0A', border: 'none', borderRadius: 6, padding: '8px 16px', fontSize: 11, fontWeight: 600, cursor: 'pointer', letterSpacing: '0.05em', textTransform: 'uppercase', fontFamily: "'DM Sans', sans-serif", flexShrink: 0 }}>{action}</button>
     )}
   </div>
 );
 
 const Table = ({ cols, rows, onEdit, onDelete }) => (
   <div style={{ overflowX: 'auto' }}>
-    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+    <table className="mgw-admin-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
       <thead>
         <tr>
           {cols.map(c => (
-            <th key={c} style={{ textAlign: 'left', padding: '8px 12px', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', color: TEXT_DIM, borderBottom: `0.5px solid ${BORDER}`, whiteSpace: 'nowrap' }}>{c}</th>
+            <th key={c} className="mgw-admin-table-th" style={{ textAlign: 'left', padding: '8px 12px', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', color: TEXT_DIM, borderBottom: `0.5px solid ${BORDER}`, whiteSpace: 'nowrap' }}>{c}</th>
           ))}
           <th style={{ padding: '8px 12px', borderBottom: `0.5px solid ${BORDER}` }} />
         </tr>
@@ -60,11 +60,11 @@ const Table = ({ cols, rows, onEdit, onDelete }) => (
         {rows.map((row, i) => (
           <tr key={i} style={{ borderBottom: `0.5px solid rgba(255,255,255,0.04)` }}>
             {row.map((cell, j) => (
-              <td key={j} style={{ padding: '12px 12px', color: typeof cell === 'string' && cell.startsWith('$') ? GOLD : '#EAEAEA', whiteSpace: 'nowrap' }}>{cell}</td>
+              <td key={j} className="mgw-admin-table-td" style={{ padding: '12px 12px', color: typeof cell === 'string' && cell.startsWith('$') ? GOLD : '#EAEAEA', whiteSpace: 'nowrap' }}>{cell}</td>
             ))}
             <td style={{ padding: '12px 12px', whiteSpace: 'nowrap' }}>
-              <button onClick={() => onEdit?.(i)} style={{ background: 'none', border: `0.5px solid ${BORDER}`, color: '#999', borderRadius: 4, padding: '4px 10px', fontSize: 10, cursor: 'pointer', marginRight: 6, fontFamily: "'DM Sans', sans-serif" }}>Edit</button>
-              <button onClick={() => onDelete?.(i)} style={{ background: 'none', border: '0.5px solid rgba(220,60,60,0.3)', color: '#c55', borderRadius: 4, padding: '4px 10px', fontSize: 10, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>Delete</button>
+              <button onClick={() => onEdit?.(i)} className="mgw-admin-table-btn" style={{ background: 'none', border: `0.5px solid ${BORDER}`, color: '#999', borderRadius: 4, padding: '4px 10px', fontSize: 10, cursor: 'pointer', marginRight: 6, fontFamily: "'DM Sans', sans-serif" }}>Edit</button>
+              <button onClick={() => onDelete?.(i)} className="mgw-admin-table-btn" style={{ background: 'none', border: '0.5px solid rgba(220,60,60,0.3)', color: '#c55', borderRadius: 4, padding: '4px 10px', fontSize: 10, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>Delete</button>
             </td>
           </tr>
         ))}
@@ -74,7 +74,7 @@ const Table = ({ cols, rows, onEdit, onDelete }) => (
 );
 
 const Badge = ({ label, color }) => (
-  <span style={{
+  <span className="mgw-admin-badge" style={{
     display: 'inline-block', padding: '2px 8px', borderRadius: 20, fontSize: 9,
     letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 500,
     background: color === 'gold' ? 'rgba(201,162,39,0.15)' : color === 'purple' ? 'rgba(106,56,194,0.15)' : color === 'green' ? 'rgba(80,200,120,0.15)' : 'rgba(150,150,150,0.15)',
@@ -86,7 +86,7 @@ const Modal = ({ title, onClose, children }) => (
   <div style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
     <div onClick={onClose} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)' }} />
     <div style={{ position: 'relative', background: '#141414', border: `0.5px solid ${BORDER}`, borderRadius: 12, padding: '28px 24px', width: '100%', maxWidth: 480, margin: '0 20px', zIndex: 1, maxHeight: '90vh', overflowY: 'auto' }}>
-      <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 20, marginBottom: 20 }}>{title}</div>
+      <div className="mgw-admin-modal-title" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 20, marginBottom: 20 }}>{title}</div>
       {children}
       <button onClick={onClose} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', color: TEXT_DIM, cursor: 'pointer', fontSize: 18 }}>✕</button>
     </div>
@@ -95,21 +95,21 @@ const Modal = ({ title, onClose, children }) => (
 
 const Field = ({ label, type = 'text', value, onChange, options }) => (
   <div style={{ marginBottom: 14 }}>
-    <label style={{ display: 'block', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: TEXT_DIM, marginBottom: 6 }}>{label}</label>
+    <label className="mgw-admin-field-label" style={{ display: 'block', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: TEXT_DIM, marginBottom: 6 }}>{label}</label>
     {type === 'select' ? (
-      <select value={value} onChange={e => onChange(e.target.value)} style={{ width: '100%', background: '#1a1a1a', border: `0.5px solid ${BORDER}`, borderRadius: 6, padding: '9px 12px', color: '#EAEAEA', fontFamily: "'DM Sans', sans-serif", fontSize: 12, outline: 'none', boxSizing: 'border-box' }}>
+      <select value={value} onChange={e => onChange(e.target.value)} className="mgw-admin-field-input" style={{ width: '100%', background: '#1a1a1a', border: `0.5px solid ${BORDER}`, borderRadius: 6, padding: '9px 12px', color: '#EAEAEA', fontFamily: "'DM Sans', sans-serif", fontSize: 12, outline: 'none', boxSizing: 'border-box' }}>
         {options.map(o => <option key={o} value={o}>{o}</option>)}
       </select>
     ) : type === 'textarea' ? (
-      <textarea value={value} onChange={e => onChange(e.target.value)} style={{ width: '100%', background: '#1a1a1a', border: `0.5px solid ${BORDER}`, borderRadius: 6, padding: '9px 12px', color: '#EAEAEA', fontFamily: "'DM Sans', sans-serif", fontSize: 12, outline: 'none', resize: 'vertical', minHeight: 70, boxSizing: 'border-box' }} />
+      <textarea value={value} onChange={e => onChange(e.target.value)} className="mgw-admin-field-input" style={{ width: '100%', background: '#1a1a1a', border: `0.5px solid ${BORDER}`, borderRadius: 6, padding: '9px 12px', color: '#EAEAEA', fontFamily: "'DM Sans', sans-serif", fontSize: 12, outline: 'none', resize: 'vertical', minHeight: 70, boxSizing: 'border-box' }} />
     ) : (
-      <input type={type} value={value} onChange={e => onChange(e.target.value)} style={{ width: '100%', background: '#1a1a1a', border: `0.5px solid ${BORDER}`, borderRadius: 6, padding: '9px 12px', color: '#EAEAEA', fontFamily: "'DM Sans', sans-serif", fontSize: 12, outline: 'none', boxSizing: 'border-box' }} />
+      <input type={type} value={value} onChange={e => onChange(e.target.value)} className="mgw-admin-field-input" style={{ width: '100%', background: '#1a1a1a', border: `0.5px solid ${BORDER}`, borderRadius: 6, padding: '9px 12px', color: '#EAEAEA', fontFamily: "'DM Sans', sans-serif", fontSize: 12, outline: 'none', boxSizing: 'border-box' }} />
     )}
   </div>
 );
 
 const SaveBtn = ({ children, onClick, disabled }) => (
-  <button onClick={!disabled ? onClick : undefined} style={{ marginTop: 8, width: '100%', background: disabled ? '#555' : GOLD, color: '#0A0A0A', border: 'none', borderRadius: 6, padding: '11px', fontWeight: 600, cursor: disabled ? 'not-allowed' : 'pointer', fontFamily: "'DM Sans', sans-serif", fontSize: 12, letterSpacing: '0.05em', textTransform: 'uppercase', opacity: disabled ? 0.7 : 1, transition: 'background 0.2s, opacity 0.2s' }}>
+  <button onClick={!disabled ? onClick : undefined} className="mgw-admin-save-btn" style={{ marginTop: 8, width: '100%', background: disabled ? '#555' : GOLD, color: '#0A0A0A', border: 'none', borderRadius: 6, padding: '11px', fontWeight: 600, cursor: disabled ? 'not-allowed' : 'pointer', fontFamily: "'DM Sans', sans-serif", fontSize: 12, letterSpacing: '0.05em', textTransform: 'uppercase', opacity: disabled ? 0.7 : 1, transition: 'background 0.2s, opacity 0.2s' }}>
     {children}
   </button>
 );
@@ -1165,8 +1165,8 @@ export default function AdminPage({ onExit, availableDays, setAvailableDays, tim
 
       <aside className={`mgw-admin-sidebar${sidebarOpen ? ' open' : ''}`}>
         <div style={{ padding: '20px 16px 12px', borderBottom: `0.5px solid ${BORDER}` }}>
-          <div style={{ fontSize: 9, letterSpacing: '0.25em', textTransform: 'uppercase', color: TEXT_DIM, marginBottom: 4 }}>Admin Panel</div>
-          <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 16, color: GOLD }}>MGW Platform</div>
+          <div className="mgw-admin-sidebar-eyebrow" style={{ fontSize: 9, letterSpacing: '0.25em', textTransform: 'uppercase', color: TEXT_DIM, marginBottom: 4 }}>Admin Panel</div>
+          <div className="mgw-admin-sidebar-brand" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 16, color: GOLD }}>MGW Platform</div>
         </div>
 
         <nav style={{ padding: '12px 8px' }}>
@@ -1176,6 +1176,7 @@ export default function AdminPage({ onExit, availableDays, setAvailableDays, tim
               <button
                 key={item.id}
                 onClick={() => { setActiveSection(item.id); setSidebarOpen(false); }}
+                className="mgw-admin-nav-item"
                 style={{
                   display: 'flex', alignItems: 'center', gap: 10, width: '100%',
                   background: isActive ? 'rgba(201,162,39,0.1)' : 'none',
