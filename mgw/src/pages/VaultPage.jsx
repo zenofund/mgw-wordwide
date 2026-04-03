@@ -444,30 +444,31 @@ function VaultItemDetail({ item, allItems, onBack, onSelectItem }) {
       </div>
 
       <div className="mgw-vault-detail-layout">
-        <div className="mgw-vault-detail-player">
-          {item.type === 'video'               && <VideoPlayer item={item} />}
-          {item.type === 'audio'               && <AudioPlayer item={item} />}
-          {item.type === 'pdf'                 && <PdfViewer item={item} />}
-          {item.type === 'masterclass'         && <VideoPlayer item={item} />}
-          {item.type === 'workshop recording'  && <VideoPlayer item={item} />}
+        <div className="mgw-vault-detail-main">
+          <div className="mgw-vault-detail-player">
+            {item.type === 'video'               && <VideoPlayer item={item} />}
+            {item.type === 'audio'               && <AudioPlayer item={item} />}
+            {item.type === 'pdf'                 && <PdfViewer item={item} />}
+            {item.type === 'masterclass'         && <VideoPlayer item={item} />}
+            {item.type === 'workshop recording'  && <VideoPlayer item={item} />}
+          </div>
+
+          <div className="mgw-vault-detail-below-player">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+              <div style={{ ...s.typePill, ...pill, fontSize: 9 }}>{item.type.toUpperCase()}</div>
+              <div style={{ fontSize: 10, color: '#666' }}>{item.duration}</div>
+            </div>
+            <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 22, fontWeight: 500, lineHeight: 1.25, marginBottom: 12, color: '#EAEAEA' }}>
+              {item.title}
+            </div>
+            <div style={{ fontSize: 13, color: '#888', lineHeight: 1.8 }}>
+              {item.description || 'Exclusive content from the MGW Knowledge Vault.'}
+            </div>
+          </div>
         </div>
 
-        <div className="mgw-vault-detail-info">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-            <div style={{ ...s.typePill, ...pill, fontSize: 9 }}>{item.type.toUpperCase()}</div>
-            <div style={{ fontSize: 10, color: '#666' }}>{item.duration}</div>
-          </div>
-
-          <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 22, fontWeight: 500, lineHeight: 1.25, marginBottom: 12, color: '#EAEAEA' }}>
-            {item.title}
-          </div>
-
-          <div style={{ fontSize: 12, color: '#888', lineHeight: 1.75, marginBottom: 24 }}>
-            {item.description || 'Exclusive content from the MGW Knowledge Vault.'}
-          </div>
-
+        <div className="mgw-vault-detail-sidebar">
           <div style={{ height: '0.5px', background: BORDER, marginBottom: 20 }} />
-
           <div style={{ fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#666', marginBottom: 12 }}>Content Details</div>
           {[
             { label: 'Type',   val: item.type.charAt(0).toUpperCase() + item.type.slice(1) },

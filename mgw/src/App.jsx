@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './styles/globals.css';
 
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import LandingPage from './pages/LandingPage';
 import AboutPage from './pages/AboutPage';
 import DashboardPage from './pages/DashboardPage';
@@ -90,6 +91,8 @@ export default function App() {
     { time: '4:30 PM',  booked: false },
   ]);
 
+  const [bookings, setBookings] = useState([]);
+
   const [authInitialView, setAuthInitialView] = useState('login');
 
   const navigate = (page, opts = {}) => {
@@ -127,6 +130,19 @@ export default function App() {
     setActivePage('landing');
   };
 
+  const handleBookingConfirm = (data) => {
+    const booking = {
+      id: `BK-${Date.now()}`,
+      ...data,
+      userName: user?.name || 'Guest',
+      status: 'Pending',
+      submittedAt: new Date().toISOString(),
+      zoom: null,
+    };
+    setBookings(prev => [booking, ...prev]);
+    setActivePage('dashboard');
+  };
+
   if (isAdmin) {
     return (
       <AdminPage
@@ -141,6 +157,8 @@ export default function App() {
         setVaultItems={setVaultItems}
         announcements={announcements}
         setAnnouncements={setAnnouncements}
+        bookings={bookings}
+        setBookings={setBookings}
       />
     );
   }
@@ -156,8 +174,11 @@ export default function App() {
     !v.accessPlans || v.accessPlans.length === 0 || (user?.plan?.name && v.accessPlans.includes(user.plan.name))
   );
 
+  const pagesWithFooter = ['landing', 'about', 'consult', 'booking', 'vault', 'dashboard', 'profile'];
+  const showFooter = pagesWithFooter.includes(activePage);
+
   return (
-    <div style={{ background: '#0A0A0A', minHeight: '100vh' }}>
+    <div style={{ background: '#0A0A0A', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Navbar
         activePage={activePage}
         onNavigate={navigate}
@@ -181,59 +202,67 @@ export default function App() {
         ))}
       </div>
 
-      {activePage === 'landing' && (
-        <LandingPage
-          onJoinMembership={() => navigate('auth', { view: 'plans' })}
-          onBookSession={() => navigate('booking')}
-          onBecomeMember={() => navigate('auth', { view: 'plans' })}
-        />
-      )}
+      <div style={{ flex: 1 }}>
+        {activePage === 'landing' && (
+          <LandingPage
+            onJoinMembership={() => navigate('auth', { view: 'plans' })}
+            onBookSession={() => navigate('booking')}
+            onBecomeMember={() => navigate('auth', { view: 'plans' })}
+            onOpenVault={() => navigate('vault')}
+          />
+        )}
 
-      {activePage === 'about' && <AboutPage />}
+        {activePage === 'about' && <AboutPage />}
 
-      {activePage === 'dashboard' && user && (
-        <DashboardPage
-          user={user}
-          vaultItems={accessibleVault}
-          onViewAllSessions={() => navigate('booking')}
-          onOpenVault={() => navigate('vault')}
-          announcement={announcements.filter(a => a.published)[0] || null}
-        />
-      )}
+        {activePage === 'dashboard' && user && (
+          <DashboardPage
+            user={user}
+            vaultItems={accessibleVault}
+            onViewAllSessions={() => navigate('booking')}
+            onOpenVault={() => navigate('vault')}
+            announcement={announcements.filter(a => a.published)[0] || null}
+          />
+        )}
 
-      {activePage === 'vault' && user && (
-        <VaultPage
-          allItems={publishedVault}
-          userTier={user.tier}
-          userPlanName={user.plan?.name}
-          plans={plans}
-          onNavigate={navigate}
-        />
-      )}
+        {activePage === 'vault' && user && (
+          <VaultPage
+            allItems={publishedVault}
+            userTier={user.tier}
+            userPlanName={user.plan?.name}
+            plans={plans}
+            onNavigate={navigate}
+          />
+        )}
 
-      {activePage === 'booking' && (
-        <BookingPage
-          availableDays={availableDays}
-          timeSlots={timeSlots}
-          onConfirm={(data) => console.log('Booking confirmed:', data)}
-        />
-      )}
+        {activePage === 'booking' && (
+          <BookingPage
+            availableDays={availableDays}
+            timeSlots={timeSlots}
+            user={user}
+            onConfirm={handleBookingConfirm}
+          />
+        )}
 
-      {activePage === 'consult' && <ConsultancyPage />}
+        {activePage === 'consult' && <ConsultancyPage />}
 
-      {activePage === 'auth' && !user && (
-        <AuthPage
-          key={authInitialView}
-          initialView={authInitialView}
-          plans={plans}
-          onLogin={handleLogin}
-          onRegister={handleRegister}
-          onForgotPassword={(email) => console.log('Reset email sent to:', email)}
-        />
-      )}
+        {activePage === 'auth' && !user && (
+          <AuthPage
+            key={authInitialView}
+            initialView={authInitialView}
+            plans={plans}
+            onLogin={handleLogin}
+            onRegister={handleRegister}
+            onForgotPassword={(email) => console.log('Reset email sent to:', email)}
+          />
+        )}
 
-      {activePage === 'profile' && user && (
-        <ProfilePage user={user} onLogout={handleLogout} onNavigate={navigate} />
+        {activePage === 'profile' && user && (
+          <ProfilePage user={user} onLogout={handleLogout} onNavigate={navigate} />
+        )}
+      </div>
+
+      {showFooter && (
+        <Footer onNavigate={navigate} />
       )}
     </div>
   );

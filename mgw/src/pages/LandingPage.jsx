@@ -433,7 +433,7 @@ const STATS = [
   { num: '12yr', label: 'Experience' },
 ];
 
-export default function LandingPage({ onJoinMembership, onBookSession, onBecomeMember }) {
+export default function LandingPage({ onJoinMembership, onBookSession, onBecomeMember, onOpenVault }) {
   return (
     <div>
       {/* ── Hero ── */}
@@ -518,14 +518,25 @@ export default function LandingPage({ onJoinMembership, onBookSession, onBecomeM
           <div className="mgw-section-sub" style={s.sectionSub}>Exclusive content from decades of creative industry mastery.</div>
           <div className="mgw-vault-preview-grid" style={s.vaultGrid}>
             {VAULT_ITEMS.map((item) => (
-              <div key={item.title} style={s.vaultItem}>
+              <div
+                key={item.title}
+                style={{ ...s.vaultItem, transition: 'border-color 0.2s', cursor: 'pointer' }}
+                onClick={onOpenVault}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(201,162,39,0.5)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(201,162,39,0.18)'; }}
+              >
                 <div style={{ ...s.typePill, ...pillStyles[item.type] }}>{item.type}</div>
                 <div className="mgw-vault-item-title" style={s.vaultTitle}>{item.title}</div>
                 <div style={s.vaultSub}>{item.sub}</div>
                 {item.locked && <div style={s.lockIcon}><LockIcon /></div>}
               </div>
             ))}
-            <div style={{ ...s.vaultItem, ...s.vaultItemWide }}>
+            <div
+              style={{ ...s.vaultItem, ...s.vaultItemWide, transition: 'border-color 0.2s', cursor: 'pointer' }}
+              onClick={onOpenVault}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(201,162,39,0.5)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(201,162,39,0.18)'; }}
+            >
               <div style={{ ...s.typePill, ...pillStyles.pdf }}>Guide</div>
               <div className="mgw-vault-item-title" style={s.vaultTitle}>The MGW Brand Strategy Framework — Complete Edition</div>
               <div style={s.vaultSub}>62 pages · Premium members only</div>

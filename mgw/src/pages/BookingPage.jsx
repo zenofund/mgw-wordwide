@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '../components/Button';
+
+const GOLD = '#C9A227';
 
 const s = {
   header: { padding: '22px 20px 16px' },
@@ -92,11 +94,24 @@ const s = {
   summaryKey: { color: '#999' },
   summaryVal: { fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 13 },
   summaryTotal: { fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 18, color: '#C9A227' },
+  emailInput: {
+    width: '100%',
+    background: '#141414',
+    border: '0.5px solid rgba(201,162,39,0.18)',
+    borderRadius: 6,
+    padding: '10px 14px',
+    color: '#EAEAEA',
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: 12,
+    outline: 'none',
+    marginBottom: 12,
+    boxSizing: 'border-box',
+  },
 };
 
 const SESSION_TYPES = [
-  { id: '1on1', label: '1-on-1', price: '$300 / 90 min', iconBg: 'rgba(201,162,39,0.15)', icon: '◆' },
-  { id: 'group', label: 'Group', price: '$120 / 2 hrs', iconBg: 'rgba(106,56,194,0.2)', icon: '◈' },
+  { id: '1on1', label: '1-on-1', price: '$300 / 90 min', amountUSD: 300, iconBg: 'rgba(201,162,39,0.15)', icon: '◆' },
+  { id: 'group', label: 'Group', price: '$120 / 2 hrs', amountUSD: 120, iconBg: 'rgba(106,56,194,0.2)', icon: '◈' },
 ];
 
 const TODAY = 2;
@@ -115,10 +130,31 @@ const ChevronRight = () => (
   </svg>
 );
 
-export default function BookingPage({ onConfirm, availableDays, timeSlots }) {
+function loadPaystackScript() {
+  return new Promise((resolve) => {
+    if (window.PaystackPop) { resolve(); return; }
+    const script = document.createElement('script');
+    script.src = 'https://js.paystack.co/v1/inline.js';
+    script.onload = resolve;
+    document.head.appendChild(script);
+  });
+}
+
+export default function BookingPage({ onConfirm, availableDays, timeSlots, user }) {
   const [selectedType, setSelectedType] = useState('1on1');
   const [selectedDay, setSelectedDay] = useState(8);
   const [selectedTime, setSelectedTime] = useState('10:00 AM');
+  const [email, setEmail] = useState(user?.email || '');
+  const [paying, setPaying] = useState(false);
+  const [payError, setPayError] = useState('');
+
+  useEffect(() => {
+    loadPaystackScript();
+  }, []);
+
+  useEffect(() => {
+    if (user?.email) setEmail(user.email);
+  }, [user]);
 
   const selectedTypeObj = SESSION_TYPES.find((t) => t.id === selectedType);
 
@@ -139,112 +175,194 @@ export default function BookingPage({ onConfirm, availableDays, timeSlots }) {
 
   const slots = timeSlots || [];
 
+  const handlePay = async () => {
+    setPayError('');
+    if (!email || !email.includes('@')) {
+      setPayError('Please enter a valid email address to proceed with payment.');
+      return;
+    }
+
+    const key = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
+    if (!key) {
+      setPayError('Paystack public key not configured. Add VITE_PAYSTACK_PUBLIC_KEY to your environment variables.');
+      return;
+    }
+
+    await loadPaystackScript();
+
+    if (!window.PaystackPop) {
+      setPayError('Could not load Paystack. Please check your internet connection and try again.');
+      return;
+    }
+
+    setPaying(true);
+
+    const amountKobo = (selectedTypeObj?.amountUSD || 300) * 100;
+
+    const handler = window.PaystackPop.setup({
+      key,
+      email,
+      amount: amountKobo,
+      currency: 'USD',
+      ref: `MGW-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
+      metadata: {
+        custom_fields: [
+          { display_name: 'Session Type', variable_name: 'session_type', value: selectedTypeObj?.label },
+          { display_name: 'Date', variable_name: 'date', value: `April ${selectedDay}, 2026` },
+          { display_name: 'Time', variable_name: 'time', value: `${selectedTime} WAT` },
+        ],
+      },
+      onClose: () => {
+        setPaying(false);
+      },
+      callback: (response) => {
+        setPaying(false);
+        onConfirm?.({
+          type: selectedType,
+          typeLabel: selectedTypeObj?.label,
+          day: selectedDay,
+          time: selectedTime,
+          email,
+          price: selectedTypeObj?.price,
+          amountUSD: selectedTypeObj?.amountUSD,
+          paystackRef: response.reference,
+          status: 'Pending',
+          submittedAt: new Date().toISOString(),
+        });
+      },
+    });
+
+    handler.openIframe();
+  };
+
   return (
     <div style={{ background: '#0A0A0A', color: '#EAEAEA', minHeight: '100vh' }}>
       <div className="mgw-booking-outer">
-      <div style={s.header}>
-        <div className="mgw-booking-title" style={s.title}>Book a Session</div>
-        <div style={s.subtitle}>Select your mentorship type and preferred time.</div>
-      </div>
-
-      <div className="mgw-booking-types" style={s.typesGrid}>
-        {SESSION_TYPES.map((t) => (
-          <div
-            key={t.id}
-            style={{ ...s.typeCard, ...(selectedType === t.id ? s.typeCardSelected : {}) }}
-            onClick={() => setSelectedType(t.id)}
-          >
-            <div style={{ ...s.typeIcon, background: t.iconBg }}>{t.icon}</div>
-            <div className="mgw-type-name" style={s.typeName}>{t.label}</div>
-            <div className="mgw-type-price" style={s.typePrice}>{t.price}</div>
-          </div>
-        ))}
-      </div>
-
-      <div className="mgw-booking-body">
-
-        <div className="mgw-booking-left" style={s.calSection}>
-          <div style={s.calMonthRow}>
-            <div className="mgw-cal-month-name" style={s.calMonthName}>April 2026</div>
-            <div style={s.calNav}>
-              <div style={s.calNavBtn}><ChevronLeft /></div>
-              <div style={s.calNavBtn}><ChevronRight /></div>
-            </div>
-          </div>
-          <div style={s.calDaysHeader}>
-            {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((d) => (
-              <div key={d} style={s.calDayHd}>{d}</div>
-            ))}
-          </div>
-          <div style={s.calGrid}>
-            {calCells.map((day, i) => (
-              <button
-                key={i}
-                style={getDayStyle(day)}
-                onClick={() => day && isDayAvailable(day) && setSelectedDay(day)}
-                disabled={!day || !isDayAvailable(day)}
-              >
-                {day || ''}
-              </button>
-            ))}
-          </div>
+        <div style={s.header}>
+          <div className="mgw-booking-title" style={s.title}>Book a Session</div>
+          <div style={s.subtitle}>Select your mentorship type and preferred time.</div>
         </div>
 
-        <div>
-          <div style={s.slotsSection}>
-            <div style={s.slotsTitle}>Available Times — April {selectedDay}</div>
-            {slots.length === 0 ? (
-              <div style={{ fontSize: 12, color: '#666', fontStyle: 'italic' }}>No time slots configured.</div>
-            ) : (
-              <div style={s.slotsGrid}>
-                {slots.map((sl) => (
-                  <button
-                    key={sl.time}
-                    style={{
-                      ...s.slot,
-                      ...(sl.booked ? s.slotBooked : {}),
-                      ...(selectedTime === sl.time && !sl.booked ? s.slotSelected : {}),
-                    }}
-                    className="mgw-slot"
-                    onClick={() => !sl.booked && setSelectedTime(sl.time)}
-                    disabled={sl.booked}
-                  >
-                    {sl.time}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div style={s.confirmSection}>
-            <div style={s.summary}>
-              {[
-                { key: 'Type', val: selectedTypeObj?.label === '1-on-1' ? '1-on-1 Mentorship' : 'Group Cohort' },
-                { key: 'Date', val: `April ${selectedDay}, 2026` },
-                { key: 'Time', val: `${selectedTime} WAT` },
-                { key: 'Duration', val: selectedType === '1on1' ? '90 minutes' : '2 hours' },
-              ].map((row) => (
-                <div key={row.key} style={s.summaryRow}>
-                  <span style={s.summaryKey}>{row.key}</span>
-                  <span className="mgw-summary-val" style={s.summaryVal}>{row.val}</span>
-                </div>
-              ))}
-              <div style={{ ...s.summaryRow, borderBottom: 'none' }}>
-                <span style={{ ...s.summaryKey, fontWeight: 500, color: '#EAEAEA', fontSize: 13 }}>Total</span>
-                <span className="mgw-summary-total" style={s.summaryTotal}>{selectedType === '1on1' ? '$300' : '$120'}</span>
-              </div>
-            </div>
-            <Button
-              variant="primary"
-              size="full"
-              onClick={() => onConfirm?.({ type: selectedType, day: selectedDay, time: selectedTime })}
+        <div className="mgw-booking-types" style={s.typesGrid}>
+          {SESSION_TYPES.map((t) => (
+            <div
+              key={t.id}
+              style={{ ...s.typeCard, ...(selectedType === t.id ? s.typeCardSelected : {}) }}
+              onClick={() => setSelectedType(t.id)}
             >
-              Confirm &amp; Pay via Paystack
-            </Button>
-          </div>
+              <div style={{ ...s.typeIcon, background: t.iconBg }}>{t.icon}</div>
+              <div className="mgw-type-name" style={s.typeName}>{t.label}</div>
+              <div className="mgw-type-price" style={s.typePrice}>{t.price}</div>
+            </div>
+          ))}
         </div>
 
-      </div>
+        <div className="mgw-booking-body">
+
+          <div className="mgw-booking-left" style={s.calSection}>
+            <div style={s.calMonthRow}>
+              <div className="mgw-cal-month-name" style={s.calMonthName}>April 2026</div>
+              <div style={s.calNav}>
+                <div style={s.calNavBtn}><ChevronLeft /></div>
+                <div style={s.calNavBtn}><ChevronRight /></div>
+              </div>
+            </div>
+            <div style={s.calDaysHeader}>
+              {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((d) => (
+                <div key={d} style={s.calDayHd}>{d}</div>
+              ))}
+            </div>
+            <div style={s.calGrid}>
+              {calCells.map((day, i) => (
+                <button
+                  key={i}
+                  style={getDayStyle(day)}
+                  onClick={() => day && isDayAvailable(day) && setSelectedDay(day)}
+                  disabled={!day || !isDayAvailable(day)}
+                >
+                  {day || ''}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <div style={s.slotsSection}>
+              <div style={s.slotsTitle}>Available Times — April {selectedDay}</div>
+              {slots.length === 0 ? (
+                <div style={{ fontSize: 12, color: '#666', fontStyle: 'italic' }}>No time slots configured.</div>
+              ) : (
+                <div style={s.slotsGrid}>
+                  {slots.map((sl) => (
+                    <button
+                      key={sl.time}
+                      style={{
+                        ...s.slot,
+                        ...(sl.booked ? s.slotBooked : {}),
+                        ...(selectedTime === sl.time && !sl.booked ? s.slotSelected : {}),
+                      }}
+                      className="mgw-slot"
+                      onClick={() => !sl.booked && setSelectedTime(sl.time)}
+                      disabled={sl.booked}
+                    >
+                      {sl.time}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div style={s.confirmSection}>
+              <div style={s.summary}>
+                {[
+                  { key: 'Type', val: selectedTypeObj?.label === '1-on-1' ? '1-on-1 Mentorship' : 'Group Cohort' },
+                  { key: 'Date', val: `April ${selectedDay}, 2026` },
+                  { key: 'Time', val: `${selectedTime} WAT` },
+                  { key: 'Duration', val: selectedType === '1on1' ? '90 minutes' : '2 hours' },
+                ].map((row) => (
+                  <div key={row.key} style={s.summaryRow}>
+                    <span style={s.summaryKey}>{row.key}</span>
+                    <span className="mgw-summary-val" style={s.summaryVal}>{row.val}</span>
+                  </div>
+                ))}
+                <div style={{ ...s.summaryRow, borderBottom: 'none' }}>
+                  <span style={{ ...s.summaryKey, fontWeight: 500, color: '#EAEAEA', fontSize: 13 }}>Total</span>
+                  <span className="mgw-summary-total" style={s.summaryTotal}>{selectedType === '1on1' ? '$300' : '$120'}</span>
+                </div>
+              </div>
+
+              {!user?.email && (
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  style={s.emailInput}
+                />
+              )}
+
+              {payError && (
+                <div style={{ background: 'rgba(220,60,60,0.1)', border: '0.5px solid rgba(220,60,60,0.3)', borderRadius: 6, padding: '10px 14px', fontSize: 12, color: '#FF6B6B', marginBottom: 12 }}>
+                  {payError}
+                </div>
+              )}
+
+              <Button
+                variant="primary"
+                size="full"
+                onClick={handlePay}
+                disabled={paying}
+              >
+                {paying ? 'Opening Paystack…' : 'Confirm & Pay via Paystack'}
+              </Button>
+
+              <div style={{ marginTop: 10, fontSize: 10, color: '#555', textAlign: 'center', letterSpacing: '0.03em' }}>
+                Secured by Paystack · Your booking is pending admin approval
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
   );

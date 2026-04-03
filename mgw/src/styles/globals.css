@@ -742,16 +742,29 @@ select {
 .mgw-vault-detail-layout {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 0;
   padding: 8px 20px 40px;
+}
+
+.mgw-vault-detail-main {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
 .mgw-vault-detail-player {
   width: 100%;
 }
 
-.mgw-vault-detail-info {
+.mgw-vault-detail-below-player {
   width: 100%;
+  padding-top: 16px;
+}
+
+.mgw-vault-detail-sidebar {
+  width: 100%;
+  padding-top: 20px;
 }
 
 @media (min-width: 1024px) {
@@ -762,16 +775,43 @@ select {
     gap: 40px;
   }
 
-  .mgw-vault-detail-player {
+  .mgw-vault-detail-main {
     flex: 1;
     min-width: 0;
   }
 
-  .mgw-vault-detail-info {
+  .mgw-vault-detail-below-player {
+    padding-top: 20px;
+  }
+
+  .mgw-vault-detail-sidebar {
     width: 300px;
     flex-shrink: 0;
     position: sticky;
     top: 80px;
+    padding-top: 0;
+  }
+}
+
+/* ── Footer ── */
+.mgw-footer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px 20px;
+}
+
+.mgw-footer-brand-col {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 768px) {
+  .mgw-footer-grid {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 0 40px;
+  }
+
+  .mgw-footer-brand-col {
+    grid-column: auto;
   }
 }
 

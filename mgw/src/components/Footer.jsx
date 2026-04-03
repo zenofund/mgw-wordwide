@@ -44,7 +44,7 @@ export default function Footer({ onNavigate }) {
 
   return (
     <footer style={{
-      background: '#0A0A0A',
+      background: 'inherit',
       borderTop: `0.5px solid ${BORDER}`,
       padding: '48px 24px 28px',
       fontFamily: "'DM Sans', sans-serif",

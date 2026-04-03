@@ -15,6 +15,7 @@ const Icon = ({ d, size = 16, color = '#999' }) => (
 
 const SIDEBAR_ITEMS = [
   { id: 'overview',       label: 'Overview',       icon: 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z' },
+  { id: 'bookings',       label: 'Bookings',       icon: 'M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2M9 14l2 2 4-4M8 2h8a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z' },
   { id: 'sessions',       label: 'Sessions',       icon: 'M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z' },
   { id: 'programs',       label: 'Programs',       icon: 'M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z' },
   { id: 'vault',          label: 'Vault',          icon: 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5' },
@@ -1218,12 +1219,167 @@ function AnnouncementsSection({ announcements, setAnnouncements }) {
   );
 }
 
-export default function AdminPage({ onExit, availableDays, setAvailableDays, timeSlots, setTimeSlots, plans, setPlans, vaultItems, setVaultItems, announcements, setAnnouncements }) {
+function BookingsSection({ bookings, setBookings }) {
+  const [zoomLoading, setZoomLoading] = useState(null);
+  const [zoomError, setZoomError] = useState('');
+
+  const statusColor = (s) => {
+    if (s === 'Accepted') return 'green';
+    if (s === 'Declined') return 'red';
+    return 'gold';
+  };
+
+  const handleAccept = async (id) => {
+    setZoomError('');
+    setZoomLoading(id);
+    const booking = bookings.find(b => b.id === id);
+    let zoom = null;
+
+    try {
+      const res = await fetch('/api/zoom/create-meeting', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: `MGW ${booking.typeLabel || '1-on-1'} — ${booking.userName}`,
+          date: `Apr ${booking.day}, 2026`,
+          time: booking.time,
+          type: booking.typeLabel || '1-on-1',
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) zoom = data;
+    } catch (_) {}
+
+    setBookings(prev => prev.map(b => b.id === id ? { ...b, status: 'Accepted', zoom } : b));
+    setZoomLoading(null);
+  };
+
+  const handleDecline = (id) => {
+    setBookings(prev => prev.map(b => b.id === id ? { ...b, status: 'Declined' } : b));
+  };
+
+  const pending = bookings.filter(b => b.status === 'Pending');
+  const handled = bookings.filter(b => b.status !== 'Pending');
+
+  const zoomLink = (zoom) => zoom?.joinUrl ? (
+    <a href={zoom.joinUrl} target="_blank" rel="noreferrer" style={{ color: '#4A90D9', fontSize: 11, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4, padding: '3px 10px', borderRadius: 10, background: 'rgba(74,144,217,0.12)', border: '0.5px solid rgba(74,144,217,0.3)' }}>
+      ▶ Zoom Link
+    </a>
+  ) : (
+    <span style={{ fontSize: 11, color: '#555', fontStyle: 'italic' }}>
+      {zoom === null ? 'Zoom credentials not configured' : '—'}
+    </span>
+  );
+
+  const BookingCard = ({ b }) => (
+    <div style={{ background: SURFACE, border: `0.5px solid ${BORDER}`, borderRadius: 10, padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 8 }}>
+        <div>
+          <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 17, fontWeight: 500, marginBottom: 3 }}>
+            {b.userName}
+          </div>
+          <div style={{ fontSize: 11, color: TEXT_DIM }}>{b.email}</div>
+        </div>
+        <Badge label={b.status} color={statusColor(b.status)} />
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '6px 20px' }}>
+        {[
+          { k: 'Session',  v: b.typeLabel || b.type },
+          { k: 'Date',     v: `April ${b.day}, 2026` },
+          { k: 'Time',     v: `${b.time} WAT` },
+          { k: 'Amount',   v: b.price },
+          { k: 'Ref',      v: b.paystackRef ? b.paystackRef.slice(-10) : '—' },
+        ].map(row => (
+          <div key={row.k}>
+            <div style={{ fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#555', marginBottom: 2 }}>{row.k}</div>
+            <div style={{ fontSize: 12, color: '#EAEAEA', fontFamily: "'Cormorant Garamond', Georgia, serif" }}>{row.v}</div>
+          </div>
+        ))}
+      </div>
+
+      {b.status === 'Accepted' && (
+        <div style={{ borderTop: `0.5px solid rgba(255,255,255,0.05)`, paddingTop: 10 }}>
+          <div style={{ fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#555', marginBottom: 6 }}>Zoom Meeting</div>
+          {zoomLink(b.zoom)}
+        </div>
+      )}
+
+      {b.status === 'Pending' && (
+        <div style={{ display: 'flex', gap: 8, borderTop: `0.5px solid rgba(255,255,255,0.05)`, paddingTop: 12 }}>
+          <button
+            onClick={() => handleAccept(b.id)}
+            disabled={zoomLoading === b.id}
+            style={{ flex: 1, background: 'rgba(80,200,120,0.12)', border: '0.5px solid rgba(80,200,120,0.35)', color: '#5CC88A', borderRadius: 6, padding: '9px', fontSize: 11, fontWeight: 600, cursor: zoomLoading === b.id ? 'wait' : 'pointer', fontFamily: "'DM Sans', sans-serif", letterSpacing: '0.05em', textTransform: 'uppercase', transition: 'all 0.15s' }}
+          >
+            {zoomLoading === b.id ? 'Creating Zoom…' : 'Accept + Create Zoom'}
+          </button>
+          <button
+            onClick={() => handleDecline(b.id)}
+            style={{ flex: 1, background: 'rgba(220,60,60,0.1)', border: '0.5px solid rgba(220,60,60,0.3)', color: '#c55', borderRadius: 6, padding: '9px', fontSize: 11, fontWeight: 600, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", letterSpacing: '0.05em', textTransform: 'uppercase', transition: 'all 0.15s' }}
+          >
+            Decline
+          </button>
+        </div>
+      )}
+    </div>
+  );
+
+  return (
+    <div>
+      <SectionHeader
+        title="Booking Requests"
+        sub="Individual session booking requests submitted by members via Paystack."
+      />
+
+      {zoomError && (
+        <div style={{ background: 'rgba(220,60,60,0.1)', border: '0.5px solid rgba(220,60,60,0.3)', borderRadius: 8, padding: '10px 14px', color: '#FF6B6B', fontSize: 12, marginBottom: 16 }}>
+          {zoomError}
+        </div>
+      )}
+
+      {bookings.length === 0 ? (
+        <div style={{ background: SURFACE, border: `0.5px solid ${BORDER}`, borderRadius: 10, padding: '48px 24px', textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 20, color: TEXT_DIM, marginBottom: 8 }}>No bookings yet</div>
+          <div style={{ fontSize: 12, color: '#555' }}>When members book and pay for sessions, they will appear here for review.</div>
+        </div>
+      ) : (
+        <>
+          {pending.length > 0 && (
+            <div style={{ marginBottom: 32 }}>
+              <div style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: GOLD, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+                Pending Review
+                <span style={{ background: 'rgba(201,162,39,0.15)', border: '0.5px solid rgba(201,162,39,0.3)', borderRadius: 10, padding: '1px 8px', fontSize: 10, color: GOLD, fontWeight: 600 }}>{pending.length}</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {pending.map(b => <BookingCard key={b.id} b={b} />)}
+              </div>
+            </div>
+          )}
+
+          {handled.length > 0 && (
+            <div>
+              <div style={{ fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: TEXT_DIM, marginBottom: 14 }}>Handled</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {handled.map(b => <BookingCard key={b.id} b={b} />)}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+export default function AdminPage({ onExit, availableDays, setAvailableDays, timeSlots, setTimeSlots, plans, setPlans, vaultItems, setVaultItems, announcements, setAnnouncements, bookings = [], setBookings }) {
   const [activeSection, setActiveSection] = useState('overview');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const pendingCount = bookings.filter(b => b.status === 'Pending').length;
+
   const sections = {
     overview:       <OverviewSection />,
+    bookings:       <BookingsSection bookings={bookings} setBookings={setBookings} />,
     sessions:       <SessionsSection availableDays={availableDays} setAvailableDays={setAvailableDays} timeSlots={timeSlots} setTimeSlots={setTimeSlots} />,
     programs:       <ProgramsSection />,
     vault:          <VaultSection vaultItems={vaultItems} setVaultItems={setVaultItems} plans={plans} />,
@@ -1261,7 +1417,10 @@ export default function AdminPage({ onExit, availableDays, setAvailableDays, tim
                 }}
               >
                 <Icon d={item.icon} color={isActive ? GOLD : '#666'} size={15} />
-                <span className="mgw-admin-sidebar-label">{item.label}</span>
+                <span className="mgw-admin-sidebar-label" style={{ flex: 1 }}>{item.label}</span>
+                {item.id === 'bookings' && pendingCount > 0 && (
+                  <span style={{ background: GOLD, color: '#0A0A0A', borderRadius: 10, padding: '1px 6px', fontSize: 9, fontWeight: 700, lineHeight: 1.5, flexShrink: 0 }}>{pendingCount}</span>
+                )}
               </button>
             );
           })}
