@@ -323,16 +323,16 @@ export default function SessionsPage({ sessions = [], user, onBook, onNavigate }
   return (
     <div style={{ background: '#0A0A0A', color: '#EAEAEA', minHeight: '100vh' }}>
       <div className="mgw-page-container">
-        <div style={{ padding: '28px 0 16px' }}>
-          <div style={{ fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: GOLD, marginBottom: 6 }}>
-            Live &amp; Upcoming
-          </div>
-          <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 32, fontWeight: 500, marginBottom: 8 }}>
-            Sessions
-          </div>
-          <div style={{ fontSize: 13, color: '#777', maxWidth: 480, lineHeight: 1.7 }}>
+        {/* Hero */}
+        <div style={{ padding: '60px 0 40px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', borderRadius: '50%', width: 400, height: 400, background: 'radial-gradient(circle, rgba(106,56,194,0.18) 0%, transparent 70%)', top: -100, left: '50%', transform: 'translateX(-50%)', pointerEvents: 'none' }} />
+          <div style={{ fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', color: GOLD, marginBottom: 14, position: 'relative' }}>Live &amp; Upcoming</div>
+          <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 36, fontWeight: 500, lineHeight: 1.15, margin: '0 0 14px', position: 'relative' }}>
+            Mentorship<br /><em style={{ color: GOLD }}>Sessions</em>
+          </h1>
+          <p style={{ fontSize: 13, color: '#888', lineHeight: 1.7, maxWidth: 520, margin: '0 auto', position: 'relative' }}>
             Browse upcoming mentorship sessions and masterclasses. Book your spot directly.
-          </div>
+          </p>
         </div>
 
         <div style={{ display: 'flex', gap: 8, padding: '0 0 20px', overflowX: 'auto', scrollbarWidth: 'none' }}>

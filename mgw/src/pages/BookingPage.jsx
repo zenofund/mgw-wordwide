@@ -221,9 +221,16 @@ export default function BookingPage({ onConfirm, availableDays, timeSlots, user 
   return (
     <div style={{ background: '#0A0A0A', color: '#EAEAEA', minHeight: '100vh' }}>
       <div className="mgw-page-container">
-        <div style={s.header}>
-          <div className="mgw-booking-title" style={s.title}>Book a Session</div>
-          <div style={s.subtitle}>Select your mentorship type and preferred time.</div>
+        {/* Hero */}
+        <div style={{ padding: '60px 0 40px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', borderRadius: '50%', width: 400, height: 400, background: 'radial-gradient(circle, rgba(106,56,194,0.18) 0%, transparent 70%)', top: -100, left: '50%', transform: 'translateX(-50%)', pointerEvents: 'none' }} />
+          <div style={{ fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#C9A227', marginBottom: 14, position: 'relative' }}>Session Booking</div>
+          <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 36, fontWeight: 500, lineHeight: 1.15, marginBottom: 14, position: 'relative', margin: '0 0 14px' }}>
+            Reserve Your<br /><em style={{ color: '#C9A227' }}>Mentorship Session</em>
+          </h1>
+          <p style={{ fontSize: 13, color: '#888', lineHeight: 1.7, maxWidth: 520, margin: '0 auto', position: 'relative' }}>
+            Select your session type, choose a date that works for you, and secure your spot.
+          </p>
         </div>
 
         <div className="mgw-booking-types" style={s.typesGrid}>

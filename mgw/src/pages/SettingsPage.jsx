@@ -687,14 +687,16 @@ export default function SettingsPage({ user, plans, onNavigate, onUpdateUser, on
     <div style={{ background: '#0A0A0A', color: '#EAEAEA', minHeight: '100vh' }}>
       <div className="mgw-settings-outer">
 
-        {/* Page header */}
-        <div style={{ padding: '28px 20px 0', marginBottom: 24 }}>
-          <div style={{ fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: GOLD, marginBottom: 5 }}>
-            Account
-          </div>
-          <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 32, fontWeight: 500 }}>
-            Settings
-          </div>
+        {/* Page Hero */}
+        <div style={{ padding: '60px 0 40px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', borderRadius: '50%', width: 400, height: 400, background: 'radial-gradient(circle, rgba(106,56,194,0.18) 0%, transparent 70%)', top: -100, left: '50%', transform: 'translateX(-50%)', pointerEvents: 'none' }} />
+          <div style={{ fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', color: GOLD, marginBottom: 14, position: 'relative' }}>Account</div>
+          <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 36, fontWeight: 500, lineHeight: 1.15, margin: '0 0 14px', position: 'relative' }}>
+            Your <em style={{ color: GOLD }}>Settings</em>
+          </h1>
+          <p style={{ fontSize: 13, color: '#888', lineHeight: 1.7, maxWidth: 520, margin: '0 auto', position: 'relative' }}>
+            Manage your profile, subscription, and account preferences.
+          </p>
         </div>
 
         <div className="mgw-settings-layout">

@@ -518,18 +518,21 @@ export default function VaultPage({ allItems, userTier = 'free', userPlanName, p
 
   return (
     <div className="mgw-page-container">
-      <div className="mgw-vault-header" style={s.header}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
-          <div>
-            <div className="mgw-vault-title-text" style={s.title}>Knowledge Vault</div>
-            <div className="mgw-vault-subtitle" style={s.subtitle}>Exclusive content from Mavin Grandpa Worldwide</div>
+      {/* Hero */}
+      <div style={{ padding: '60px 0 40px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', borderRadius: '50%', width: 400, height: 400, background: 'radial-gradient(circle, rgba(106,56,194,0.18) 0%, transparent 70%)', top: -100, left: '50%', transform: 'translateX(-50%)', pointerEvents: 'none' }} />
+        <div style={{ fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', color: GOLD, marginBottom: 14, position: 'relative' }}>Exclusive Content</div>
+        <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 36, fontWeight: 500, lineHeight: 1.15, margin: '0 0 14px', position: 'relative' }}>
+          Knowledge<br /><em style={{ color: GOLD }}>Vault</em>
+        </h1>
+        <p style={{ fontSize: 13, color: '#888', lineHeight: 1.7, maxWidth: 520, margin: '0 auto', position: 'relative' }}>
+          Exclusive content from Mavin Grandpa Worldwide — curated for the select few.
+        </p>
+        {userPlanName && (
+          <div style={{ display: 'inline-block', marginTop: 20, background: 'rgba(201,162,39,0.08)', border: '0.5px solid rgba(201,162,39,0.3)', borderRadius: 20, padding: '5px 14px', fontSize: 10, color: GOLD, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', position: 'relative' }}>
+            {userPlanName}
           </div>
-          {userPlanName && (
-            <div style={{ background: 'rgba(201,162,39,0.08)', border: '0.5px solid rgba(201,162,39,0.3)', borderRadius: 20, padding: '5px 14px', fontSize: 10, color: GOLD, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', flexShrink: 0 }}>
-              {userPlanName}
-            </div>
-          )}
-        </div>
+        )}
       </div>
 
       <div className="mgw-vault-filters" style={s.filters}>

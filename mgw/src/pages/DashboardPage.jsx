@@ -188,15 +188,23 @@ export default function DashboardPage({
   const today = new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
   return (
+    <div style={{ background: '#0A0A0A', color: '#EAEAEA', minHeight: '100vh' }}>
+      {/* Page Hero */}
+      <div style={{ padding: '60px 20px 40px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', borderRadius: '50%', width: 400, height: 400, background: 'radial-gradient(circle, rgba(106,56,194,0.18) 0%, transparent 70%)', top: -100, left: '50%', transform: 'translateX(-50%)', pointerEvents: 'none' }} />
+        <div style={{ fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#C9A227', marginBottom: 14, position: 'relative' }}>Member Area</div>
+        <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 36, fontWeight: 500, lineHeight: 1.15, margin: '0 0 14px', position: 'relative' }}>
+          Welcome back, <em style={{ color: '#C9A227' }}>{user.name}</em>
+        </h1>
+        <p style={{ fontSize: 13, color: '#888', lineHeight: 1.7, maxWidth: 520, margin: '0 auto', position: 'relative' }}>
+          {today}
+        </p>
+      </div>
+
     <div className="mgw-dashboard-layout">
-      {/* ── Left: Sidebar (greeting + stats + sessions) ── */}
+      {/* ── Left: Sidebar (stats + sessions) ── */}
       <div className="mgw-dashboard-sidebar">
-        {/* Greeting */}
-        <div style={s.greeting}>
-          <div style={s.greetingSub}>Welcome back</div>
-          <div className="mgw-greeting-title" style={s.greetingTitle}>{user.name}</div>
-          <div className="mgw-greeting-date" style={s.greetingDate}>{today}</div>
-        </div>
+        <div style={{ height: 8 }} />
 
         {/* Quick Stats */}
         <div className="mgw-quick-stats" style={s.quickStats}>
@@ -273,6 +281,7 @@ export default function DashboardPage({
 
         <div style={{ height: 20 }} />
       </div>
+    </div>
     </div>
   );
 }
