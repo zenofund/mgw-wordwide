@@ -922,6 +922,12 @@ select {
   }
 }
 
+/* ── Toast notification ── */
+@keyframes mgw-toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
 /* ── Settings Page ── */
 .mgw-settings-outer {
   width: 100%;

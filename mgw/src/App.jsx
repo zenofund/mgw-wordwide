@@ -77,6 +77,12 @@ export default function App() {
   const [isAdmin, setIsAdmin]         = useState(false);
   const [user, setUser]               = useState(null);
   const [postLoginDest, setPostLoginDest] = useState(null);
+  const [toast, setToast]             = useState(null);
+
+  const showToast = (message, type = 'info') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3500);
+  };
 
   const [plans, setPlans] = useState([
     { name: 'Open Access',     price: '$0',   billing: 'Free',      tier: 'free',     features: ['Community access', 'Monthly digest', 'Limited vault'],                                                       color: '#555',    members: 472  },
@@ -230,6 +236,7 @@ export default function App() {
 
   return (
     <div style={{ background: '#0A0A0A', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {toast && <Toast message={toast.message} type={toast.type} onDismiss={() => setToast(null)} />}
       <Navbar
         activePage={activePage}
         onNavigate={navigate}
@@ -257,9 +264,15 @@ export default function App() {
       <div style={{ flex: 1 }}>
         {activePage === 'landing' && (
           <LandingPage
-            onJoinMembership={() => navigate('auth', { view: 'plans' })}
+            onJoinMembership={() => {
+              if (user) { showToast("You're already a member! Redirecting to your dashboard.", 'success'); setTimeout(() => navigate('dashboard'), 600); }
+              else navigate('auth', { view: 'plans' });
+            }}
             onBookSession={() => navigate('booking')}
-            onBecomeMember={() => navigate('auth', { view: 'plans' })}
+            onBecomeMember={() => {
+              if (user) { showToast("You're already a member! Redirecting to your dashboard.", 'success'); setTimeout(() => navigate('dashboard'), 600); }
+              else navigate('auth', { view: 'plans' });
+            }}
             onOpenVault={() => navigate('vault')}
           />
         )}
@@ -338,6 +351,47 @@ export default function App() {
         activePage === 'booking' ||
         (user && (activePage === 'dashboard' || activePage === 'vault'))
       } />
+    </div>
+  );
+}
+
+function Toast({ message, type, onDismiss }) {
+  const colors = {
+    success: { bg: 'rgba(80,200,120,0.12)', border: 'rgba(80,200,120,0.35)', text: '#5CC88A', icon: '✓' },
+    info:    { bg: 'rgba(201,162,39,0.1)',  border: 'rgba(201,162,39,0.3)',  text: '#C9A227', icon: 'ℹ' },
+    error:   { bg: 'rgba(220,60,60,0.1)',   border: 'rgba(220,60,60,0.3)',   text: '#FF6B6B', icon: '✕' },
+  };
+  const c = colors[type] || colors.info;
+  return (
+    <div style={{
+      position: 'fixed',
+      top: 80,
+      left: '50%',
+      transform: 'translateX(-50%)',
+      zIndex: 9999,
+      background: c.bg,
+      border: `0.5px solid ${c.border}`,
+      borderRadius: 10,
+      padding: '12px 20px 12px 16px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 10,
+      boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+      backdropFilter: 'blur(12px)',
+      maxWidth: 'calc(100vw - 40px)',
+      whiteSpace: 'nowrap',
+      animation: 'mgw-toast-in 0.25s ease',
+    }}>
+      <span style={{ fontSize: 14, color: c.text }}>{c.icon}</span>
+      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#EAEAEA', letterSpacing: '0.01em' }}>
+        {message}
+      </span>
+      <button
+        onClick={onDismiss}
+        style={{ background: 'none', border: 'none', color: '#555', cursor: 'pointer', fontSize: 14, padding: '0 0 0 8px', lineHeight: 1 }}
+      >
+        ✕
+      </button>
     </div>
   );
 }
