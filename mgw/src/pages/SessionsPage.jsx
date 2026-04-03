@@ -87,6 +87,12 @@ function SessionCard({ session, onBook, booked }) {
         </div>
       </div>
 
+      {session.description && (
+        <div style={{ fontSize: 12, color: '#777', lineHeight: 1.65 }}>
+          {session.description}
+        </div>
+      )}
+
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))',
@@ -169,26 +175,32 @@ function BookModal({ session, user, onConfirm, onClose }) {
   const [email, setEmail] = useState(user?.email || '');
   const [name, setName] = useState(user?.name || '');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState('details');
+  const [paying, setPaying] = useState(false);
 
-  const handleSubmit = async () => {
+  const handleProceed = () => {
     setError('');
     if (!email || !email.includes('@')) { setError('Please enter a valid email address.'); return; }
     if (!name.trim()) { setError('Please enter your name.'); return; }
-    setLoading(true);
-    await new Promise(r => setTimeout(r, 800));
-    setLoading(false);
-    onConfirm({ name, email });
+    setStep('payment');
+  };
+
+  const handlePay = async () => {
+    setPaying(true);
+    await new Promise(r => setTimeout(r, 1500));
+    const ref = `MGW-SES-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+    setPaying(false);
+    onConfirm({ name, email, paystackRef: ref });
   };
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div onClick={onClose} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(4px)' }} />
+      <div onClick={!paying ? onClose : undefined} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(4px)' }} />
       <div style={{ position: 'relative', background: '#141414', border: `0.5px solid ${BORDER}`, borderRadius: 14, padding: '28px 24px', width: '100%', maxWidth: 420, margin: '0 20px', zIndex: 1 }}>
-        <button onClick={onClose} style={{ position: 'absolute', top: 14, right: 16, background: 'none', border: 'none', color: '#666', cursor: 'pointer', fontSize: 18 }}>✕</button>
+        {!paying && <button onClick={onClose} style={{ position: 'absolute', top: 14, right: 16, background: 'none', border: 'none', color: '#666', cursor: 'pointer', fontSize: 18 }}>✕</button>}
 
         <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 22, fontWeight: 500, marginBottom: 4, color: '#EAEAEA' }}>
-          Book Session
+          {step === 'payment' ? 'Confirm Payment' : 'Book Session'}
         </div>
         <div style={{ fontSize: 12, color: '#666', marginBottom: 20 }}>{session.title}</div>
 
@@ -206,43 +218,64 @@ function BookModal({ session, user, onConfirm, onClose }) {
           ))}
         </div>
 
-        {!user?.name && (
-          <input
-            type="text"
-            placeholder="Your full name"
-            value={name}
-            onChange={e => setName(e.target.value)}
-            style={{ width: '100%', background: '#1a1a1a', border: `0.5px solid ${BORDER}`, borderRadius: 6, padding: '10px 14px', color: '#EAEAEA', fontFamily: "'DM Sans', sans-serif", fontSize: 12, outline: 'none', marginBottom: 10, boxSizing: 'border-box' }}
-          />
+        {step === 'details' && (
+          <>
+            {!user?.name && (
+              <input
+                type="text"
+                placeholder="Your full name"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                style={{ width: '100%', background: '#1a1a1a', border: `0.5px solid ${BORDER}`, borderRadius: 6, padding: '10px 14px', color: '#EAEAEA', fontFamily: "'DM Sans', sans-serif", fontSize: 12, outline: 'none', marginBottom: 10, boxSizing: 'border-box' }}
+              />
+            )}
+            {!user?.email && (
+              <input
+                type="email"
+                placeholder="Your email address"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                style={{ width: '100%', background: '#1a1a1a', border: `0.5px solid ${BORDER}`, borderRadius: 6, padding: '10px 14px', color: '#EAEAEA', fontFamily: "'DM Sans', sans-serif", fontSize: 12, outline: 'none', marginBottom: 10, boxSizing: 'border-box' }}
+              />
+            )}
+            {error && (
+              <div style={{ background: 'rgba(220,60,60,0.1)', border: '0.5px solid rgba(220,60,60,0.3)', borderRadius: 6, padding: '9px 12px', fontSize: 12, color: '#FF6B6B', marginBottom: 10 }}>
+                {error}
+              </div>
+            )}
+            <button
+              onClick={handleProceed}
+              style={{ width: '100%', background: GOLD, color: '#0A0A0A', border: 'none', borderRadius: 8, padding: '13px', fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', cursor: 'pointer' }}
+            >
+              Continue to Payment
+            </button>
+          </>
         )}
 
-        {!user?.email && (
-          <input
-            type="email"
-            placeholder="Your email address"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            style={{ width: '100%', background: '#1a1a1a', border: `0.5px solid ${BORDER}`, borderRadius: 6, padding: '10px 14px', color: '#EAEAEA', fontFamily: "'DM Sans', sans-serif", fontSize: 12, outline: 'none', marginBottom: 10, boxSizing: 'border-box' }}
-          />
+        {step === 'payment' && (
+          <>
+            <div style={{ background: 'rgba(0,179,255,0.05)', border: '0.5px solid rgba(0,179,255,0.2)', borderRadius: 8, padding: '14px 16px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ width: 36, height: 36, borderRadius: 8, background: 'rgba(0,179,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00B3FF" strokeWidth="1.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+              </div>
+              <div>
+                <div style={{ fontSize: 12, color: '#EAEAEA', marginBottom: 2 }}>Paystack Secure Checkout</div>
+                <div style={{ fontSize: 10, color: '#666' }}>Your payment is protected and encrypted</div>
+              </div>
+            </div>
+
+            <button
+              onClick={handlePay}
+              disabled={paying}
+              style={{ width: '100%', background: paying ? '#555' : GOLD, color: '#0A0A0A', border: 'none', borderRadius: 8, padding: '13px', fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', cursor: paying ? 'not-allowed' : 'pointer', opacity: paying ? 0.7 : 1 }}
+            >
+              {paying ? 'Processing Payment…' : `Pay ${session.price}`}
+            </button>
+            <div style={{ marginTop: 10, fontSize: 10, color: '#555', textAlign: 'center' }}>
+              Admin will confirm your spot and send a Zoom link.
+            </div>
+          </>
         )}
-
-        {error && (
-          <div style={{ background: 'rgba(220,60,60,0.1)', border: '0.5px solid rgba(220,60,60,0.3)', borderRadius: 6, padding: '9px 12px', fontSize: 12, color: '#FF6B6B', marginBottom: 10 }}>
-            {error}
-          </div>
-        )}
-
-        <button
-          onClick={handleSubmit}
-          disabled={loading}
-          style={{ width: '100%', background: loading ? '#555' : GOLD, color: '#0A0A0A', border: 'none', borderRadius: 8, padding: '13px', fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1 }}
-        >
-          {loading ? 'Submitting…' : 'Submit Booking Request'}
-        </button>
-
-        <div style={{ marginTop: 10, fontSize: 10, color: '#555', textAlign: 'center' }}>
-          Admin will confirm your spot and send a Zoom link.
-        </div>
       </div>
     </div>
   );
@@ -269,8 +302,8 @@ export default function SessionsPage({ sessions = [], user, onBook, onNavigate }
     setBookingSession(session);
   };
 
-  const handleConfirm = ({ name, email }) => {
-    const ref = `MGW-SES-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+  const handleConfirm = ({ name, email, paystackRef }) => {
+    const ref = paystackRef || `MGW-SES-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
     onBook?.({
       sessionTitle: bookingSession.title,
       sessionDate: bookingSession.date,

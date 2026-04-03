@@ -15,11 +15,11 @@ import AdminPage from './pages/AdminPage';
 import SettingsPage from './pages/SettingsPage';
 
 const INITIAL_SESSIONS = [
-  { id: 's1', title: 'Creative Direction Deep Dive', type: '1-on-1', date: 'Apr 10, 2026', time: '11:00 AM', price: '$300', status: 'Scheduled', zoom: null },
-  { id: 's2', title: "Founder's Circle — April Cohort", type: 'Group', date: 'Apr 14, 2026', time: '3:00 PM', price: '$480', status: 'Open', zoom: null },
-  { id: 's3', title: 'Brand Architecture Intensive', type: 'Intensive', date: 'Apr 18, 2026', time: '9:00 AM', price: '$2,500', status: 'Full', zoom: null },
-  { id: 's4', title: 'Creative Strategy Session', type: '1-on-1', date: 'Apr 22, 2026', time: '2:00 PM', price: '$300', status: 'Scheduled', zoom: null },
-  { id: 's5', title: 'Masterclass: Music Business 101', type: 'Masterclass', date: 'Apr 28, 2026', time: '6:00 PM', price: '$120', status: 'Open', zoom: null },
+  { id: 's1', title: 'Creative Direction Deep Dive', type: '1-on-1', date: 'Apr 10, 2026', time: '11:00 AM', price: '$300', status: 'Scheduled', description: 'An intensive one-on-one session exploring your creative direction — from visual identity to campaign thinking with direct feedback from Mavin Grandpa.', zoom: null },
+  { id: 's2', title: "Founder's Circle — April Cohort", type: 'Group', date: 'Apr 14, 2026', time: '3:00 PM', price: '$480', status: 'Open', description: 'A group session for creative founders and entrepreneurs. Discuss challenges, share strategies, and get mentorship in a curated cohort setting.', zoom: null },
+  { id: 's3', title: 'Brand Architecture Intensive', type: 'Intensive', date: 'Apr 18, 2026', time: '9:00 AM', price: '$2,500', status: 'Full', description: 'A full-day deep dive into brand architecture — positioning, identity systems, and market differentiation for ambitious creative businesses.', zoom: null },
+  { id: 's4', title: 'Creative Strategy Session', type: '1-on-1', date: 'Apr 22, 2026', time: '2:00 PM', price: '$300', status: 'Scheduled', description: 'A focused strategy session to align your creative output with your business goals. Come with a challenge, leave with a plan.', zoom: null },
+  { id: 's5', title: 'Masterclass: Music Business 101', type: 'Masterclass', date: 'Apr 28, 2026', time: '6:00 PM', price: '$120', status: 'Open', description: 'Everything you need to know about the music business — deals, royalties, artist management, and building a sustainable career in the industry.', zoom: null },
 ];
 
 const TABS = [

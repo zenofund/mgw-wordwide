@@ -824,6 +824,18 @@ select {
   }
 }
 
+/* ── Vault page outer container ── */
+.mgw-vault-outer {
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .mgw-vault-outer {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
 /* ── Sessions page ── */
 .mgw-sessions-outer {
   width: 100%;

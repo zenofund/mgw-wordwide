@@ -517,7 +517,7 @@ export default function VaultPage({ allItems, userTier = 'free', userPlanName, p
   }
 
   return (
-    <div>
+    <div className="mgw-vault-outer">
       <div className="mgw-vault-header" style={s.header}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
           <div>

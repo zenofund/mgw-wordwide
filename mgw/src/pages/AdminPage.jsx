@@ -203,7 +203,7 @@ function SessionsSection({ availableDays, setAvailableDays, timeSlots, setTimeSl
   const [editIndex, setEditIndex] = useState(null);
   const [zoomLoading, setZoomLoading] = useState(false);
   const [zoomError, setZoomError] = useState('');
-  const [form, setForm] = useState({ title: '', type: '1-on-1', date: '', time: '', price: '', status: 'Scheduled', createZoom: true });
+  const [form, setForm] = useState({ title: '', type: '1-on-1', date: '', time: '', price: '', status: 'Scheduled', description: '', createZoom: true });
   const [newSlotTime, setNewSlotTime] = useState('');
 
   const zoomLink = (zoom) => zoom?.joinUrl ? (
@@ -215,14 +215,14 @@ function SessionsSection({ availableDays, setAvailableDays, timeSlots, setTimeSl
   const rows = sessions.map(s => [s.title, s.type, s.date, s.time, s.price, <Badge label={s.status} color={sessionStatusColor(s.status)} />, zoomLink(s.zoom)]);
 
   const openAdd = () => {
-    setForm({ title: '', type: '1-on-1', date: '', time: '', price: '', status: 'Scheduled', createZoom: true });
+    setForm({ title: '', type: '1-on-1', date: '', time: '', price: '', status: 'Scheduled', description: '', createZoom: true });
     setZoomError('');
     setEditIndex(null);
     setShowModal(true);
   };
 
   const openEdit = (i) => {
-    setForm({ ...sessions[i], createZoom: false });
+    setForm({ ...sessions[i], description: sessions[i].description || '', createZoom: false });
     setZoomError('');
     setEditIndex(i);
     setShowModal(true);
@@ -230,7 +230,7 @@ function SessionsSection({ availableDays, setAvailableDays, timeSlots, setTimeSl
 
   const handleSave = async () => {
     setZoomError('');
-    const row = { title: form.title, type: form.type, date: form.date, time: form.time, price: form.price, status: form.status, zoom: editIndex !== null ? sessions[editIndex].zoom : null };
+    const row = { title: form.title, type: form.type, date: form.date, time: form.time, price: form.price, status: form.status, description: form.description || '', zoom: editIndex !== null ? sessions[editIndex].zoom : null };
 
     if (form.createZoom && editIndex === null) {
       setZoomLoading(true);
@@ -415,6 +415,7 @@ function SessionsSection({ availableDays, setAvailableDays, timeSlots, setTimeSl
       {showModal && (
         <Modal title={editIndex !== null ? 'Edit Session' : 'Create New Session'} onClose={() => !zoomLoading && setShowModal(false)}>
           <Field label="Session Title" value={form.title} onChange={v => setForm(f => ({ ...f, title: v }))} />
+          <Field label="Description" type="textarea" value={form.description} onChange={v => setForm(f => ({ ...f, description: v }))} />
           <Field label="Type" type="select" value={form.type} onChange={v => setForm(f => ({ ...f, type: v }))} options={['1-on-1', 'Group', 'Intensive', 'Masterclass', 'Workshop']} />
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <Field label="Date" type="text" value={form.date} onChange={v => setForm(f => ({ ...f, date: v }))} placeholder="Apr 10, 2026" />
