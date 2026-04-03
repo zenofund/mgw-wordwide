@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from '../components/Button';
+import brandPhoto from '@assets/Mavin-Grandpa-Worldwide-11_1775177601294.jpeg';
 
 const s = {
   /* ── Hero ── */
@@ -312,129 +313,86 @@ function BrandImage() {
       width: '100%',
       height: '100%',
       minHeight: 520,
-      background: 'linear-gradient(145deg, #110820 0%, #0d0d1a 35%, #08050f 70%, #0a0a0a 100%)',
+      background: '#08050f',
       overflow: 'hidden',
     }}>
-      {/* Background glow layers */}
+      {/* Real brand photo — cinematic filters to match luxury dark theme */}
+      <img
+        src={brandPhoto}
+        alt="Mavin Grandpa"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          objectPosition: 'center top',
+          filter: 'brightness(0.82) contrast(1.14) saturate(0.65)',
+          display: 'block',
+        }}
+      />
+
+      {/* Purple atmospheric overlay — ties image into the brand palette */}
       <div style={{
-        position: 'absolute', borderRadius: '50%',
-        width: 500, height: 500,
-        background: 'radial-gradient(circle, rgba(106,56,194,0.22) 0%, transparent 70%)',
-        top: '-10%', right: '-10%',
+        position: 'absolute', inset: 0,
+        background: 'radial-gradient(ellipse at 70% 30%, rgba(106,56,194,0.28) 0%, transparent 65%)',
         pointerEvents: 'none',
+        mixBlendMode: 'screen',
       }} />
+
+      {/* Left-edge fade — smooth blend into the hero text side */}
       <div style={{
-        position: 'absolute', borderRadius: '50%',
-        width: 300, height: 300,
-        background: 'radial-gradient(circle, rgba(201,162,39,0.12) 0%, transparent 70%)',
-        bottom: '10%', left: '-5%',
+        position: 'absolute', inset: 0,
+        background: 'linear-gradient(to right, rgba(8,5,15,0.55) 0%, transparent 35%)',
         pointerEvents: 'none',
       }} />
 
-      {/* Thin gold vertical line left edge */}
+      {/* Bottom fade — blends into the next section */}
       <div style={{
-        position: 'absolute', top: 0, left: 0, bottom: 0,
-        width: 1,
-        background: 'linear-gradient(180deg, transparent 0%, rgba(201,162,39,0.5) 30%, rgba(201,162,39,0.5) 70%, transparent 100%)',
+        position: 'absolute', bottom: 0, left: 0, right: 0, height: 100,
+        background: 'linear-gradient(to top, #08050f 0%, transparent 100%)',
+        pointerEvents: 'none',
+      }} />
+
+      {/* Thin gold vertical line — left edge accent */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0, bottom: 0, width: 1,
+        background: 'linear-gradient(180deg, transparent 0%, rgba(201,162,39,0.45) 30%, rgba(201,162,39,0.45) 70%, transparent 100%)',
+        pointerEvents: 'none',
       }} />
 
       {/* Gold corner accents */}
-      {/* Top-left */}
-      <div style={{ position: 'absolute', top: 32, left: 32, width: 24, height: 24,
-        borderTop: '1px solid rgba(201,162,39,0.6)', borderLeft: '1px solid rgba(201,162,39,0.6)' }} />
-      {/* Top-right */}
-      <div style={{ position: 'absolute', top: 32, right: 32, width: 24, height: 24,
-        borderTop: '1px solid rgba(201,162,39,0.6)', borderRight: '1px solid rgba(201,162,39,0.6)' }} />
-      {/* Bottom-left */}
-      <div style={{ position: 'absolute', bottom: 32, left: 32, width: 24, height: 24,
-        borderBottom: '1px solid rgba(201,162,39,0.6)', borderLeft: '1px solid rgba(201,162,39,0.6)' }} />
-      {/* Bottom-right */}
-      <div style={{ position: 'absolute', bottom: 32, right: 32, width: 24, height: 24,
-        borderBottom: '1px solid rgba(201,162,39,0.6)', borderRight: '1px solid rgba(201,162,39,0.6)' }} />
+      <div style={{ position: 'absolute', top: 28, left: 28, width: 22, height: 22,
+        borderTop: '1px solid rgba(201,162,39,0.55)', borderLeft: '1px solid rgba(201,162,39,0.55)' }} />
+      <div style={{ position: 'absolute', top: 28, right: 28, width: 22, height: 22,
+        borderTop: '1px solid rgba(201,162,39,0.55)', borderRight: '1px solid rgba(201,162,39,0.55)' }} />
+      <div style={{ position: 'absolute', bottom: 28, left: 28, width: 22, height: 22,
+        borderBottom: '1px solid rgba(201,162,39,0.55)', borderLeft: '1px solid rgba(201,162,39,0.55)' }} />
+      <div style={{ position: 'absolute', bottom: 28, right: 28, width: 22, height: 22,
+        borderBottom: '1px solid rgba(201,162,39,0.55)', borderRight: '1px solid rgba(201,162,39,0.55)' }} />
 
-      {/* Center portrait frame */}
+      {/* Name tag — bottom of panel */}
       <div style={{
-        position: 'absolute',
-        top: '50%', left: '50%',
-        transform: 'translate(-50%, -50%)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: 0,
-        textAlign: 'center',
+        position: 'absolute', bottom: 40, left: 0, right: 0,
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
         zIndex: 2,
       }}>
-        {/* Outer ring */}
-        <div style={{
-          width: 180, height: 180,
-          borderRadius: '50%',
-          border: '1px solid rgba(201,162,39,0.25)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          marginBottom: 28,
-          position: 'relative',
-        }}>
-          {/* Inner ring */}
-          <div style={{
-            width: 160, height: 160,
-            borderRadius: '50%',
-            border: '0.5px solid rgba(201,162,39,0.15)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            overflow: 'hidden',
-            background: 'linear-gradient(155deg, #1e0f38 0%, #150d28 40%, #0d0820 100%)',
-          }}>
-            {/* Silhouette / photo placeholder */}
-            <svg width="90" height="90" viewBox="0 0 100 100" fill="none">
-              <circle cx="50" cy="36" r="22" fill="rgba(201,162,39,0.18)" />
-              <ellipse cx="50" cy="88" rx="32" ry="22" fill="rgba(201,162,39,0.12)" />
-            </svg>
-          </div>
-
-          {/* Small gold dot at top of ring */}
-          <div style={{
-            position: 'absolute', top: -4, left: '50%', transform: 'translateX(-50%)',
-            width: 8, height: 8, borderRadius: '50%',
-            background: '#C9A227',
-            boxShadow: '0 0 8px rgba(201,162,39,0.6)',
-          }} />
-        </div>
-
-        {/* Name */}
         <div style={{
           fontFamily: "'Cormorant Garamond', Georgia, serif",
-          fontSize: 13,
-          letterSpacing: '0.35em',
-          textTransform: 'uppercase',
-          color: 'rgba(201,162,39,0.5)',
-          marginBottom: 6,
+          fontSize: 11, letterSpacing: '0.4em', textTransform: 'uppercase',
+          color: 'rgba(201,162,39,0.65)',
         }}>Mavin Grandpa</div>
-
-        {/* Decorative line with diamond */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-          <div style={{ width: 40, height: 0.5, background: 'rgba(201,162,39,0.3)' }} />
-          <div style={{
-            width: 5, height: 5,
-            background: 'rgba(201,162,39,0.5)',
-            transform: 'rotate(45deg)',
-          }} />
-          <div style={{ width: 40, height: 0.5, background: 'rgba(201,162,39,0.3)' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ width: 36, height: 0.5, background: 'rgba(201,162,39,0.3)' }} />
+          <div style={{ width: 4, height: 4, background: 'rgba(201,162,39,0.5)', transform: 'rotate(45deg)' }} />
+          <div style={{ width: 36, height: 0.5, background: 'rgba(201,162,39,0.3)' }} />
         </div>
-
-        {/* Tagline */}
         <div style={{
           fontFamily: "'DM Sans', sans-serif",
-          fontSize: 9,
-          letterSpacing: '0.2em',
-          textTransform: 'uppercase',
+          fontSize: 8, letterSpacing: '0.25em', textTransform: 'uppercase',
           color: 'rgba(201,162,39,0.35)',
         }}>Worldwide</div>
       </div>
-
-      {/* Bottom gradient fade */}
-      <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0, height: 80,
-        background: 'linear-gradient(0deg, #0A0A0A 0%, transparent 100%)',
-        pointerEvents: 'none',
-      }} />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import logoImg from '@assets/logo_1775177601310.webp';
 
 const styles = {
   nav: {
@@ -99,7 +100,11 @@ export default function Navbar({ activePage, onNavigate, tabs = [], onSearchClic
   return (
     <nav style={styles.nav}>
       <div style={styles.navInner}>
-        <span style={styles.logo}>MGW</span>
+        <img
+          src={logoImg}
+          alt="MGW"
+          style={{ height: 42, width: 42, objectFit: 'contain', flexShrink: 0 }}
+        />
 
         {/* Desktop nav links */}
         <div className="mgw-nav-links">
