@@ -700,28 +700,44 @@ function VaultSection() {
 function PlansSection({ plans, setPlans }) {
   const [showModal, setShowModal] = useState(false);
   const [editPlan, setEditPlan] = useState(null);
-  const [form, setForm] = useState({ name: '', price: '', billing: 'Monthly', sessions: '', vault: 'Partial', status: 'Active' });
+  const [form, setForm] = useState({ name: '', price: '', billing: 'Monthly', sessions: '', vault: 'Partial', extraFeatures: '' });
 
   const openAdd = () => {
-    setForm({ name: '', price: '', billing: 'Monthly', sessions: '', vault: 'Partial' });
+    setForm({ name: '', price: '', billing: 'Monthly', sessions: '', vault: 'Partial', extraFeatures: '' });
     setEditPlan(null);
     setShowModal(true);
   };
 
   const openEdit = (plan) => {
-    setForm({ name: plan.name, price: plan.price.replace('$', ''), billing: plan.billing, sessions: '', vault: 'Partial' });
+    setForm({
+      name: plan.name,
+      price: plan.price.replace('$', ''),
+      billing: plan.billing,
+      sessions: '',
+      vault: 'Partial',
+      extraFeatures: (plan.features || []).join('\n'),
+    });
     setEditPlan(plan.name);
     setShowModal(true);
   };
 
   const handleSave = () => {
+    const extraLines = form.extraFeatures
+      .split('\n')
+      .map(l => l.trim())
+      .filter(Boolean);
+    const baseFeatures = form.sessions ? [`${form.sessions} sessions`, `Vault: ${form.vault}`] : [];
+    const allFeatures = editPlan !== null
+      ? extraLines
+      : [...baseFeatures, ...extraLines];
+
     if (editPlan !== null) {
       setPlans(prev => prev.map(p => p.name === editPlan
-        ? { ...p, name: form.name, price: `$${form.price}`, billing: form.billing }
+        ? { ...p, name: form.name, price: `$${form.price}`, billing: form.billing, features: allFeatures.length ? allFeatures : p.features }
         : p
       ));
     } else {
-      setPlans(prev => [...prev, { name: form.name, price: `$${form.price}`, billing: form.billing, features: [`${form.sessions} sessions`, `Vault: ${form.vault}`], color: GOLD, members: 0 }]);
+      setPlans(prev => [...prev, { name: form.name, price: `$${form.price}`, billing: form.billing, features: allFeatures, color: GOLD, members: 0 }]);
     }
     setShowModal(false);
   };
@@ -762,6 +778,16 @@ function PlansSection({ plans, setPlans }) {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <Field label="Sessions included" value={form.sessions} onChange={v => setForm(f => ({ ...f, sessions: v }))} />
             <Field label="Vault Access" type="select" value={form.vault} onChange={v => setForm(f => ({ ...f, vault: v }))} options={['None', 'Partial', 'Full', 'Premium']} />
+          </div>
+          <div style={{ marginBottom: 14 }}>
+            <label style={{ display: 'block', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: TEXT_DIM, marginBottom: 6 }}>Additional Features <span style={{ color: '#555', textTransform: 'none', letterSpacing: 0 }}>(one per line)</span></label>
+            <textarea
+              value={form.extraFeatures}
+              onChange={e => setForm(f => ({ ...f, extraFeatures: e.target.value }))}
+              placeholder={'e.g. Priority support\nExclusive event invites\nDirect messaging'}
+              rows={5}
+              style={{ width: '100%', background: '#1a1a1a', border: `0.5px solid ${BORDER}`, borderRadius: 6, padding: '9px 12px', color: '#EAEAEA', fontFamily: "'DM Sans', sans-serif", fontSize: 12, outline: 'none', resize: 'vertical', boxSizing: 'border-box', lineHeight: 1.6 }}
+            />
           </div>
           <SaveBtn onClick={handleSave}>{editPlan !== null ? 'Update Plan' : 'Create Plan'}</SaveBtn>
         </Modal>

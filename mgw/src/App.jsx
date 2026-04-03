@@ -78,11 +78,15 @@ export default function App() {
     { time: '4:30 PM',  booked: false },
   ]);
 
-  const navigate = (page) => {
+  const [authInitialView, setAuthInitialView] = useState('login');
+
+  const navigate = (page, opts = {}) => {
     if (GATED.has(page) && !user) {
       setPostLoginDest(page);
+      setAuthInitialView('login');
       setActivePage('auth');
     } else {
+      if (page === 'auth' && opts.view) setAuthInitialView(opts.view);
       setActivePage(page);
     }
   };
@@ -160,9 +164,9 @@ export default function App() {
 
       {activePage === 'landing' && (
         <LandingPage
-          onJoinMembership={() => navigate('auth')}
+          onJoinMembership={() => navigate('auth', { view: 'plans' })}
           onBookSession={() => navigate('booking')}
-          onBecomeMember={() => navigate('auth')}
+          onBecomeMember={() => navigate('auth', { view: 'plans' })}
         />
       )}
 
@@ -180,7 +184,6 @@ export default function App() {
       {activePage === 'vault' && user && (
         <VaultPage
           userTier={user.tier}
-          onItemClick={(item) => console.log('Open:', item.title)}
         />
       )}
 
@@ -196,7 +199,8 @@ export default function App() {
 
       {activePage === 'auth' && !user && (
         <AuthPage
-          initialView="login"
+          key={authInitialView}
+          initialView={authInitialView}
           plans={plans}
           onLogin={handleLogin}
           onRegister={handleRegister}

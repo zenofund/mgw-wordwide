@@ -690,6 +690,67 @@ select {
   50% { opacity: 0.4; }
 }
 
+/* Waveform animation */
+@keyframes mgw-wave-0 { from { transform: scaleY(0.6); } to { transform: scaleY(1); } }
+@keyframes mgw-wave-1 { from { transform: scaleY(0.75); } to { transform: scaleY(0.95); } }
+@keyframes mgw-wave-2 { from { transform: scaleY(0.5); } to { transform: scaleY(1); } }
+@keyframes mgw-wave-3 { from { transform: scaleY(0.8); } to { transform: scaleY(0.9); } }
+@keyframes mgw-wave-4 { from { transform: scaleY(0.55); } to { transform: scaleY(1); } }
+
+/* ── Vault detail page ── */
+.mgw-vault-detail-outer {
+  min-height: 80vh;
+}
+
+.mgw-vault-detail-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 8px 20px 40px;
+}
+
+.mgw-vault-detail-player {
+  width: 100%;
+}
+
+.mgw-vault-detail-info {
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .mgw-vault-detail-layout {
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 16px 48px 60px;
+    gap: 40px;
+  }
+
+  .mgw-vault-detail-player {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .mgw-vault-detail-info {
+    width: 300px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 80px;
+  }
+}
+
+/* ── Booking page outer container ── */
+.mgw-booking-outer {
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .mgw-booking-outer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+}
+
 /* ── Auth — Plans carousel (mobile: horizontal swipe) ── */
 .mgw-auth-card-wrap {
   width: 100%;
@@ -731,6 +792,10 @@ select {
   .mgw-auth-card-wrap {
     max-width: 560px;
     margin: 0 auto;
+  }
+
+  .mgw-auth-plans-active {
+    max-width: 900px !important;
   }
 
   .mgw-plans-scroll {

@@ -314,7 +314,7 @@ export default function AuthPage({ initialView = 'login', plans = [], onLogin, o
       <div style={s.orb1} />
       <div style={s.orb2} />
 
-      <div className="mgw-auth-card-wrap">
+      <div className={`mgw-auth-card-wrap${view === 'plans' ? ' mgw-auth-plans-active' : ''}`}>
         <Logo />
 
         {view === 'login' && (
