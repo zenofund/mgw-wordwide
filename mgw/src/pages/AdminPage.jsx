@@ -14,13 +14,14 @@ const Icon = ({ d, size = 16, color = '#999' }) => (
 );
 
 const SIDEBAR_ITEMS = [
-  { id: 'overview',    label: 'Overview',     icon: 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z' },
-  { id: 'sessions',   label: 'Sessions',      icon: 'M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z' },
-  { id: 'programs',   label: 'Programs',      icon: 'M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z' },
-  { id: 'vault',      label: 'Vault',         icon: 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5' },
-  { id: 'plans',      label: 'Plans',         icon: 'M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z' },
-  { id: 'consultancy',label: 'Consultancy',   icon: 'M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z' },
-  { id: 'members',    label: 'Members',       icon: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75' },
+  { id: 'overview',       label: 'Overview',       icon: 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z' },
+  { id: 'sessions',       label: 'Sessions',       icon: 'M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z' },
+  { id: 'programs',       label: 'Programs',       icon: 'M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z' },
+  { id: 'vault',          label: 'Vault',          icon: 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5' },
+  { id: 'plans',          label: 'Plans',          icon: 'M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z' },
+  { id: 'consultancy',    label: 'Consultancy',    icon: 'M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z' },
+  { id: 'members',        label: 'Members',        icon: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75' },
+  { id: 'announcements',  label: 'The Dispatch',   icon: 'M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z' },
 ];
 
 const StatCard = ({ label, value, delta, accent = GOLD }) => (
@@ -918,18 +919,219 @@ function MembersSection() {
   );
 }
 
-export default function AdminPage({ onExit, availableDays, setAvailableDays, timeSlots, setTimeSlots, plans, setPlans }) {
+function RichTextEditor({ editorRef }) {
+  const exec = (cmd, val = null) => {
+    editorRef.current?.focus();
+    document.execCommand(cmd, false, val);
+  };
+
+  const toolbarBtnStyle = (active) => ({
+    background: active ? 'rgba(201,162,39,0.15)' : '#1a1a1a',
+    border: `0.5px solid ${active ? GOLD : BORDER}`,
+    color: active ? GOLD : '#999',
+    borderRadius: 5,
+    width: 32,
+    height: 30,
+    cursor: 'pointer',
+    fontSize: 12,
+    fontFamily: "'DM Sans', sans-serif",
+    fontWeight: 600,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+    transition: 'all 0.15s',
+  });
+
+  return (
+    <div>
+      <div style={{ display: 'flex', gap: 4, marginBottom: 8, flexWrap: 'wrap' }}>
+        <button onMouseDown={e => { e.preventDefault(); exec('bold'); }} style={toolbarBtnStyle(false)} title="Bold"><strong>B</strong></button>
+        <button onMouseDown={e => { e.preventDefault(); exec('italic'); }} style={{ ...toolbarBtnStyle(false), fontStyle: 'italic' }} title="Italic"><em>I</em></button>
+        <button onMouseDown={e => { e.preventDefault(); exec('underline'); }} style={{ ...toolbarBtnStyle(false), textDecoration: 'underline' }} title="Underline"><u>U</u></button>
+        <div style={{ width: 1, background: BORDER, margin: '0 4px' }} />
+        <button onMouseDown={e => { e.preventDefault(); exec('insertUnorderedList'); }} style={toolbarBtnStyle(false)} title="Bullet list">≡</button>
+        <button onMouseDown={e => { e.preventDefault(); exec('insertOrderedList'); }} style={toolbarBtnStyle(false)} title="Numbered list">①</button>
+        <div style={{ width: 1, background: BORDER, margin: '0 4px' }} />
+        <button onMouseDown={e => { e.preventDefault(); exec('justifyLeft'); }} style={toolbarBtnStyle(false)} title="Align left">⫷</button>
+        <button onMouseDown={e => { e.preventDefault(); exec('justifyCenter'); }} style={toolbarBtnStyle(false)} title="Center">⊟</button>
+        <div style={{ width: 1, background: BORDER, margin: '0 4px' }} />
+        <button onMouseDown={e => { e.preventDefault(); exec('removeFormat'); }} style={toolbarBtnStyle(false)} title="Clear formatting">✕</button>
+      </div>
+      <div
+        ref={editorRef}
+        contentEditable
+        suppressContentEditableWarning
+        style={{
+          minHeight: 140,
+          background: '#1a1a1a',
+          border: `0.5px solid ${BORDER}`,
+          borderRadius: 6,
+          padding: '10px 12px',
+          color: '#EAEAEA',
+          fontFamily: "'DM Sans', sans-serif",
+          fontSize: 13,
+          outline: 'none',
+          lineHeight: 1.65,
+        }}
+      />
+    </div>
+  );
+}
+
+function AnnouncementsSection({ announcements, setAnnouncements }) {
+  const [composing, setComposing] = useState(false);
+  const [title, setTitle] = useState('');
+  const editorRef = React.useRef(null);
+
+  const handlePublish = () => {
+    const html = editorRef.current?.innerHTML?.trim();
+    if (!title.trim() || !html || html === '<br>') return;
+    const now = new Date();
+    const dateStr = `Posted ${now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+    const newItem = {
+      id: Date.now(),
+      title: title.trim(),
+      text: html,
+      date: dateStr,
+      published: true,
+    };
+    setAnnouncements(prev => [newItem, ...prev.map(a => ({ ...a, published: false }))]);
+    setTitle('');
+    if (editorRef.current) editorRef.current.innerHTML = '';
+    setComposing(false);
+  };
+
+  const handleUnpublish = (id) => {
+    setAnnouncements(prev => prev.map(a => a.id === id ? { ...a, published: false } : a));
+  };
+
+  const handlePublishExisting = (id) => {
+    setAnnouncements(prev => prev.map(a => ({ ...a, published: a.id === id })));
+  };
+
+  const handleDelete = (id) => {
+    setAnnouncements(prev => prev.filter(a => a.id !== id));
+  };
+
+  return (
+    <div>
+      <SectionHeader
+        title="The Dispatch"
+        sub="Compose and publish announcements to all members on their dashboard."
+        action={composing ? undefined : '+ New Dispatch'}
+        onAction={() => setComposing(true)}
+      />
+
+      {composing && (
+        <div style={{ background: SURFACE, border: `0.5px solid ${BORDER}`, borderRadius: 12, padding: '22px 20px', marginBottom: 24 }}>
+          <div style={{ fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase', color: TEXT_DIM, marginBottom: 14 }}>Compose Dispatch</div>
+
+          <div style={{ marginBottom: 14 }}>
+            <label style={{ display: 'block', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: TEXT_DIM, marginBottom: 6 }}>Title</label>
+            <input
+              type="text"
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              placeholder="e.g. New Masterclass This Friday..."
+              style={{ width: '100%', background: '#1a1a1a', border: `0.5px solid ${BORDER}`, borderRadius: 6, padding: '9px 12px', color: '#EAEAEA', fontFamily: "'DM Sans', sans-serif", fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
+            />
+          </div>
+
+          <div style={{ marginBottom: 16 }}>
+            <label style={{ display: 'block', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: TEXT_DIM, marginBottom: 6 }}>Message</label>
+            <RichTextEditor editorRef={editorRef} />
+          </div>
+
+          <div style={{ display: 'flex', gap: 10 }}>
+            <button
+              onClick={handlePublish}
+              style={{ background: GOLD, color: '#0A0A0A', border: 'none', borderRadius: 6, padding: '10px 22px', fontSize: 11, fontWeight: 600, cursor: 'pointer', letterSpacing: '0.05em', textTransform: 'uppercase', fontFamily: "'DM Sans', sans-serif" }}
+            >
+              Publish to Members
+            </button>
+            <button
+              onClick={() => { setComposing(false); setTitle(''); if (editorRef.current) editorRef.current.innerHTML = ''; }}
+              style={{ background: 'none', border: `0.5px solid ${BORDER}`, color: TEXT_DIM, borderRadius: 6, padding: '10px 18px', fontSize: 11, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}
+            >
+              Discard
+            </button>
+          </div>
+        </div>
+      )}
+
+      {announcements.length === 0 && !composing && (
+        <div style={{ textAlign: 'center', padding: '60px 20px', color: TEXT_DIM, fontSize: 13 }}>
+          No dispatches yet. Create your first announcement above.
+        </div>
+      )}
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        {announcements.map(item => (
+          <div key={item.id} style={{ background: SURFACE, border: `0.5px solid ${item.published ? 'rgba(201,162,39,0.4)' : BORDER}`, borderRadius: 10, padding: '18px 18px 16px', position: 'relative', overflow: 'hidden' }}>
+            {item.published && (
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, ${GOLD}, transparent)` }} />
+            )}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, marginBottom: 10 }}>
+              <div>
+                <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 17, fontWeight: 500, marginBottom: 3 }}>{item.title}</div>
+                <div style={{ fontSize: 10, color: TEXT_DIM }}>{item.date}</div>
+              </div>
+              <div style={{ display: 'flex', gap: 8, flexShrink: 0, alignItems: 'center' }}>
+                {item.published
+                  ? <span style={{ fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '3px 10px', borderRadius: 20, background: 'rgba(201,162,39,0.12)', color: GOLD, border: `0.5px solid rgba(201,162,39,0.3)`, fontWeight: 500 }}>Live</span>
+                  : <span style={{ fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '3px 10px', borderRadius: 20, background: 'rgba(150,150,150,0.1)', color: '#666', border: '0.5px solid rgba(150,150,150,0.2)', fontWeight: 500 }}>Archived</span>
+                }
+              </div>
+            </div>
+            <div
+              style={{ fontSize: 13, color: '#EAEAEA', lineHeight: 1.6, marginBottom: 14, maxHeight: 80, overflow: 'hidden', fontFamily: "'DM Sans', sans-serif" }}
+              dangerouslySetInnerHTML={{ __html: item.text }}
+            />
+            <div style={{ display: 'flex', gap: 8 }}>
+              {!item.published && (
+                <button
+                  onClick={() => handlePublishExisting(item.id)}
+                  style={{ background: 'rgba(201,162,39,0.1)', border: `0.5px solid rgba(201,162,39,0.3)`, color: GOLD, borderRadius: 5, padding: '5px 12px', fontSize: 10, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textTransform: 'uppercase', letterSpacing: '0.05em' }}
+                >
+                  Set as Live
+                </button>
+              )}
+              {item.published && (
+                <button
+                  onClick={() => handleUnpublish(item.id)}
+                  style={{ background: 'none', border: `0.5px solid ${BORDER}`, color: TEXT_DIM, borderRadius: 5, padding: '5px 12px', fontSize: 10, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textTransform: 'uppercase', letterSpacing: '0.05em' }}
+                >
+                  Unpublish
+                </button>
+              )}
+              <button
+                onClick={() => handleDelete(item.id)}
+                style={{ background: 'none', border: '0.5px solid rgba(220,60,60,0.3)', color: '#c55', borderRadius: 5, padding: '5px 12px', fontSize: 10, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function AdminPage({ onExit, availableDays, setAvailableDays, timeSlots, setTimeSlots, plans, setPlans, announcements, setAnnouncements }) {
   const [activeSection, setActiveSection] = useState('overview');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const sections = {
-    overview:    <OverviewSection />,
-    sessions:    <SessionsSection availableDays={availableDays} setAvailableDays={setAvailableDays} timeSlots={timeSlots} setTimeSlots={setTimeSlots} />,
-    programs:    <ProgramsSection />,
-    vault:       <VaultSection />,
-    plans:       <PlansSection plans={plans} setPlans={setPlans} />,
-    consultancy: <ConsultancyAdminSection />,
-    members:     <MembersSection />,
+    overview:       <OverviewSection />,
+    sessions:       <SessionsSection availableDays={availableDays} setAvailableDays={setAvailableDays} timeSlots={timeSlots} setTimeSlots={setTimeSlots} />,
+    programs:       <ProgramsSection />,
+    vault:          <VaultSection />,
+    plans:          <PlansSection plans={plans} setPlans={setPlans} />,
+    consultancy:    <ConsultancyAdminSection />,
+    members:        <MembersSection />,
+    announcements:  <AnnouncementsSection announcements={announcements} setAnnouncements={setAnnouncements} />,
   };
 
   return (

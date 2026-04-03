@@ -62,6 +62,10 @@ export default function App() {
     { name: 'Inner Circle',   price: '$149', billing: 'per month', tier: 'premium',  features: ['All Creative Circle perks', '4 sessions/mo (1-on-1)', 'Direct messaging', 'Exclusive content', 'Event invitations'], color: '#C9A227', members: 842  },
   ]);
 
+  const [announcements, setAnnouncements] = useState([
+    { id: 1, title: 'Brand Architecture Masterclass — This Friday', text: 'New masterclass dropping this Friday — <strong>Brand Architecture for the Digital Era</strong>.', date: 'Posted 2 days ago', published: true },
+  ]);
+
   const [availableDays, setAvailableDays] = useState(
     new Set([7, 8, 9, 10, 13, 14, 15, 17, 21, 22, 23, 24, 27, 28, 29, 30])
   );
@@ -117,6 +121,8 @@ export default function App() {
         setTimeSlots={setTimeSlots}
         plans={plans}
         setPlans={setPlans}
+        announcements={announcements}
+        setAnnouncements={setAnnouncements}
       />
     );
   }
@@ -167,6 +173,7 @@ export default function App() {
           user={user}
           onViewAllSessions={() => navigate('booking')}
           onOpenVault={() => navigate('vault')}
+          announcement={announcements.filter(a => a.published)[0] || null}
         />
       )}
 

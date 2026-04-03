@@ -257,9 +257,12 @@ export default function DashboardPage({
         {announcement && (
           <div style={s.announce}>
             <div style={s.announceIcon}>M</div>
-            <div>
-              <div style={s.announceLabel}>From MGW</div>
-              <div style={s.announceText}>{announcement.text}</div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={s.announceLabel}>The Dispatch</div>
+              <div
+                style={s.announceText}
+                dangerouslySetInnerHTML={{ __html: announcement.text }}
+              />
               <div style={s.announceDate}>{announcement.date}</div>
             </div>
           </div>

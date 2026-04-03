@@ -140,7 +140,7 @@ export default function BookingPage({ onConfirm, availableDays, timeSlots }) {
   const slots = timeSlots || [];
 
   return (
-    <div>
+    <div style={{ background: '#0A0A0A', color: '#EAEAEA', minHeight: '100vh' }}>
       <div style={s.header}>
         <div className="mgw-booking-title" style={s.title}>Book a Session</div>
         <div style={s.subtitle}>Select your mentorship type and preferred time.</div>
