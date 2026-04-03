@@ -243,10 +243,11 @@ export default function ConsultancyPage() {
           <div className="mgw-consult-title-lg" style={s.sectionTitle}>Creative Consultancy Offerings</div>
           <div style={s.sectionSub}>Tailored engagements for brands, artists, and creative leaders who demand the best.</div>
 
-          <div className="mgw-consult-grid" style={s.servicesGrid}>
+          <div className="mgw-consult-grid">
             {SERVICES.map((svc) => (
               <div
                 key={svc.id}
+                className="mgw-consult-card"
                 style={{
                   ...s.serviceCard,
                   background: selected === svc.id ? accentBg[svc.accent] : '#111',
@@ -270,6 +271,15 @@ export default function ConsultancyPage() {
                   </div>
                 </div>
               </div>
+            ))}
+          </div>
+          <div className="mgw-consult-dots">
+            {SERVICES.map((svc) => (
+              <div
+                key={svc.id}
+                className={`mgw-consult-dot${selected === svc.id ? ' active' : ''}`}
+                onClick={() => { setSelected(svc.id); setForm(f => ({ ...f, service: svc.title })); }}
+              />
             ))}
           </div>
         </div>
