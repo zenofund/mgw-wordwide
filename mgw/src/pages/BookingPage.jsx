@@ -147,6 +147,8 @@ export default function BookingPage({ onConfirm, availableDays, timeSlots, user 
   const [email, setEmail] = useState(user?.email || '');
   const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [successRef, setSuccessRef] = useState('');
 
   useEffect(() => {
     if (user?.email) setEmail(user.email);
@@ -181,6 +183,8 @@ export default function BookingPage({ onConfirm, availableDays, timeSlots, user 
     await new Promise(r => setTimeout(r, 1500));
     const fakeRef = `MGW-SIM-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
     setPaying(false);
+    setSuccessRef(fakeRef);
+    setSuccess(true);
     onConfirm?.({
       type: selectedType,
       typeLabel: selectedTypeObj?.label,
@@ -194,6 +198,25 @@ export default function BookingPage({ onConfirm, availableDays, timeSlots, user 
       submittedAt: new Date().toISOString(),
     });
   };
+
+  if (success) {
+    return (
+      <div style={{ background: '#0A0A0A', color: '#EAEAEA', minHeight: '80vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 24px', textAlign: 'center' }}>
+        <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(80,200,120,0.12)', border: '0.5px solid rgba(80,200,120,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 24, fontSize: 28 }}>✓</div>
+        <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 28, fontWeight: 500, marginBottom: 10, color: '#EAEAEA' }}>Booking Submitted</div>
+        <div style={{ fontSize: 13, color: '#999', maxWidth: 360, lineHeight: 1.7, marginBottom: 28 }}>
+          Your session request for <strong style={{ color: '#EAEAEA' }}>April {selectedDay}</strong> at <strong style={{ color: '#EAEAEA' }}>{selectedTime} WAT</strong> has been received. The admin will review and confirm your booking shortly.
+        </div>
+        <div style={{ background: '#141414', border: '0.5px solid rgba(201,162,39,0.2)', borderRadius: 8, padding: '12px 20px', marginBottom: 28, maxWidth: 400, width: '100%' }}>
+          <div style={{ fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#555', marginBottom: 6 }}>Reference</div>
+          <div style={{ fontSize: 11, color: '#888', fontFamily: 'monospace', wordBreak: 'break-all' }}>{successRef}</div>
+        </div>
+        <div style={{ fontSize: 11, color: '#555' }}>
+          A confirmation will be sent to <strong style={{ color: '#777' }}>{email}</strong>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ background: '#0A0A0A', color: '#EAEAEA', minHeight: '100vh' }}>

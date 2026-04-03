@@ -134,13 +134,13 @@ export default function App() {
     const booking = {
       id: `BK-${Date.now()}`,
       ...data,
-      userName: user?.name || 'Guest',
+      userName: user?.name || data.email || 'Guest',
       status: 'Pending',
       submittedAt: new Date().toISOString(),
       zoom: null,
     };
     setBookings(prev => [booking, ...prev]);
-    setActivePage('dashboard');
+    if (user) setActivePage('dashboard');
   };
 
   if (isAdmin) {
