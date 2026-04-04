@@ -225,9 +225,9 @@ export default function ConsultancyPage() {
       <div style={s.hero}>
         <div style={s.heroOrb} />
         <div style={s.heroLabel}>Creative Consultancy</div>
-        <h1 className="mgw-consult-title" style={s.heroTitle}>
-          Where Vision Meets<br />
-          <em style={{ color: '#C9A227' }}>Strategic Mastery</em>
+        <h1 style={s.heroTitle}>
+          Strategic Creative<br />
+          <em style={{ color: '#C9A227' }}>Consultancy</em>
         </h1>
         <p style={s.heroSub}>
           Mavin Grandpa Worldwide brings three decades of creative industry authority to your project. Select a service below and request a consultation.
