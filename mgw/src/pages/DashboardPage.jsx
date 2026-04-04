@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AboutShareSection from '../components/AboutShareSection';
 
 const GOLD = '#C9A227';
 const PURPLE = '#6A38C2';
@@ -44,10 +45,10 @@ function StatusBadge({ label }) {
 
 /* ─── NAV items ─── */
 const NAV_ITEMS = [
-  { id: 'home',    label: 'Home',         icon: '⊞' },
-  { id: 'sessions',label: 'My Sessions',  icon: '◈' },
-  { id: 'settings',label: 'Settings',     icon: '⚙', external: true },
-  { id: 'about',   label: 'About & Share',icon: '◎', external: true },
+  { id: 'home',         label: 'Home',          icon: '⊞' },
+  { id: 'sessions',     label: 'My Sessions',   icon: '◈' },
+  { id: 'subscription', label: 'Subscription',  icon: '⬡' },
+  { id: 'about',        label: 'About & Share', icon: '◎' },
 ];
 
 /* ─── Sidebar ─── */
@@ -97,13 +98,7 @@ function DashSidebar({ active, onSelect, user, onNavigate }) {
           return (
             <button
               key={item.id}
-              onClick={() => {
-                if (item.external) {
-                  onNavigate?.(item.id === 'settings' ? 'settings' : 'about');
-                } else {
-                  onSelect(item.id);
-                }
-              }}
+              onClick={() => onSelect(item.id)}
               style={{
                 display: 'flex', alignItems: 'center', gap: 10,
                 width: '100%', textAlign: 'left',
@@ -122,9 +117,6 @@ function DashSidebar({ active, onSelect, user, onNavigate }) {
             >
               <span style={{ fontSize: 14, opacity: 0.75, width: 18, textAlign: 'center' }}>{item.icon}</span>
               {item.label}
-              {item.external && (
-                <span style={{ marginLeft: 'auto', fontSize: 10, color: '#444' }}>↗</span>
-              )}
             </button>
           );
         })}
@@ -145,13 +137,7 @@ function MobileTabStrip({ active, onSelect, onNavigate }) {
         return (
           <button
             key={item.id}
-            onClick={() => {
-              if (item.external) {
-                onNavigate?.(item.id === 'settings' ? 'settings' : 'about');
-              } else {
-                onSelect(item.id);
-              }
-            }}
+            onClick={() => onSelect(item.id)}
             style={{
               display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0,
               background: isActive ? 'rgba(201,162,39,0.1)' : SURFACE,
@@ -359,11 +345,111 @@ function MySessionsSection({ bookings, user, onBrowseSessions }) {
   );
 }
 
+/* ─── SUBSCRIPTION PANEL ─── */
+function SubscriptionPanel({ user, plans = [], onNavigate }) {
+  const tierColors = { free: '#555', standard: PURPLE, premium: GOLD };
+  const currentPlan = user?.plan;
+  const currentColor = tierColors[user?.tier] || '#555';
+
+  return (
+    <div style={{ padding: '20px 20px 32px' }}>
+      <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 22, fontWeight: 500, marginBottom: 4 }}>Subscription</div>
+      <div style={{ fontSize: 12, color: '#666', marginBottom: 24 }}>View and manage your current membership plan.</div>
+
+      {/* Current plan */}
+      <div style={{
+        background: currentPlan ? `${currentColor}0A` : 'rgba(255,255,255,0.02)',
+        border: `0.5px solid ${currentPlan ? currentColor + '40' : BORDER}`,
+        borderRadius: 12, padding: '20px 18px', marginBottom: 24,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap',
+      }}>
+        <div>
+          <div style={{ fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#555', marginBottom: 5 }}>Current Plan</div>
+          <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 22, color: currentPlan ? currentColor : '#555' }}>
+            {currentPlan?.name || 'Open Access (Free)'}
+          </div>
+          {currentPlan && (
+            <div style={{ fontSize: 12, color: '#666', marginTop: 4 }}>{currentPlan.price} · {currentPlan.billing}</div>
+          )}
+        </div>
+        {currentPlan ? (
+          <div style={{ background: `${currentColor}12`, border: `0.5px solid ${currentColor}40`, borderRadius: 20, padding: '5px 14px', fontSize: 11, color: currentColor, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+            Active
+          </div>
+        ) : (
+          <button
+            onClick={() => onNavigate?.('sessions')}
+            style={{ background: `${GOLD}12`, border: `0.5px solid ${GOLD}40`, color: GOLD, borderRadius: 8, padding: '9px 20px', fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', cursor: 'pointer' }}
+          >
+            Upgrade
+          </button>
+        )}
+      </div>
+
+      {/* Plans list */}
+      <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 16, color: '#EAEAEA', marginBottom: 14 }}>Available Plans</div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {plans.map(plan => {
+          const planColor = tierColors[plan.tier] || '#555';
+          const isCurrent = currentPlan?.name === plan.name;
+          return (
+            <div key={plan.name} style={{ background: isCurrent ? `${planColor}0D` : SURFACE, border: `0.5px solid ${isCurrent ? planColor + '45' : BORDER}`, borderRadius: 10, padding: '16px 18px', display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+              <div style={{ flex: 1, minWidth: 140 }}>
+                <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 16, color: isCurrent ? planColor : '#EAEAEA', marginBottom: 4 }}>{plan.name}</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '3px 10px' }}>
+                  {(plan.features || []).slice(0, 3).map(f => (
+                    <span key={f} style={{ fontSize: 10, color: '#666' }}>· {f}</span>
+                  ))}
+                </div>
+              </div>
+              <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                <div style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: 18, color: planColor }}>{plan.price}</div>
+                <div style={{ fontSize: 10, color: '#555', marginBottom: 8 }}>{plan.billing}</div>
+                {isCurrent ? (
+                  <span style={{ fontSize: 10, color: planColor, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Current</span>
+                ) : (
+                  <button
+                    onClick={() => onNavigate?.('sessions')}
+                    style={{ background: `${planColor}12`, border: `0.5px solid ${planColor}40`, color: planColor, borderRadius: 6, padding: '6px 14px', fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, cursor: 'pointer', letterSpacing: '0.04em' }}
+                  >
+                    {plan.tier === 'free' ? 'Downgrade' : 'Upgrade'}
+                  </button>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{ height: 0.5, background: BORDER, margin: '28px 0' }} />
+
+      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+        <button style={{ background: 'rgba(220,60,60,0.07)', border: '0.5px solid rgba(220,60,60,0.2)', color: '#cc5555', borderRadius: 8, padding: '10px 20px', fontFamily: "'DM Sans', sans-serif", fontSize: 12, cursor: 'pointer', letterSpacing: '0.04em' }}>
+          Cancel Subscription
+        </button>
+        <button style={{ background: 'rgba(201,162,39,0.06)', border: `0.5px solid ${BORDER}`, color: '#777', borderRadius: 8, padding: '10px 20px', fontFamily: "'DM Sans', sans-serif", fontSize: 12, cursor: 'pointer', letterSpacing: '0.04em' }}>
+          Billing History
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ─── ABOUT PANEL (wraps shared component with padding) ─── */
+function AboutPanel() {
+  return (
+    <div style={{ padding: '20px 20px 32px' }}>
+      <AboutShareSection />
+    </div>
+  );
+}
+
 /* ─── MAIN EXPORT ─── */
 export default function DashboardPage({
   user = { name: 'Member' },
   vaultItems = [],
   bookings = [],
+  plans = [],
   stats = [
     { val: '3',    key: 'Sessions' },
     { val: '14',   key: 'Saved' },
@@ -438,6 +524,12 @@ export default function DashboardPage({
               user={user}
               onBrowseSessions={onViewAllSessions}
             />
+          )}
+          {activeSection === 'subscription' && (
+            <SubscriptionPanel user={user} plans={plans} onNavigate={onNavigate} />
+          )}
+          {activeSection === 'about' && (
+            <AboutPanel />
           )}
         </div>
       </div>
