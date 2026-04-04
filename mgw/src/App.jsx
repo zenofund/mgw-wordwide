@@ -345,12 +345,17 @@ export default function App() {
         )}
       </div>
 
-      <Footer alwaysShow={
-        activePage === 'landing' ||
-        activePage === 'consult' ||
-        activePage === 'booking' ||
-        (user && (activePage === 'dashboard' || activePage === 'vault'))
-      } />
+      <Footer
+        onNavigate={navigate}
+        alwaysShow={
+          activePage === 'landing' ||
+          activePage === 'about'   ||
+          activePage === 'consult' ||
+          activePage === 'sessions'||
+          activePage === 'booking' ||
+          activePage === 'vault'
+        }
+      />
     </div>
   );
 }

@@ -793,7 +793,7 @@ select {
   }
 }
 
-/* ── Footer copyright bar ── */
+/* ── Footer copyright bar (mobile minimal) ── */
 .mgw-footer-bar {
   padding: 14px 24px;
   border-top: 0.5px solid rgba(201,162,39,0.12);
@@ -808,6 +808,50 @@ select {
 @media (min-width: 1024px) {
   .mgw-footer-mobile-only {
     display: none;
+  }
+}
+
+/* ── Desktop full footer ── */
+.mgw-footer-full {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .mgw-footer-full {
+    display: block;
+    border-top: 0.5px solid rgba(201,162,39,0.14);
+    background: #080808;
+  }
+
+  .mgw-footer-full-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 48px 48px;
+    display: flex;
+    gap: 60px;
+    align-items: flex-start;
+  }
+
+  .mgw-footer-brand-col {
+    flex-shrink: 0;
+    width: 280px;
+  }
+
+  .mgw-footer-nav-cols {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+
+  .mgw-footer-full-bottom {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 48px;
+    border-top: 0.5px solid rgba(255,255,255,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 }
 
