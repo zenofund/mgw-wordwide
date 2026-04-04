@@ -77,6 +77,14 @@ select {
   min-height: 0 !important;
 }
 
+/* ── Dashboard — mobile base (sidebar hidden, tab strip shown) ── */
+.mgw-dashboard-sidebar {
+  display: none;
+}
+.mgw-dash-mobile-tabs {
+  display: block;
+}
+
 /* Mobile: dark gradient overlay left→right so text is legible over image */
 .mgw-hero-text-overlay {
   position: absolute;
@@ -288,16 +296,22 @@ select {
   /* ── Dashboard ── */
   .mgw-dashboard-layout {
     display: grid !important;
-    grid-template-columns: 360px 1fr !important;
+    grid-template-columns: 210px 1fr !important;
     gap: 0 !important;
     align-items: start !important;
   }
 
   .mgw-dashboard-sidebar {
+    display: block !important;
     border-right: 0.5px solid rgba(201,162,39,0.18);
-    min-height: calc(100vh - 120px);
+    min-height: calc(100vh - 180px);
     position: sticky;
     top: 60px;
+  }
+
+  /* Hide mobile tabs on desktop */
+  .mgw-dash-mobile-tabs {
+    display: none !important;
   }
 
   .mgw-greeting-title {

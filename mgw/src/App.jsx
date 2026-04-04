@@ -283,8 +283,10 @@ export default function App() {
           <DashboardPage
             user={user}
             vaultItems={accessibleVault}
+            bookings={bookings.filter(b => b.email === user.email || b.userName === user.name)}
             onViewAllSessions={() => navigate('sessions')}
             onOpenVault={() => navigate('vault')}
+            onNavigate={navigate}
             announcement={announcements.filter(a => a.published)[0] || null}
           />
         )}

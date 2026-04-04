@@ -1213,7 +1213,7 @@ function AnnouncementsSection({ announcements, setAnnouncements }) {
   );
 }
 
-function BookingsSection({ bookings, setBookings }) {
+function BookingsSection({ bookings, setBookings, sessions = [] }) {
   const [zoomLoading, setZoomLoading] = useState(null);
   const [zoomError, setZoomError] = useState('');
 
@@ -1228,17 +1228,27 @@ function BookingsSection({ bookings, setBookings }) {
     setZoomLoading(id);
     const booking = bookings.find(b => b.id === id);
 
-    // Simulate Zoom meeting creation (real endpoint kept at /api/zoom/create-meeting)
-    await new Promise(r => setTimeout(r, 1200));
-    const meetingId = Math.floor(Math.random() * 9000000000) + 1000000000;
-    const zoom = {
-      meetingId,
-      joinUrl: `https://zoom.us/j/${meetingId}?pwd=MGW${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
-      startUrl: `https://zoom.us/s/${meetingId}`,
-      password: Math.random().toString(36).slice(2, 8).toUpperCase(),
-      topic: `MGW ${booking?.typeLabel || '1-on-1'} — ${booking?.userName}`,
-      startTime: new Date().toISOString(),
-    };
+    // Try to reuse the session's existing Zoom link (same meeting for all attendees)
+    const matchedSession = sessions.find(s =>
+      s.title === booking?.sessionTitle ||
+      (s.date === booking?.sessionDate && s.type === (booking?.typeLabel || booking?.type))
+    );
+
+    let zoom = matchedSession?.zoom || null;
+
+    // Only create a new Zoom meeting if the session doesn't have one yet
+    if (!zoom) {
+      await new Promise(r => setTimeout(r, 900));
+      const meetingId = Math.floor(Math.random() * 9000000000) + 1000000000;
+      zoom = {
+        meetingId,
+        joinUrl: `https://zoom.us/j/${meetingId}?pwd=MGW${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
+        startUrl: `https://zoom.us/s/${meetingId}`,
+        password: Math.random().toString(36).slice(2, 8).toUpperCase(),
+        topic: `MGW ${booking?.typeLabel || '1-on-1'} — ${booking?.sessionTitle || booking?.userName}`,
+        startTime: new Date().toISOString(),
+      };
+    }
 
     setBookings(prev => prev.map(b => b.id === id ? { ...b, status: 'Accepted', zoom } : b));
     setZoomLoading(null);
@@ -1369,7 +1379,7 @@ export default function AdminPage({ onExit, availableDays, setAvailableDays, tim
 
   const sections = {
     overview:       <OverviewSection />,
-    bookings:       <BookingsSection bookings={bookings} setBookings={setBookings} />,
+    bookings:       <BookingsSection bookings={bookings} setBookings={setBookings} sessions={sessions} />,
     sessions:       <SessionsSection availableDays={availableDays} setAvailableDays={setAvailableDays} timeSlots={timeSlots} setTimeSlots={setTimeSlots} sessions={sessions} setSessions={setSessions} />,
     programs:       <ProgramsSection />,
     vault:          <VaultSection vaultItems={vaultItems} setVaultItems={setVaultItems} plans={plans} />,
